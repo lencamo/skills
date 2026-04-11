@@ -1,5 +1,4 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "lencamo-skill",
   "description": "Personal skill collection for Codex: doc-feat-desc, git-smart-commit.",
   "owner": {
@@ -8,7 +7,7 @@
   "plugins": [
     {
       "name": "doc-feat-desc",
-      "description": "Generate a three-file user documentation bundle from real implementation, including help-center copy, site copy, and in-product guidance.",
+      "description": "Use when the user wants user-facing docs for an implemented feature. Inspect the real implementation first, then write help-center, site-copy, and in-product docs under doc/<requirement-name>.",
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/doc-feat-desc",
@@ -16,7 +15,7 @@
     },
     {
       "name": "git-smart-commit",
-      "description": "Detect the current project's commit convention and generate a short commit header that matches the repository style.",
+      "description": "Use when the user wants a git commit message or wants to refine one. Detect the repo's commit convention first, then generate a short commit header that matches the repo.",
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/git-smart-commit",

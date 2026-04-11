@@ -1,8 +1,8 @@
 ---
 name: doc-feat-desc
-description: Generate a three-file user doc bundle for a real feature by inspecting the implementation first, then writing help-center, site-copy, and in-product docs under `doc/<requirement-name>/`. Follow the user's language unless another language is explicitly requested.
+description: Use when the user wants user-facing docs for an implemented feature. Inspect the real implementation first, then write help-center, site-copy, and in-product docs under `doc/<requirement-name>/`.
 metadata:
-  version: "0.1.0"
+  version: '0.1.0'
 ---
 
 # Doc Feat Desc
@@ -43,12 +43,17 @@ Read [references/doc-variants.md](references/doc-variants.md) for structure, ton
 1. Resolve the target repo, subject, requirement name, and output language
 2. Read the main implementation and enough nearby code or UI copy to confirm behavior
 3. If docs already exist, read them first and preserve correct naming
-4. Run `scripts/init_doc_bundle.sh <repo-root> <requirement-name>` from this skill directory
-5. Write the three Markdown files into `doc/<requirement-name>/`
-6. Reply with the repo, directory, file paths, and any key assumptions
+4. Create `doc/<requirement-name>/` if it does not exist
+5. Create or update:
+   - `help-center-full.md`
+   - `official-site-copy.md`
+   - `in-product-short.md`
+6. Write the three Markdown files into `doc/<requirement-name>/`
+7. Reply with the repo, directory, file paths, and any key assumptions
 
 ## Output Rules
 
 - Keep the fixed filenames unless the user explicitly asks otherwise
 - Do not create extra README, notes, changelog, or process files
 - Keep formatting simple Markdown
+- Do not turn internal implementation details into user-facing language
