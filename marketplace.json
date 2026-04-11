@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "lencamo-skill",
+  "description": "Personal skill collection for Codex: doc-feat-desc, git-smart-commit.",
+  "owner": {
+    "name": "lencamo"
+  },
+  "plugins": [
+    {
+      "name": "doc-feat-desc",
+      "description": "Generate a three-file user documentation bundle from real implementation, including help-center copy, site copy, and in-product guidance.",
+      "version": "0.1.0",
+      "category": "development",
+      "source": "./skills/doc-feat-desc",
+      "homepage": "https://github.com/lencamo/lencamo-skill"
+    },
+    {
+      "name": "git-smart-commit",
+      "description": "Detect the current project's commit convention and generate a short commit header that matches the repository style.",
+      "version": "0.1.0",
+      "category": "development",
+      "source": "./skills/git-smart-commit",
+      "homepage": "https://github.com/lencamo/lencamo-skill"
+    }
+  ]
+}
