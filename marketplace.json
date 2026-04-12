@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, git-smart-commit.",
+  "description": "Personal agent skill collection: doc-feat-desc, git-smart-commit, work-hunt, work-think, work-check, work-design.",
   "owner": {
     "name": "lencamo"
   },
@@ -19,6 +19,38 @@
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/git-smart-commit",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "work-hunt",
+      "description": "Invoke when debugging any error, crash, unexpected behavior, or failing test. Finds root cause before applying any fix. Not for code review or new features.",
+      "version": "3.8.0",
+      "category": "development",
+      "source": "./skills/work-hunt",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "work-think",
+      "description": "Invoke before writing any code for a new feature, design, or architecture decision. Turns rough ideas into approved plans with validated structure. Not for bug fixes or small edits.",
+      "version": "3.8.0",
+      "category": "development",
+      "source": "./skills/work-think",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "work-check",
+      "description": "Invoke after any implementation task completes or before merging. Reviews the diff, auto-fixes safe issues, runs specialist security and architecture reviewers on large diffs. Not for exploring ideas or debugging.",
+      "version": "3.8.0",
+      "category": "development",
+      "source": "./skills/work-check",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "work-design",
+      "description": "Invoke when building any UI, component, page, or visual interface. Produces distinctive design with a committed aesthetic, not generic defaults. Not for backend logic or data pipelines.",
+      "version": "3.8.0",
+      "category": "development",
+      "source": "./skills/work-design",
       "homepage": "https://github.com/lencamo/skills"
     }
   ]
