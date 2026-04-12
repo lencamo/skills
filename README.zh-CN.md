@@ -71,21 +71,15 @@ npx skills add . -a codex -g -y
 ├── README.md
 ├── README.zh-CN.md
 └── skills
-    ├── doc-feat-desc
-    │   ├── references
-    │   └── SKILL.md
-    ├── work-check
-    │   ├── agents
-    │   ├── references
-    │   ├── scripts
-    │   └── SKILL.md
-    ├── work-design
-    │   ├── references
-    │   └── SKILL.md
-    ├── git-smart-commit
-    │   └── SKILL.md
-    ├── work-hunt
-    │   └── SKILL.md
-    └── work-think
-        └── SKILL.md
+    └── example-skill
+        ├── SKILL.md
+        ├── agents
+        ├── references
+        ├── scripts
+        └── templates
 ```
+
+## 参考
+
+- [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
+- [tw93/Waza](https://github.com/tw93/Waza)
