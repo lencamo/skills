@@ -1,5 +1,5 @@
 {
-  "name": "lencamo-skill",
+  "name": "skills",
   "description": "Personal skill collection for Codex: doc-feat-desc, git-smart-commit.",
   "owner": {
     "name": "lencamo"
@@ -11,7 +11,7 @@
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/doc-feat-desc",
-      "homepage": "https://github.com/lencamo/lencamo-skill"
+      "homepage": "https://github.com/lencamo/skills"
     },
     {
       "name": "git-smart-commit",
@@ -19,7 +19,7 @@
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/git-smart-commit",
-      "homepage": "https://github.com/lencamo/lencamo-skill"
+      "homepage": "https://github.com/lencamo/skills"
     }
   ]
 }

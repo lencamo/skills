@@ -1,8 +1,10 @@
-# lencamo-skill
+# skills
 
 [English](./README.md) | 中文
 
 面向实际工程场景的 Codex Skills 集合。
+
+仓库地址：`https://github.com/lencamo/skills`
 
 ## Skills
 
@@ -18,26 +20,27 @@
 安装全部可用 skills：
 
 ```bash
-npx skills add lencamo/lencamo-skill -a codex -g -y
+npx skills add lencamo/skills -a codex -g -y
 ```
 
 查看可安装列表：
 
 ```bash
-npx skills add lencamo/lencamo-skill --list
+npx skills add lencamo/skills --list
 ```
 
 按需安装指定 skills：
 
 ```bash
-npx skills add lencamo/lencamo-skill -a codex -g -y -s doc-feat-desc
-npx skills add lencamo/lencamo-skill -a codex -g -y -s git-smart-commit
+npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
+npx skills add lencamo/skills -a codex -g -y -s git-smart-commit
 ```
 
 本地开发时使用当前仓库：
 
 ```bash
-cd lencamo-skill
+git clone git@github.com:lencamo/skills.git
+cd skills
 npx skills add . -a codex -g -y
 ```
 

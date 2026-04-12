@@ -1,8 +1,10 @@
-# lencamo-skill
+# skills
 
 English | [中文](./README.zh-CN.md)
 
 Codex skills for practical engineering workflows.
+
+Repository: `https://github.com/lencamo/skills`
 
 ## Skills
 
@@ -18,26 +20,27 @@ Each skill lives in its own folder instead of a single markdown file. A skill ca
 Install all available skills:
 
 ```bash
-npx skills add lencamo/lencamo-skill -a codex -g -y
+npx skills add lencamo/skills -a codex -g -y
 ```
 
 List available skills:
 
 ```bash
-npx skills add lencamo/lencamo-skill --list
+npx skills add lencamo/skills --list
 ```
 
 Install selected skills:
 
 ```bash
-npx skills add lencamo/lencamo-skill -a codex -g -y -s doc-feat-desc
-npx skills add lencamo/lencamo-skill -a codex -g -y -s git-smart-commit
+npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
+npx skills add lencamo/skills -a codex -g -y -s git-smart-commit
 ```
 
 Use the local repository during development:
 
 ```bash
-cd lencamo-skill
+git clone git@github.com:lencamo/skills.git
+cd skills
 npx skills add . -a codex -g -y
 ```
 
