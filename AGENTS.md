@@ -4,7 +4,7 @@ This file defines how skills in this repository should be maintained. It does no
 
 ## Repository Positioning
 
-This is a Codex skill collection repository, not a CLI or runtime project.
+This is an agent skill collection repository, not a CLI or runtime project.
 
 Goals:
 

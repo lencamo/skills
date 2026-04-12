@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal skill collection for Codex: doc-feat-desc, git-smart-commit.",
+  "description": "Personal agent skill collection: doc-feat-desc, git-smart-commit.",
   "owner": {
     "name": "lencamo"
   },
