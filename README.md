@@ -12,10 +12,6 @@ Repository: `https://github.com/lencamo/skills`
 | :----------------------------------------------------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------- |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)       | When an implemented feature needs user-facing documentation | Generates three docs under `doc/<requirement-name>/` from the real implementation |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md) | When a commit message needs to match repo conventions       | Detects commit rules and drafts a short matching commit header                    |
-| [`work-hunt`](skills/work-hunt/SKILL.md)               | When debugging an error, crash, or failing test             | Forces root-cause diagnosis before applying any fix                               |
-| [`work-think`](skills/work-think/SKILL.md)             | Before writing code for a new feature or design             | Turns rough ideas into approved, concrete implementation plans                    |
-| [`work-check`](skills/work-check/SKILL.md)             | After implementation or before merging                      | Reviews the diff, fixes safe issues, and requires real verification               |
-| [`work-design`](skills/work-design/SKILL.md)           | When building a UI, page, or component                      | Locks an aesthetic direction and enforces non-generic interface decisions         |
 
 Each skill lives in its own folder instead of a single markdown file. A skill can include bundled references and helper resources when needed.
 

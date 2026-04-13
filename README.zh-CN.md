@@ -12,10 +12,6 @@
 | :----------------------------------------------------- | :----------------------------------- | :------------------------------------------------------ |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)       | 已有功能需要补充面向用户的文档时     | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档 |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md) | 需要生成符合仓库约定的提交信息时     | 检测仓库提交规范并产出匹配的简短 commit 标题            |
-| [`work-hunt`](skills/work-hunt/SKILL.md)               | 排查报错、崩溃、异常行为或失败测试时 | 强制先定位根因，再动手修复                              |
-| [`work-think`](skills/work-think/SKILL.md)             | 新功能、设计或架构决策动手前         | 把模糊想法收敛成可审批、可执行的具体方案                |
-| [`work-check`](skills/work-check/SKILL.md)             | 实现完成后或合并前                   | 审查 diff、自动修复安全问题，并强制执行真实验证         |
-| [`work-design`](skills/work-design/SKILL.md)           | 设计页面、组件或可视界面时           | 锁定明确审美方向，避免生成模板化、默认感过强的界面      |
 
 每个 skill 都是一个独立目录，不只是单个 Markdown 文件。按需可以携带 `references/` 等辅助资源。
 
