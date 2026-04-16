@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, frontend-guard, git-smart-commit.",
+  "description": "Personal agent skill collection: doc-feat-desc, visual-to-project, git-smart-commit.",
   "owner": {
     "name": "lencamo"
   },
@@ -14,16 +14,16 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
-      "name": "frontend-guard",
-      "description": "Use before writing or modifying frontend pages or UI components. Apply as a preventive guard to reuse existing components, align with the project, fit local UI sizing, and avoid unnecessary new styles.",
-      "version": "0.1.6",
+      "name": "visual-to-project",
+      "description": "Convert screenshots, HTML drafts, or mockups into frontend pages matching the project style. Reuse existing components and styles.",
+      "version": "0.1.0",
       "category": "development",
-      "source": "./skills/frontend-guard",
+      "source": "./skills/visual-to-project",
       "homepage": "https://github.com/lencamo/skills"
     },
     {
       "name": "git-smart-commit",
-      "description": "Use when the user wants a git commit message or wants to refine one. Detect the repo's commit convention first, then generate a short commit header that matches the repo.",
+      "description": "Use when the user wants a commit message or wants to refine one. Detect the repo's commit convention first, then generate a short commit header that matches the repo.",
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/git-smart-commit",
