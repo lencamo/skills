@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, git-smart-commit.",
+  "description": "Personal agent skill collection: doc-feat-desc, frontend-guard, git-smart-commit.",
   "owner": {
     "name": "lencamo"
   },
@@ -11,6 +11,14 @@
       "version": "0.1.0",
       "category": "development",
       "source": "./skills/doc-feat-desc",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "frontend-guard",
+      "description": "Use before writing or modifying frontend pages or UI components. Apply as a preventive guard to keep implementations consistent with the existing codebase and avoid common structure, layout, wrapper, and interaction mistakes.",
+      "version": "0.1.0",
+      "category": "development",
+      "source": "./skills/frontend-guard",
       "homepage": "https://github.com/lencamo/skills"
     },
     {

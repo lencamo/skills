@@ -11,6 +11,7 @@
 | Skill                                                  | 适用场景                             | 功能说明                                                |
 | :----------------------------------------------------- | :----------------------------------- | :------------------------------------------------------ |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)       | 已有功能需要补充面向用户的文档时     | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档 |
+| [`frontend-guard`](skills/frontend-guard/SKILL.md)     | 编写或修改前端页面或 UI 组件时       | 在实现前提供预防型护栏，要求实现尽量贴合项目既有代码与风格，并规避结构、布局、包装层和交互类常见问题 |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md) | 需要生成符合仓库约定的提交信息时     | 检测仓库提交规范并产出匹配的简短 commit 标题            |
 
 每个 skill 都是一个独立目录，不只是单个 Markdown 文件。按需可以携带 `references/` 等辅助资源。
@@ -41,6 +42,7 @@ npx skills add lencamo/skills -a claude-code -g -y
 
 ```bash
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
+npx skills add lencamo/skills -a codex -g -y -s frontend-guard
 npx skills add lencamo/skills -a claude-code -g -y -s git-smart-commit
 ```
 
