@@ -1,25 +1,24 @@
 # Component Encapsulation Guard
 
-Use this reference when page work also requires creating or modifying reusable components, wrapper components, or third-party UI wrappers.
+Use this reference when implementing a page also requires writing a new child component, shared component, wrapper component, or local wrapper around a third-party UI primitive.
 
-Its purpose is to constrain how those components are written and encapsulated.
-
-Preventing wrapper side effects is one rule in this reference, not the only rule.
+Those components should follow the constraints in this reference.
 
 Typical cases:
 
-- popup, modal, drawer, bottom-sheet
+- child components extracted while implementing a page
+- shared components introduced while implementing a page
 - transition wrappers
 - slot wrappers
 - form-field wrappers
 - list-item wrappers
-- third-party UI components wrapped by local components
+- new local wrappers around third-party UI components
 
 ## Core Rule
 
-Write reusable components as stable building blocks for pages.
+When implementing a page really requires a new component, write it as a stable building block for its actual scope.
 
-The page should not need to know internal wrapper details to use the component safely.
+The page should not need to know internal wrapper details to use that component safely.
 
 ## Rules
 
@@ -30,7 +29,7 @@ The page should not need to know internal wrapper details to use the component s
 - Prefer component-level prevention over asking every page to patch component side effects locally.
 - Reuse existing project conventions for naming, structure, props, slots, events, and file placement.
 
-## Wrapper Side Effects
+## Check
 
 A component may look correct while its wrapper still leaks side effects through layout, spacing, scroll height, event propagation, focus behavior, conditional rendering, or state lifetime.
 

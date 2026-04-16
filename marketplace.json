@@ -15,8 +15,8 @@
     },
     {
       "name": "frontend-guard",
-      "description": "Use before writing or modifying frontend pages or UI components. Apply as a preventive guard to keep implementations consistent with the existing codebase and avoid common structure, layout, wrapper, and interaction mistakes.",
-      "version": "0.1.0",
+      "description": "Use before writing or modifying frontend pages or UI components. Apply as a preventive guard to reuse existing components, align with the project, fit local UI sizing, and avoid unnecessary new styles.",
+      "version": "0.1.6",
       "category": "development",
       "source": "./skills/frontend-guard",
       "homepage": "https://github.com/lencamo/skills"
