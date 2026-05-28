@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, visual-to-project, git-smart-commit.",
+  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit.",
   "owner": {
     "name": "lencamo"
   },
@@ -14,11 +14,11 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
-      "name": "visual-to-project",
-      "description": "Convert screenshots, HTML drafts, or mockups into frontend pages matching the project style. Reuse existing components and styles.",
-      "version": "0.1.0",
+      "name": "draft-to-project",
+      "description": "Convert UI drafts such as screenshots, HTML drafts, local file:// prototype pages, or mockups into frontend pages inside an existing project while keeping the draft layout structure close to the source.",
+      "version": "0.2.0",
       "category": "development",
-      "source": "./skills/visual-to-project",
+      "source": "./skills/draft-to-project",
       "homepage": "https://github.com/lencamo/skills"
     },
     {

@@ -11,7 +11,7 @@
 | Skill                                                  | 适用场景                             | 功能说明                                                |
 | :----------------------------------------------------- | :----------------------------------- | :------------------------------------------------------ |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)       | 已有功能需要补充面向用户的文档时     | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档 |
-| [`frontend-guard`](skills/frontend-guard/SKILL.md)     | 编写或修改前端页面或 UI 组件时       | 在实现前提供预防型护栏，优先组件复用、对齐项目既有实现、校准本地尺寸关系，并尽量少写新样式 |
+| [`draft-to-project`](skills/draft-to-project/SKILL.md) | 需要把截图、HTML 草图、本地 `file://` 原型页或设计稿等 UI 草稿落到真实项目页面时 | 复用已有组件和样式，同时让最终实现的布局结构贴近提供的草图 |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md) | 需要生成符合仓库约定的提交信息时     | 检测仓库提交规范并产出匹配的简短 commit 标题            |
 
 每个 skill 都是一个独立目录，不只是单个 Markdown 文件。按需可以携带 `references/` 等辅助资源。
@@ -42,7 +42,7 @@ npx skills add lencamo/skills -a claude-code -g -y
 
 ```bash
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
-npx skills add lencamo/skills -a codex -g -y -s frontend-guard
+npx skills add lencamo/skills -a codex -g -y -s draft-to-project
 npx skills add lencamo/skills -a claude-code -g -y -s git-smart-commit
 ```
 

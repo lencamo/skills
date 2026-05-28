@@ -11,7 +11,7 @@ Repository: `https://github.com/lencamo/skills`
 | Skill                                                  | When                                                        | What it does                                                                      |
 | :----------------------------------------------------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------- |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)       | When an implemented feature needs user-facing documentation | Generates three docs under `doc/<requirement-name>/` from the real implementation |
-| [`frontend-guard`](skills/frontend-guard/SKILL.md)     | When writing or modifying frontend pages or UI components   | Applies pre-implementation guardrails to reuse components, align with the project, fit local UI sizing, and avoid unnecessary new styles |
+| [`draft-to-project`](skills/draft-to-project/SKILL.md) | When a UI draft such as a screenshot, HTML draft, local `file://` prototype, or mockup should be implemented in a real project page | Reuses existing components and styles while keeping the provided draft layout structure close to the source |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md) | When a commit message needs to match repo conventions       | Detects commit rules and drafts a short matching commit header                    |
 
 Each skill lives in its own folder instead of a single markdown file. A skill can include bundled references and helper resources when needed.
@@ -42,7 +42,7 @@ Install selected skills for a specific agent:
 
 ```bash
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
-npx skills add lencamo/skills -a codex -g -y -s frontend-guard
+npx skills add lencamo/skills -a codex -g -y -s draft-to-project
 npx skills add lencamo/skills -a claude-code -g -y -s git-smart-commit
 ```
 
