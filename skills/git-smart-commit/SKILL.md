@@ -1,13 +1,13 @@
 ---
 name: git-smart-commit
-description: Use when the user wants a git commit message or wants to refine one. Detect the current project's commit convention first, then generate a short commit header that matches the repo.
+description: Use when the user wants a git commit message or wants to refine one. Detect the current project's commit convention first, then generate a matching short header; add a body or split suggestion only when the request or changeset requires it.
 metadata:
-  version: '0.1.0'
+  version: '0.2.0'
 ---
 
 # Git Smart Commit
 
-Generate a short commit header that matches the repository's actual rules.
+Generate a commit message that matches the repository's actual rules. Default to one short header; add extra structure only when the user asks for a full message or the changeset is clearly not suitable for one commit.
 
 ## Use When
 
@@ -17,7 +17,6 @@ Generate a short commit header that matches the repository's actual rules.
 
 ## Do Not Use
 
-- For full commit bodies unless explicitly requested
 - For changelogs, PR titles, or release notes
 - When the user already gave the exact final commit header
 
@@ -47,8 +46,9 @@ If docs and config disagree, follow executable config.
 
 1. Inspect staged changes first with `git diff --cached --name-only` and `git diff --cached --stat`.
 2. If nothing is staged, inspect `git status --short` and `git diff --name-only`, then generate the message from the working tree changes.
-3. Discover the repo's allowed `type` and `scope` values before writing anything.
-4. If the repo has no explicit rules, default to:
+3. Assess cohesion: decide whether the changes form (a) one logical change, (b) one dominant change plus incidental ripple, or (c) several unrelated changes. Treat formatting, lockfile, and generated-file churn — and tests removed alongside the code they covered — as incidental ripple, not separate areas.
+4. Discover the repo's allowed `type` and `scope` values before writing anything.
+5. If the repo has no explicit rules, default to:
    - `feat`
    - `fix`
    - `docs`
@@ -60,8 +60,8 @@ If docs and config disagree, follow executable config.
    - `ci`
    - `chore`
    - `revert`
-5. Infer `scope` from the dominant module, package, app, service, or directory.
-6. Write one short subject that describes the actual change.
+6. Infer `scope` from the dominant module, package, app, service, or directory.
+7. Write the subject from the primary intent, not from the area with the most files. Then choose the output shape from the cohesion result (see Output).
 
 ## Hard rules
 
@@ -87,10 +87,17 @@ If docs and config disagree, follow executable config.
 
 ## Output
 
-- Default: return one line only, the recommended commit header.
+Default to one line: the recommended commit header.
+
+Use extra structure only in these cases:
+
+- If the user asks for a full commit message and one intent spans several areas, return the header, one blank line, then a short body of up to `5` bullets.
+- If several unrelated changes are present, recommend splitting the commit first, then provide up to `3` one-line headers grouped by path or intent.
+
 - If `type` or `scope` is genuinely ambiguous, return at most `3` one-line candidates, best first.
-- Do not add bullets, labels, explanations, or code fences unless the user asks.
-- Do not add body or footer unless the user explicitly asks for a full commit message.
+- Keep the header within the same length limits whether or not a body follows.
+- Never pad a cohesive change with bullets.
+- Do not add labels or explanations for a normal one-line header. A multi-line message may use a single code block for readability.
 - Prefer a single best answer whenever the repo signals are clear.
 
 ## Quick mapping
@@ -112,3 +119,12 @@ If docs and config disagree, follow executable config.
 - `docs: update setup guide`
 - `chore(lint): tune oxlint config`
 - `refactor(core): simplify init flow`
+- Multi-area under one intent:
+
+  ```
+  chore(lint): roll out shared eslint config across monorepo
+
+  - add explicit return types in utils/ui for the new rule
+  - relax explicit-function-return-type to module boundaries
+  - drop obsolete utils unit tests
+  ```

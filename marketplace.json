@@ -23,8 +23,8 @@
     },
     {
       "name": "git-smart-commit",
-      "description": "Use when the user wants a commit message or wants to refine one. Detect the repo's commit convention first, then generate a short commit header that matches the repo.",
-      "version": "0.1.0",
+      "description": "Use when the user wants a commit message or wants to refine one. Detect the repo's commit convention first, then generate a matching short header; add body or split guidance only when needed.",
+      "version": "0.2.0",
       "category": "development",
       "source": "./skills/git-smart-commit",
       "homepage": "https://github.com/lencamo/skills"
