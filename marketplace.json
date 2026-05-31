@@ -32,7 +32,7 @@
     {
       "name": "global-project-rules",
       "description": "Use as always-on project rules for agent behavior in any repository: Chinese replies, senior engineer style, simple maintainable solutions, clear APIs, and no state-changing git commands unless explicitly requested.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "development",
       "source": "./skills/global-project-rules",
       "homepage": "https://github.com/lencamo/skills"
