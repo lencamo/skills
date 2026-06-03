@@ -40,7 +40,7 @@
     {
       "name": "split-pencil-file",
       "description": "Split an imported Pencil .pen design file into one folder per top-level Frame, each containing index.pen and the local image assets referenced by that frame.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "development",
       "source": "./skills/split-pencil-file",
       "homepage": "https://github.com/lencamo/skills"
