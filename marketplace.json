@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, split-pencil-file.",
+  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, solution-design-review, split-pencil-file.",
   "owner": {
     "name": "lencamo"
   },
@@ -35,6 +35,14 @@
       "version": "0.1.1",
       "category": "development",
       "source": "./skills/global-project-rules",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "solution-design-review",
+      "description": "Use when the user asks for an implementation plan, bug-fix approach, best solution, root-cause analysis, refactor strategy, or tradeoff discussion before coding.",
+      "version": "0.1.0",
+      "category": "development",
+      "source": "./skills/solution-design-review",
       "homepage": "https://github.com/lencamo/skills"
     },
     {

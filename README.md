@@ -14,6 +14,7 @@ Repository: `https://github.com/lencamo/skills`
 | [`draft-to-project`](skills/draft-to-project/SKILL.md)   | When a UI draft such as a screenshot, HTML draft, local `file://` prototype, or mockup should be implemented in a real project page | Reuses existing components and styles while keeping the provided draft layout structure close to the source |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md)   | When a commit message needs to match repo conventions                                                                               | Detects commit rules and drafts a short matching header, with body or split guidance only when needed       |
 | [`global-project-rules`](skills/global-project-rules/SKILL.md) | When a project needs always-on agent behavior rules                                                                                 | Enforces Chinese replies, senior engineer style, simple maintainable solutions, and protected git changes   |
+| [`solution-design-review`](skills/solution-design-review/SKILL.md) | When a solution, implementation plan, bug-fix approach, root-cause analysis, or tradeoff discussion is needed before coding        | Separates root cause, quick fixes, durable solutions, tradeoffs, impact, and verification before implementation |
 | [`split-pencil-file`](skills/split-pencil-file/SKILL.md) | When a large imported Pencil `.pen` file should be split into one folder per top-level Frame                                        | Generates `<frame-name>/index.pen` folders and copies each frame's local image assets                       |
 
 Each skill lives in its own folder instead of a single markdown file. A skill can include bundled references and helper resources when needed.
@@ -46,6 +47,7 @@ Install selected skills for a specific agent:
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
 npx skills add lencamo/skills -a codex -g -y -s global-project-rules
+npx skills add lencamo/skills -a codex -g -y -s solution-design-review
 npx skills add lencamo/skills -a claude-code -g -y -s git-smart-commit
 npx skills add lencamo/skills -a claude-code -g -y -s split-pencil-file
 ```

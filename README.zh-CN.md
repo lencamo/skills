@@ -14,6 +14,7 @@
 | [`draft-to-project`](skills/draft-to-project/SKILL.md)   | 需要把截图、HTML 草图、本地 `file://` 原型页或设计稿等 UI 草稿落到真实项目页面时 | 复用已有组件和样式，同时让最终实现的布局结构贴近提供的草图            |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md)   | 需要生成符合仓库约定的提交信息时                                                 | 检测仓库提交规范并产出简短 commit 标题，仅在需要时补充正文或拆分建议    |
 | [`global-project-rules`](skills/global-project-rules/SKILL.md) | 需要为项目启用全局 Agent 行为规则时                                              | 固定中文回复、资深工程师风格、简单可维护方案，并保护 git 状态变更      |
+| [`solution-design-review`](skills/solution-design-review/SKILL.md) | 需要在编码前讨论实施方案、bug 修复方案、根因分析、最佳方案或取舍时              | 在实施前区分根因、快速修复、长期方案、影响范围和验证计划              |
 | [`split-pencil-file`](skills/split-pencil-file/SKILL.md) | 需要把导入后的大型 Pencil `.pen` 按顶层 Frame 拆成独立目录时                     | 生成 `<frame-name>/index.pen` 目录，并复制该 Frame 引用的本地图片资源 |
 
 每个 skill 都是一个独立目录，不只是单个 Markdown 文件。按需可以携带 `references/` 等辅助资源。
@@ -46,6 +47,7 @@ npx skills add lencamo/skills -a claude-code -g -y
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
 npx skills add lencamo/skills -a codex -g -y -s global-project-rules
+npx skills add lencamo/skills -a codex -g -y -s solution-design-review
 npx skills add lencamo/skills -a claude-code -g -y -s git-smart-commit
 npx skills add lencamo/skills -a claude-code -g -y -s split-pencil-file
 ```
