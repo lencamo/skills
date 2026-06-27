@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, solution-design-review, split-pencil-file.",
+  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, signature-svg-generator, solution-design-review, split-pencil-file.",
   "owner": {
     "name": "lencamo"
   },
@@ -35,6 +35,14 @@
       "version": "0.1.1",
       "category": "development",
       "source": "./skills/global-project-rules",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "signature-svg-generator",
+      "description": "Use when generating reusable signature-style SVG assets or Vue components from font files, including personal signatures, handwritten wordmarks, logo text, font-based SVG paths, or mask-based handwriting animations.",
+      "version": "0.1.0",
+      "category": "design",
+      "source": "./skills/signature-svg-generator",
       "homepage": "https://github.com/lencamo/skills"
     },
     {
