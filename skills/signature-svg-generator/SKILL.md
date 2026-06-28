@@ -1,13 +1,15 @@
 ---
 name: signature-svg-generator
-description: Use when generating reusable signature-style SVG assets or Vue components from font files, including personal signatures, handwritten wordmarks, logo text, font-based SVG paths, or mask-based handwriting animations.
+description: Use when generating reusable signature-style SVG assets or Vue components from font files, including personal signatures, handwritten wordmarks, font-derived SVG paths, or mask-based handwriting animations. Use only when the user wants font-based output, not general logo design.
+metadata:
+  version: '0.2.0'
 ---
 
 # Signature SVG Generator
 
 ## Purpose
 
-Generate reusable signature-style SVG assets from real font files. Use the bundled script as the source of truth for conversion, font copying, license copying, SVG output, and Vue component output.
+Generate reusable signature-style SVG and Vue component assets from real font files. Use the bundled script as the source of truth for font resolution, SVG output, and Vue component output.
 
 ## When Not To Use
 
@@ -24,7 +26,6 @@ Require these before generation:
    - bundled font name, for example `Caveat`
    - local `.ttf` or `.otf` path
    - Google Fonts family name for script download
-3. Output root directory. The script always writes a `signatures/` tree under this directory.
 
 Do not invent missing required inputs. If more than one required input is missing, ask for all missing inputs in one response.
 
@@ -32,78 +33,48 @@ Do not invent missing required inputs. If more than one required input is missin
 
 Respond in the user's language.
 
-If the user gives only signature text, explain that font input and output root are still required. Show the supported font input methods and the bundled font list.
+If the user gives only signature text, explain that font input is still required. Show the supported font input methods and run `--list-fonts` when possible to show the actual bundled font list.
 
-If the user gives text and font but no output root, ask only for the output root.
-
-If the user gives text and output root but no font, show the supported font input methods and bundled font list.
+If the user gives text but no font, show the supported font input methods and run `--list-fonts` when possible to show the actual bundled font list.
 
 If all required inputs are available, generate immediately.
 
-For Chinese users, use this concise response shape when font and output root are missing:
-
-```text
-已识别签名文本：`<text>`
-
-还需要提供字体和输出目录。
-
-字体可以用以下任一方式提供：
-- 回复内置字体名，例如 `Caveat`
-- 提供本地 `.ttf` / `.otf` 字体路径
-- 指定 Google Fonts 字体名，让脚本尝试下载
-
-内置推荐：
-| 字体 | 字体文件 | 适合场景 |
-| --- | --- | --- |
-| `Caveat` | `Caveat[wght].ttf` | 自然手写、个人签名、轻松随性的文本标识 |
-| `Sacramento` | `Sacramento-Regular.ttf` | 细线优雅签名、个人品牌、精致 logo 文本 |
-| `DancingScript` | `DancingScript[wght].ttf` | 温暖流畅、创作者品牌、邀请函风格 |
-| `Ballet` | `Ballet[opsz].ttf` | 高级感书法、艺术、时尚、奢侈品风格；不适合很小尺寸 |
-| `PatrickHand` | `PatrickHand-Regular.ttf` | 轻松手写体、教育、笔记、原型项目 |
-| `LXGWWenKai` | `LXGWWenKai-Regular.ttf` | 中文手写感、阅读、笔记、教育场景 |
-| `Inter` | `Inter[opsz,wght].ttf` | 清晰产品字标，非签名优先 |
-| `NotoSans` | `NotoSans[wdth,wght].ttf` | 多语言清晰字标 |
-| `NotoSansSC` | `NotoSansSC[wght].ttf` | 简体中文清晰字标 |
-
-请回复字体和输出目录，例如：
-`Caveat，输出到 /path/to/project`
-```
-
-For English users, translate the same structure instead of returning a fixed English-only table.
+When asking for missing inputs, keep the response short: acknowledge provided inputs, list only missing inputs, show supported font input methods, and include one concrete example.
 
 ## Bundled Fonts
 
-Bundled font files live in `assets/fonts/`. Font aliases are matched by filename, so `Caveat` resolves to `Caveat[wght].ttf`.
+Bundled font files live in `assets/fonts/`. Font aliases are matched by filename token, so `Caveat` resolves to `Caveat[wght].ttf` and `Sacramento` resolves to `Sacramento-Regular.ttf`.
 
 Use the script to list project fonts, existing generated candidates, and bundled fonts:
 
 ```bash
-node <skill-dir>/scripts/generate_signature_svgs.mjs --list-fonts --out-dir <output-root>
+node <skill-dir>/scripts/generate_signature_svgs.mjs --list-fonts
 ```
 
 Use the actual skill directory for `<skill-dir>`, for example `skills/signature-svg-generator`.
+
+If a font name matches multiple files, rerun with the exact listed font name instead of guessing.
 
 ## Font Resolution
 
 Resolve fonts in this order:
 
-1. `--font <file>`: copy the explicit local font and matching license file into `<out-dir>/signatures/fonts`.
-2. `--font-name <name>`: search `<out-dir>/signatures/fonts`.
+1. `--font <file>`: use the explicit local font path without copying it into the output.
+2. `--font-name <name>`: search legacy project fonts under `signatures/fonts` from the project root for backward compatibility.
 3. Search bundled fonts in `<skill-dir>/assets/fonts`.
-4. If still missing, download the requested family from Google Fonts into `<out-dir>/signatures/fonts`.
+4. If still missing, download the requested family from Google Fonts into an OS temp cache.
 
-Do not block generation only because commercial status is unknown. Always report the status after generation.
+Do not block generation only because commercial status is unknown. Always report the status after generation. If Google Fonts download is needed, network access must be available.
 
 ## Generate One Signature
 
-Run from the target project root or pass absolute paths:
+Run from the target project root:
 
 ```bash
 node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --text "Avery Stone" \
   --font-name Sacramento \
   --id avery-stone-sacramento \
-  --out-dir . \
   --component-name AveryStoneSignatureSacramento \
   --label Sacramento \
   --width 106 \
@@ -121,7 +92,6 @@ Use a JSON config when generating or comparing multiple variants:
 ```json
 {
   "text": "Avery Stone",
-  "outDir": ".",
   "variants": [
     {
       "id": "avery-stone-sacramento",
@@ -132,7 +102,7 @@ Use a JSON config when generating or comparing multiple variants:
       "height": 27,
       "fontSize": 52,
       "strokeWidth": 1.65,
-      "handwritingAnimation": false
+      "handwritingStrokes": []
     }
   ]
 }
@@ -141,76 +111,111 @@ Use a JSON config when generating or comparing multiple variants:
 Run:
 
 ```bash
-node <skill-dir>/scripts/generate_signature_svgs.mjs --config signatures/signatures.json
+node <skill-dir>/scripts/generate_signature_svgs.mjs --config signature-batch.json
 ```
 
 ## Handwriting Animation
 
-Enable handwriting mode when the user asks for real handwriting, signature replay, mask-based writing, or a "from beginning to end" signing effect:
+The script always emits both static and animated artifacts. The legacy `handwritingAnimation` flag is accepted but no longer required.
 
 ```bash
 node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --text "Mira Chen" \
   --font-name Caveat \
   --id mira-chen-caveat \
-  --out-dir . \
-  --component-name MiraChenSignatureCaveat \
-  --handwriting-animation true \
-  --animation-duration-ms 1430
+  --component-name MiraChenSignatureCaveat
 ```
 
-Handwriting mode keeps the font outline as the final shape and reveals it through animated centerline mask paths. Without custom `handwritingPaths`, the script generates a simple left-to-right approximation.
+Generated output always includes a static SVG, animated SVG, static Vue component, animated Vue component, stroke guide SVG, and stroke guide Vue component.
 
-For higher fidelity, provide `handwritingPaths` in config:
+Animated mode keeps the font outline as the final shape. Best-quality signature replay requires `handwritingStrokes`: centerline paths drawn in human writing order. The script uses those strokes as a mask timeline and keeps a final complete outline layer for stability.
+
+The script always writes a flat stroke guide SVG and matching Vue component beside the generated assets.
+
+Without `handwritingStrokes`, the animated SVG and Vue component use `data-handwriting-mode="fallback-wipe"` and the script also writes a flat stroke template beside the generated assets.
+
+Font outlines do not contain real pen stroke order. For true signature replay from beginning to end, draw or provide `handwritingStrokes`. The legacy `handwritingPaths` field is accepted as an alias, but prefer `handwritingStrokes`.
+
+Treat `fallback-wipe` as a visual placeholder, not real handwriting. For true signing motion, provide `handwritingStrokes`.
+
+Stroke timing is automatic by path length unless a stroke provides `durationMs` or `delayMs`. Use `--animation-duration-ms <ms>` or `animationDurationMs` only when the user asks for a fixed total fallback duration.
+
+For `stroke-timeline` output, each mask stroke must use a path-length dashoffset timeline with a small guard length: `stroke-dasharray="<length> <length>"`, `stroke-dashoffset="<length>"`, and a matching `--path-length` style variable. Do not replace this with `pathLength="1"` or animate `stroke-dasharray`; that changes the rendered signing behavior.
+
+For high fidelity, provide `handwritingStrokes` as an array on the config variant:
 
 ```json
 {
-  "d": "M17 15 C15.5 21 13.5 31 10.2 46",
-  "strokeWidth": 8
+  "text": "Mira Chen",
+  "variants": [
+    {
+      "id": "mira-chen-caveat",
+      "component": "MiraChenSignatureCaveat",
+      "fontName": "Caveat",
+      "handwritingStrokes": [
+        {
+          "d": "M17 15 C15.5 21 13.5 31 10.2 46",
+          "strokeWidth": 8,
+          "durationMs": 190,
+          "delayMs": 0
+        }
+      ]
+    }
+  ]
 }
 ```
 
+Recommended authoring workflow:
+
+1. Generate once with no strokes.
+2. Open `signatures/<signature-text-slug>/<id>.stroke-guide.svg`.
+3. Draw centerline strokes over the glyphs in natural writing order.
+4. Paste the exported stroke `d` values into `handwritingStrokes`.
+5. Regenerate and verify the SVG/Vue animation.
+
 ## Output Contract
 
-When generation succeeds, the script always writes this tree under `<out-dir>`:
+When generation succeeds, the script writes a flat folder under `signatures/` named from the signature text. For example, `Ting Note!` becomes `signatures/ting-note/`.
 
 ```text
 signatures/
-├── fonts/
-│   ├── FontName.ttf
-│   └── OFL-font-name.txt
-├── generated/
-│   └── person-name-font-name.svg
-└── components/
-    └── PersonNameSignatureFontName.vue
+└── ting-note/
+    ├── tingnote-caveat.svg
+    ├── tingnote-caveat.animated.svg
+    ├── TingNoteSignatureCaveat.vue
+    ├── TingNoteSignatureCaveatAnimated.vue
+    ├── TingNoteSignatureCaveatStrokeGuide.vue
+    ├── tingnote-caveat.stroke-guide.svg
+    └── tingnote-caveat.strokes.template.json
 ```
 
 Each generated variant must keep together:
 
-- the source font file under `signatures/fonts/`
-- the license file when available
-- the source SVG under `signatures/generated/`
-- the Vue component under `signatures/components/`
+- static SVG
+- animated SVG
+- static Vue component
+- animated Vue component
+- stroke guide SVG
+- stroke guide Vue component
+- stroke template when `handwritingStrokes` are not provided
 
-The `signatures/` directory is the complete output artifact.
+Do not copy font files or license files into the output folder.
 
 ## Vue Usage
 
 For comparison, import generated components into a local preview UI and render them via `<component :is="...">`.
 
-For final production use, keep only the selected component, source SVG, font file, and license file. Do not create a global font picker unless the user asks for productized settings.
+For final production use, keep only the selected SVG/component artifacts. Do not create a global font picker unless the user asks for productized settings.
 
 ## Validation
 
 Before claiming completion:
 
-1. Confirm the expected SVG, Vue component, font, and license files exist.
+1. Confirm the expected static SVG, animated SVG, static Vue component, animated Vue component, stroke guide SVG, and stroke guide Vue component exist.
 2. Confirm generated files are non-empty and contain real SVG path data.
-3. If wiring into an app, run the relevant app build, for example `pnpm build`.
-4. Confirm generated SVG/component count matches the intended variants.
-5. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), and commercial-use status.
-6. Report skipped fonts and why, especially missing files, invalid files, download failures, or oversized CJK fonts.
+3. Confirm the output folder is flat and contains no copied `fonts/`, `generated/`, `components/`, or `authoring/` subfolders.
+4. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), output folder, commercial-use status, and any skipped fonts. Treat a missing local-font license as unknown status, not generation failure.
 
 ## Dependencies
 
-The script uses `opentype.js`. If it is unavailable, the script installs `opentype.js@1.3.4` into a temporary OS directory. It does not modify the target project's `package.json` or workspace dependencies.
+The script uses the bundled `scripts/opentype.js` from `opentype.js@1.3.4`. It does not install dependencies, modify the target project's `package.json`, or assume the target project uses a specific package manager.
