@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand Asset Generator"
+  short_description: "从源图生成并接入品牌图标资产"
+  default_prompt: "Use $brand-asset-generator to generate and wire project-ready web, PWA, and desktop icon assets from a source logo."

@@ -1,10 +1,18 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, signature-svg-generator, solution-design-review, split-pencil-file.",
+  "description": "Personal agent skill collection: brand-asset-generator, doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, signature-svg-generator, solution-design-review, split-pencil-file.",
   "owner": {
     "name": "lencamo"
   },
   "plugins": [
+    {
+      "name": "brand-asset-generator",
+      "description": "Use when generating or wiring project-ready brand image assets from a user-provided logo, mark, or icon source image, including transparent source marks, favicon, PWA icons, apple touch icons, desktop app icons, tray icons, ICO, and ICNS outputs.",
+      "version": "0.1.1",
+      "category": "design",
+      "source": "./skills/brand-asset-generator",
+      "homepage": "https://github.com/lencamo/skills"
+    },
     {
       "name": "doc-feat-desc",
       "description": "Use when the user wants user-facing docs for an implemented feature. Inspect the real implementation first, then write help-center, site-copy, and in-product docs under doc/<requirement-name>.",
