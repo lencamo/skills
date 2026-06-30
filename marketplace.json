@@ -8,7 +8,7 @@
     {
       "name": "brand-asset-generator",
       "description": "Use when generating or wiring project-ready brand image assets from a user-provided logo, mark, or icon source image, including transparent source marks, favicon, PWA icons, apple touch icons, desktop app icons, tray icons, ICO, and ICNS outputs.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "category": "design",
       "source": "./skills/brand-asset-generator",
       "homepage": "https://github.com/lencamo/skills"

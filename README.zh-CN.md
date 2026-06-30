@@ -10,7 +10,7 @@
 
 | Skill                                                                | 适用场景                                                                         | 功能说明                                                                        |
 | :------------------------------------------------------------------- | :------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
-| [`brand-asset-generator`](skills/brand-asset-generator/SKILL.md)     | 需要把源 logo 图片生成通用 web、PWA、桌面应用、托盘、ICO 或 ICNS 资产并接入项目时 | 生成透明 source mark，输出 `web/` 与 `desktop/` 图片资产包，并提供项目放置规则 |
+| [`brand-asset-generator`](skills/brand-asset-generator/SKILL.md)     | 需要把源 logo 图片生成通用 web、PWA、桌面应用、托盘、ICO 或 ICNS 资产并接入项目时 | 生成透明 source mark，输出带背景和形状规则的 `web/` 与 `desktop/` 图片资产包 |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)                     | 已有功能需要补充面向用户的文档时                                                 | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档                         |
 | [`draft-to-project`](skills/draft-to-project/SKILL.md)               | 需要把截图、HTML 草图、本地 `file://` 原型页或设计稿等 UI 草稿落到真实项目页面时 | 复用已有组件和样式，同时让最终实现的布局结构贴近提供的草图                      |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md)               | 需要生成符合仓库约定的提交信息时                                                 | 检测仓库提交规范并产出简短 commit 标题，仅在需要时补充正文或拆分建议            |

@@ -8,7 +8,7 @@ from collections import deque
 from pathlib import Path
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageDraw
 except ImportError:
     print(
         "Error: Pillow is required. Install it with `python3 -m pip install --user pillow`.",
@@ -18,13 +18,15 @@ except ImportError:
 
 
 WEB_PNGS = [
-    ("favicon-16x16.png", 16, False),
-    ("favicon-32x32.png", 32, False),
-    ("favicon-48x48.png", 48, False),
-    ("favicon.png", 64, False),
-    ("icon-192.png", 192, False),
-    ("icon-512.png", 512, False),
-    ("apple-touch-icon.png", 180, True),
+    ("favicon-16x16.png", 16, True, "web", "favicon", 0),
+    ("favicon-32x32.png", 32, True, "web", "favicon", 0),
+    ("favicon-48x48.png", 48, True, "web", "favicon", 0.04),
+    ("favicon.png", 64, True, "web", "favicon", 0.06),
+    ("icon-192.png", 192, True, "web", "web", 0.08),
+    ("icon-512.png", 512, True, "web", "web", 0.08),
+    ("icon-192-maskable.png", 192, True, "app", None, 0),
+    ("icon-512-maskable.png", 512, True, "app", None, 0),
+    ("apple-touch-icon.png", 180, True, "app", None, 0),
 ]
 
 DESKTOP_ICON_SIZES = [16, 24, 32, 48, 64, 96, 128, 256, 512, 1024]
@@ -51,6 +53,26 @@ def parse_fill(value: str) -> float:
     if not 0 < fill <= 1:
         raise argparse.ArgumentTypeError("fill must be greater than 0 and less than or equal to 1")
     return fill
+
+
+def parse_corner_radius(value: str) -> float:
+    try:
+        radius = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("corner radius must be a number between 0 and 0.5") from exc
+    if not 0 <= radius <= 0.5:
+        raise argparse.ArgumentTypeError("corner radius must be greater than or equal to 0 and less than or equal to 0.5")
+    return radius
+
+
+def parse_inset(value: str) -> float:
+    try:
+        inset = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("container inset must be a number between 0 and 0.4") from exc
+    if not 0 <= inset <= 0.4:
+        raise argparse.ArgumentTypeError("container inset must be greater than or equal to 0 and less than or equal to 0.4")
+    return inset
 
 
 def slug_from_path(path: Path) -> str:
@@ -163,6 +185,45 @@ def resize_square(image: Image.Image, size: int, background: tuple[int, int, int
     return with_background(resized, background)
 
 
+def rounded_background(
+    size: int,
+    background: tuple[int, int, int, int],
+    radius_ratio: float,
+    inset_ratio: float = 0,
+) -> Image.Image:
+    inset = max(0, round(size * inset_ratio))
+    radius = max(0, round((size - inset * 2) * radius_ratio))
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    if radius == 0 and inset == 0:
+        canvas.paste(background, (0, 0, size, size))
+        return canvas
+
+    mask = Image.new("L", (size, size), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle((inset, inset, size - 1 - inset, size - 1 - inset), radius=radius, fill=255)
+    canvas.paste(background, (0, 0, size, size))
+    canvas.putalpha(mask)
+    return canvas
+
+
+def resize_icon(
+    image: Image.Image,
+    size: int,
+    background: tuple[int, int, int, int] | None,
+    corner_radius_ratio: float = 0,
+    container_inset_ratio: float = 0,
+) -> Image.Image:
+    inset = max(0, round(size * container_inset_ratio)) if background else 0
+    subject_size = max(1, size - inset * 2)
+    resized = image.convert("RGBA").resize((subject_size, subject_size), Image.Resampling.LANCZOS)
+    if background is None:
+        return resized
+
+    canvas = rounded_background(size, background, corner_radius_ratio, container_inset_ratio)
+    canvas.alpha_composite(resized, (inset, inset))
+    return canvas
+
+
 def should_use_background(default_background: bool, args: argparse.Namespace) -> tuple[int, int, int, int] | None:
     if args.transparent_background:
         return None
@@ -171,10 +232,33 @@ def should_use_background(default_background: bool, args: argparse.Namespace) ->
     return None
 
 
-def save_ico(source: Image.Image, output_path: Path, sizes: list[int], background: tuple[int, int, int, int] | None) -> None:
+def radius_for_kind(kind: str | None, args: argparse.Namespace) -> float:
+    if kind == "favicon":
+        return args.favicon_corner_radius
+    if kind == "web":
+        return args.web_corner_radius
+    return 0
+
+
+def inset_for_kind(kind: str | None, default_inset: float, args: argparse.Namespace) -> float:
+    if kind == "favicon":
+        return args.favicon_container_inset if args.favicon_container_inset is not None else default_inset
+    if kind == "web":
+        return args.web_container_inset
+    return 0
+
+
+def save_ico(
+    source: Image.Image,
+    output_path: Path,
+    sizes: list[int],
+    background: tuple[int, int, int, int] | None,
+    corner_radius_ratio: float = 0,
+    container_inset_ratio: float = 0,
+) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     base_size = max(sizes)
-    base = resize_square(source, base_size, background)
+    base = resize_icon(source, base_size, background, corner_radius_ratio, container_inset_ratio)
     base.save(output_path, format="ICO", sizes=[(size, size) for size in sizes])
 
 
@@ -213,11 +297,19 @@ def build_source(input_path: Path, output_dir: Path, name: str, args: argparse.N
 def build_web(output_dir: Path, mark_app: Image.Image, mark_web: Image.Image, args: argparse.Namespace) -> None:
     web_dir = output_dir / "web"
     web_dir.mkdir(parents=True, exist_ok=True)
-    for filename, size, default_background in WEB_PNGS:
-        source = mark_app if filename == "apple-touch-icon.png" else mark_web
+    for filename, size, default_background, source_kind, radius_kind, default_inset in WEB_PNGS:
+        source = mark_app if source_kind == "app" else mark_web
         background = should_use_background(default_background, args)
-        resize_square(source, size, background).save(web_dir / filename)
-    save_ico(mark_web, web_dir / "favicon.ico", FAVICON_ICO_SIZES, should_use_background(False, args))
+        radius = radius_for_kind(radius_kind, args)
+        inset = inset_for_kind(radius_kind, default_inset, args)
+        resize_icon(source, size, background, radius, inset).save(web_dir / filename)
+    save_ico(
+        mark_web,
+        web_dir / "favicon.ico",
+        FAVICON_ICO_SIZES,
+        should_use_background(True, args),
+        args.favicon_corner_radius,
+    )
 
 
 def build_desktop(output_dir: Path, mark_app: Image.Image, mark_web: Image.Image, args: argparse.Namespace) -> None:
@@ -277,17 +369,28 @@ def validate_outputs(output_dir: Path, profile: str) -> None:
         raise SystemExit("Missing generated output: " + ", ".join(str(path) for path in missing))
 
 
-def print_summary(output_dir: Path, name: str, profile: str, background: tuple[int, int, int, int]) -> None:
+def print_summary(output_dir: Path, name: str, profile: str, args: argparse.Namespace) -> None:
     print(f"output: {output_dir}")
     print("source:")
     print(f"- source/{name}-mark-app.png")
     print(f"- source/{name}-mark-web.png")
     if profile in {"web", "all"}:
         print("web:")
-        for filename, size, default_background in WEB_PNGS:
-            bg = f", background #{background[0]:02x}{background[1]:02x}{background[2]:02x}" if default_background else ", transparent"
-            print(f"- web/{filename}: {size}x{size}{bg}")
-        print("- web/favicon.ico: 16x16, 32x32, 48x48")
+        for filename, size, default_background, _source_kind, radius_kind, default_inset in WEB_PNGS:
+            background = should_use_background(default_background, args)
+            bg = (
+                f", background #{background[0]:02x}{background[1]:02x}{background[2]:02x}"
+                if background
+                else ", transparent"
+            )
+            shape = ", rounded" if background and radius_for_kind(radius_kind, args) > 0 else ", square"
+            inset = inset_for_kind(radius_kind, default_inset, args) if background else 0
+            inset_text = f", inset {inset:g}" if inset else ""
+            print(f"- web/{filename}: {size}x{size}{bg}{shape}{inset_text}")
+        favicon_background = should_use_background(True, args)
+        favicon_shape = "rounded" if favicon_background and args.favicon_corner_radius > 0 else "square"
+        favicon_bg = "background" if favicon_background else "transparent"
+        print(f"- web/favicon.ico: 16x16, 32x32, 48x48, {favicon_bg}, {favicon_shape}")
     if profile in {"desktop", "all"}:
         print("desktop:")
         print("- desktop/icon.icns")
@@ -310,6 +413,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--background", type=parse_hex_color, default=parse_hex_color("#ffffff"))
     parser.add_argument("--web-fill", type=parse_fill, default=0.86)
     parser.add_argument("--app-fill", type=parse_fill, default=0.68)
+    parser.add_argument("--favicon-corner-radius", type=parse_corner_radius, default=0.18)
+    parser.add_argument("--web-corner-radius", type=parse_corner_radius, default=0.22)
+    parser.add_argument("--favicon-container-inset", type=parse_inset)
+    parser.add_argument("--web-container-inset", type=parse_inset, default=0.08)
     parser.add_argument("--background-threshold", type=int, default=28)
     parser.add_argument("--force-background", action="store_true")
     parser.add_argument("--transparent-background", action="store_true")
@@ -351,7 +458,7 @@ def main() -> int:
         )
     make_preview(output_dir, preview_paths)
     validate_outputs(output_dir, args.profile)
-    print_summary(output_dir, name, args.profile, args.background)
+    print_summary(output_dir, name, args.profile, args)
     return 0
 
 
