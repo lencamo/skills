@@ -59,6 +59,7 @@ function parseArgs(argv) {
     'height',
     'font-size',
     'stroke-width',
+    'bold-stroke-width',
     'handwriting-animation',
     'handwriting-fallback',
     'animation-duration-ms'
@@ -105,6 +106,7 @@ Useful options:
   --font-candidate-dir <dir> Legacy Vue candidate directory for --list-fonts. Default: ${DEFAULT_FONT_CANDIDATE_DIR}
   --handwriting-animation true  Legacy flag. Static and animated artifacts are always emitted.
   --handwriting-fallback wipe  Legacy flag. Missing strokes use fallback-wipe animation.
+  --bold-stroke-width <px>       Outline stroke width for bold artifacts. Default: 1.4.
   --animation-duration-ms <ms>  Optional. Defaults to automatic path-length timing.
   --list-fonts               Print available fonts and exit.
 `)
@@ -333,8 +335,12 @@ function outputPaths(variant) {
   const outputDir = path.resolve(rootDir, 'signatures', outputFolderName(variant.text))
   const staticSvg = path.resolve(outputDir, `${variant.id}.svg`)
   const animatedSvg = path.resolve(outputDir, `${variant.id}.animated.svg`)
+  const boldSvg = path.resolve(outputDir, `${variant.id}.bold.svg`)
+  const animatedBoldSvg = path.resolve(outputDir, `${variant.id}.animated.bold.svg`)
   const staticComponent = path.resolve(outputDir, `${variant.component}.vue`)
   const animatedComponent = path.resolve(outputDir, `${variant.component}Animated.vue`)
+  const boldComponent = path.resolve(outputDir, `${variant.component}Bold.vue`)
+  const animatedBoldComponent = path.resolve(outputDir, `${variant.component}AnimatedBold.vue`)
   const authoringGuideComponent = path.resolve(outputDir, `${variant.component}StrokeGuide.vue`)
   const authoringGuide = path.resolve(outputDir, `${variant.id}.stroke-guide.svg`)
   const authoringTemplate = path.resolve(outputDir, `${variant.id}.strokes.template.json`)
@@ -342,8 +348,12 @@ function outputPaths(variant) {
   for (const outputPath of [
     staticSvg,
     animatedSvg,
+    boldSvg,
+    animatedBoldSvg,
     staticComponent,
     animatedComponent,
+    boldComponent,
+    animatedBoldComponent,
     authoringGuideComponent,
     authoringGuide,
     authoringTemplate
@@ -359,8 +369,12 @@ function outputPaths(variant) {
     legacyFontDir: path.join(rootDir, 'signatures/fonts'),
     staticSvg,
     animatedSvg,
+    boldSvg,
+    animatedBoldSvg,
     staticComponent,
     animatedComponent,
+    boldComponent,
+    animatedBoldComponent,
     authoringGuideComponent,
     authoringGuide,
     authoringTemplate
@@ -518,6 +532,60 @@ function normalizePath(font, text, fontSize) {
 function parseViewBox(viewBox) {
   const [, , width, height] = viewBox.split(/\s+/).map(Number)
   return { width, height }
+}
+
+function formatDimension(value) {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Expected a finite SVG dimension, received: ${value}`)
+  }
+  return Number.isInteger(value) ? String(value) : String(Number(value.toFixed(3)))
+}
+
+function displayDimensions(svg, variant) {
+  const viewBox = parseViewBox(svg.viewBox)
+  const width = variant.width
+  const height = variant.height
+
+  if (width !== undefined && height === undefined) {
+    return {
+      width: formatDimension(width),
+      height: formatDimension((width * viewBox.height) / viewBox.width)
+    }
+  }
+
+  if (width === undefined && height !== undefined) {
+    return {
+      width: formatDimension((height * viewBox.width) / viewBox.height),
+      height: formatDimension(height)
+    }
+  }
+
+  return {
+    width: formatDimension(width ?? viewBox.width),
+    height: formatDimension(height ?? viewBox.height)
+  }
+}
+
+function svgSizingAttributes(svg, variant) {
+  const dimensions = displayDimensions(svg, variant)
+  return `width="${dimensions.width}" height="${dimensions.height}" viewBox="${svg.viewBox}"`
+}
+
+function boldPathAttributes(variant) {
+  const strokeWidth = formatDimension(variant.boldStrokeWidth)
+  return `stroke="currentColor" stroke-width="${strokeWidth}" stroke-linejoin="round" stroke-linecap="round" paint-order="stroke fill"`
+}
+
+function boldShapeStyles(className, variant) {
+  const strokeWidth = formatDimension(variant.boldStrokeWidth)
+  return `    .${className}__shape {
+      fill: currentColor;
+      stroke: currentColor;
+      stroke-width: ${strokeWidth};
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      paint-order: stroke fill;
+    }`
 }
 
 function normalizeHandwritingStroke(input, fallbackStrokeWidth) {
@@ -755,9 +823,20 @@ function staticSourceSvg(svg, variant) {
   const title = escapeXmlText(`${variant.text} ${variant.label} signature`)
   const pathData = escapeXmlAttribute(svg.d)
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${svg.viewBox}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)}>
   <title>${title}</title>
   <path d="${pathData}" fill="currentColor" />
+</svg>
+`
+}
+
+function staticBoldSourceSvg(svg, variant) {
+  const title = escapeXmlText(`${variant.text} ${variant.label} bold signature`)
+  const pathData = escapeXmlAttribute(svg.d)
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)}>
+  <title>${title}</title>
+  <path d="${pathData}" fill="currentColor" ${boldPathAttributes(variant)} />
 </svg>
 `
 }
@@ -770,7 +849,7 @@ function animatedSourceSvg(svg, variant) {
   const mask = maskMarkup(className, svg, variant)
   const finalRevealBegin = secondsValue(mask.totalDuration)
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${svg.viewBox}" data-handwriting-mode="${renderMode}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}">
   <title>${title}</title>
 ${mask.markup}
   <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
@@ -796,11 +875,43 @@ ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
 `
 }
 
+function animatedBoldSourceSvg(svg, variant) {
+  const title = escapeXmlText(`${variant.text} ${variant.label} bold signature`)
+  const pathData = escapeXmlAttribute(svg.d)
+  const renderMode = animatedRenderMode(variant)
+  const className = `signature-svg-${variant.id}-bold`
+  const mask = maskMarkup(className, svg, variant)
+  const finalRevealBegin = secondsValue(mask.totalDuration)
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}">
+  <title>${title}</title>
+${mask.markup}
+  <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
+  <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
+    <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
+  </path>
+  <style>
+${boldShapeStyles(className, variant)}
+${mask.mode === 'path' ? pathMaskStyles(className) : ''}
+    @media (prefers-reduced-motion: reduce) {
+${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
+      .${className}__shape--reveal {
+        display: none;
+      }
+      .${className}__shape--final {
+        opacity: 1;
+      }
+    }
+  </style>
+</svg>
+`
+}
+
 function staticVueComponent(svg, variant) {
   const className = `signature-svg-${variant.id}`
   const pathData = escapeXmlAttribute(svg.d)
   return `<template>
-  <svg class="${className}" viewBox="${svg.viewBox}" aria-hidden="true">
+  <svg class="${className}" ${svgSizingAttributes(svg, variant)} aria-hidden="true">
     <path class="${className}__shape" d="${pathData}" fill="currentColor" />
   </svg>
 </template>
@@ -808,8 +919,6 @@ function staticVueComponent(svg, variant) {
 <style scoped>
 .${className} {
   display: block;
-  width: ${variant.width}px;
-  height: ${variant.height}px;
   color: currentColor;
   overflow: visible;
 }
@@ -817,6 +926,27 @@ function staticVueComponent(svg, variant) {
 .${className}__shape {
   fill: currentColor;
 }
+</style>
+`
+}
+
+function staticBoldVueComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}-bold`
+  const pathData = escapeXmlAttribute(svg.d)
+  return `<template>
+  <svg class="${className}" ${svgSizingAttributes(svg, variant)} aria-hidden="true">
+    <path class="${className}__shape" d="${pathData}" fill="currentColor" />
+  </svg>
+</template>
+
+<style scoped>
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+${boldShapeStyles(className, variant).trimStart()}
 </style>
 `
 }
@@ -829,7 +959,7 @@ function animatedVueComponent(svg, variant) {
   const finalRevealBegin = secondsValue(mask.totalDuration)
 
   return `<template>
-  <svg class="${className}" viewBox="${svg.viewBox}" data-handwriting-mode="${renderMode}" aria-hidden="true">
+  <svg class="${className}" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
 ${mask.markup}
     <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
     <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
@@ -841,8 +971,6 @@ ${mask.markup}
 <style scoped>
 .${className} {
   display: block;
-  width: ${variant.width}px;
-  height: ${variant.height}px;
   color: currentColor;
   overflow: visible;
 }
@@ -868,11 +996,54 @@ ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
 `
 }
 
+function animatedBoldVueComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}-bold`
+  const pathData = escapeXmlAttribute(svg.d)
+  const renderMode = animatedRenderMode(variant)
+  const mask = maskMarkup(className, svg, variant)
+  const finalRevealBegin = secondsValue(mask.totalDuration)
+
+  return `<template>
+  <svg class="${className}" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
+${mask.markup}
+    <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
+    <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
+      <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
+    </path>
+  </svg>
+</template>
+
+<style scoped>
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+${boldShapeStyles(className, variant).trimStart()}
+
+${mask.mode === 'path' ? pathMaskStyles(className) : ''}
+
+@media (prefers-reduced-motion: reduce) {
+${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
+
+  .${className}__shape--reveal {
+    display: none;
+  }
+
+  .${className}__shape--final {
+    opacity: 1;
+  }
+}
+</style>
+`
+}
+
 function authoringGuideSvg(svg, variant) {
   const title = escapeXmlText(`${variant.text} handwriting stroke guide`)
   const pathData = escapeXmlAttribute(svg.d)
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${svg.viewBox}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)}>
   <title>${title}</title>
   <path class="signature-authoring__fill" d="${pathData}" />
   <path class="signature-authoring__outline" d="${pathData}" />
@@ -899,7 +1070,7 @@ function authoringGuideVueComponent(svg, variant) {
   const pathData = escapeXmlAttribute(svg.d)
 
   return `<template>
-  <svg class="${className}" viewBox="${svg.viewBox}" aria-hidden="true">
+  <svg class="${className}" ${svgSizingAttributes(svg, variant)} aria-hidden="true">
     <path class="signature-authoring__fill" d="${pathData}" />
     <path class="signature-authoring__outline" d="${pathData}" />
   </svg>
@@ -908,8 +1079,6 @@ function authoringGuideVueComponent(svg, variant) {
 <style scoped>
 .${className} {
   display: block;
-  width: ${variant.width}px;
-  height: ${variant.height}px;
   color: currentColor;
   overflow: visible;
 }
@@ -977,10 +1146,11 @@ function normalizeVariant(input, defaults = {}) {
     bundledFontDir: input.bundledFontDir ?? defaults.bundledFontDir ?? DEFAULT_BUNDLED_FONT_DIR,
     fontCandidateDir:
       input.fontCandidateDir ?? defaults.fontCandidateDir ?? DEFAULT_FONT_CANDIDATE_DIR,
-    width: Number(input.width ?? 100),
-    height: Number(input.height ?? 24),
+    width: optionalNumber(input.width),
+    height: optionalNumber(input.height),
     fontSize: Number(input.fontSize ?? 48),
     strokeWidth: Number(input.strokeWidth ?? 1.4),
+    boldStrokeWidth: Number(input.boldStrokeWidth ?? input['bold-stroke-width'] ?? 1.4),
     handwritingAnimation: toBoolean(input.handwritingAnimation ?? input['handwriting-animation']),
     handwritingStrokes: input.handwritingStrokes ?? input.handwritingPaths,
     handwritingFallback: String(
@@ -1021,6 +1191,7 @@ function loadJobs(args) {
     height: args.height,
     fontSize: args['font-size'],
     strokeWidth: args['stroke-width'],
+    boldStrokeWidth: args['bold-stroke-width'],
     handwritingAnimation: args['handwriting-animation'],
     handwritingFallback: args['handwriting-fallback'],
     animationDurationMs: args['animation-duration-ms']
@@ -1059,6 +1230,9 @@ function validateVariant(variant) {
   if (!['none', 'wipe'].includes(variant.handwritingFallback)) {
     throw new Error(`Variant ${variant.id} handwritingFallback must be "none" or "wipe".`)
   }
+  if (!Number.isFinite(variant.boldStrokeWidth) || variant.boldStrokeWidth < 0) {
+    throw new Error(`Variant ${variant.id} boldStrokeWidth must be a finite number >= 0.`)
+  }
 }
 
 async function main() {
@@ -1095,13 +1269,17 @@ async function main() {
     fs.mkdirSync(paths.outputDir, { recursive: true })
     fs.writeFileSync(paths.staticSvg, staticSourceSvg(svg, variant))
     fs.writeFileSync(paths.animatedSvg, animatedSourceSvg(svg, variant))
+    fs.writeFileSync(paths.boldSvg, staticBoldSourceSvg(svg, variant))
+    fs.writeFileSync(paths.animatedBoldSvg, animatedBoldSourceSvg(svg, variant))
     fs.writeFileSync(paths.staticComponent, staticVueComponent(svg, variant))
     fs.writeFileSync(paths.animatedComponent, animatedVueComponent(svg, variant))
+    fs.writeFileSync(paths.boldComponent, staticBoldVueComponent(svg, variant))
+    fs.writeFileSync(paths.animatedBoldComponent, animatedBoldVueComponent(svg, variant))
     fs.writeFileSync(paths.authoringGuide, authoringGuideSvg(svg, variant))
     fs.writeFileSync(paths.authoringGuideComponent, authoringGuideVueComponent(svg, variant))
 
     const messages = [
-      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; animated svg: ${paths.animatedSvg}; component: ${paths.staticComponent}; animated component: ${paths.animatedComponent}; stroke guide: ${paths.authoringGuide}; stroke guide component: ${paths.authoringGuideComponent})`
+      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; animated svg: ${paths.animatedSvg}; bold svg: ${paths.boldSvg}; animated bold svg: ${paths.animatedBoldSvg}; component: ${paths.staticComponent}; animated component: ${paths.animatedComponent}; bold component: ${paths.boldComponent}; animated bold component: ${paths.animatedBoldComponent}; stroke guide: ${paths.authoringGuide}; stroke guide component: ${paths.authoringGuideComponent})`
     ]
 
     const renderMode = animatedRenderMode(variant)

@@ -80,10 +80,23 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --width 106 \
   --height 27 \
   --font-size 52 \
-  --stroke-width 1.65
+  --bold-stroke-width 1.4
 ```
 
 Use `--font <file>` instead of `--font-name <name>` for an explicit local font path.
+
+Generated SVG files and Vue components use the same root `width`, `height`, and `viewBox`.
+If `width` and `height` are omitted, display dimensions are derived from the generated `viewBox`.
+If only one dimension is provided, the other is derived proportionally from the `viewBox`.
+If both dimensions are provided, both SVG and Vue artifacts use those exact display dimensions.
+
+`fontSize` controls the generated font outline path. The legacy `strokeWidth` / `--stroke-width`
+input does not change static glyph thickness; handwriting mask strokes should specify their own
+`strokeWidth` inside `handwritingStrokes`.
+
+The script also emits bold SVG and Vue artifacts. Bold artifacts use the same font outline path
+with an additional same-color outline stroke. `boldStrokeWidth` / `--bold-stroke-width` controls
+that outline stroke and defaults to `1.4`.
 
 ## Batch Generation
 
@@ -101,7 +114,7 @@ Use a JSON config when generating or comparing multiple variants:
       "width": 106,
       "height": 27,
       "fontSize": 52,
-      "strokeWidth": 1.65,
+      "boldStrokeWidth": 1.4,
       "handwritingStrokes": []
     }
   ]
@@ -126,7 +139,7 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --component-name MiraChenSignatureCaveat
 ```
 
-Generated output always includes a static SVG, animated SVG, static Vue component, animated Vue component, stroke guide SVG, and stroke guide Vue component.
+Generated output always includes static SVG, animated SVG, bold SVG, animated bold SVG, static Vue component, animated Vue component, bold Vue component, animated bold Vue component, stroke guide SVG, and stroke guide Vue component.
 
 Animated mode keeps the font outline as the final shape. Best-quality signature replay requires `handwritingStrokes`: centerline paths drawn in human writing order. The script uses those strokes as a mask timeline and keeps a final complete outline layer for stability.
 
@@ -182,8 +195,12 @@ signatures/
 └── ting-note/
     ├── tingnote-caveat.svg
     ├── tingnote-caveat.animated.svg
+    ├── tingnote-caveat.bold.svg
+    ├── tingnote-caveat.animated.bold.svg
     ├── TingNoteSignatureCaveat.vue
     ├── TingNoteSignatureCaveatAnimated.vue
+    ├── TingNoteSignatureCaveatBold.vue
+    ├── TingNoteSignatureCaveatAnimatedBold.vue
     ├── TingNoteSignatureCaveatStrokeGuide.vue
     ├── tingnote-caveat.stroke-guide.svg
     └── tingnote-caveat.strokes.template.json
@@ -193,8 +210,12 @@ Each generated variant must keep together:
 
 - static SVG
 - animated SVG
+- bold SVG
+- animated bold SVG
 - static Vue component
 - animated Vue component
+- bold Vue component
+- animated bold Vue component
 - stroke guide SVG
 - stroke guide Vue component
 - stroke template when `handwritingStrokes` are not provided
@@ -211,10 +232,11 @@ For final production use, keep only the selected SVG/component artifacts. Do not
 
 Before claiming completion:
 
-1. Confirm the expected static SVG, animated SVG, static Vue component, animated Vue component, stroke guide SVG, and stroke guide Vue component exist.
+1. Confirm the expected static SVG, animated SVG, bold SVG, animated bold SVG, static Vue component, animated Vue component, bold Vue component, animated bold Vue component, stroke guide SVG, and stroke guide Vue component exist.
 2. Confirm generated files are non-empty and contain real SVG path data.
-3. Confirm the output folder is flat and contains no copied `fonts/`, `generated/`, `components/`, or `authoring/` subfolders.
-4. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), output folder, commercial-use status, and any skipped fonts. Treat a missing local-font license as unknown status, not generation failure.
+3. Confirm bold artifacts contain same-color outline stroke styling and normal artifacts do not.
+4. Confirm the output folder is flat and contains no copied `fonts/`, `generated/`, `components/`, or `authoring/` subfolders.
+5. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), output folder, commercial-use status, and any skipped fonts. Treat a missing local-font license as unknown status, not generation failure.
 
 ## Dependencies
 
