@@ -48,7 +48,7 @@
     {
       "name": "signature-svg-generator",
       "description": "Use when generating reusable font-based signature assets. Emits static and animated SVG/Vue artifacts under signatures/<text-slug>/, including personal signatures, handwritten wordmarks, font-derived paths, and mask-based handwriting animations.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "category": "design",
       "source": "./skills/signature-svg-generator",
       "homepage": "https://github.com/lencamo/skills"

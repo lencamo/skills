@@ -2,7 +2,7 @@
 name: signature-svg-generator
 description: Use when generating reusable signature-style SVG assets or Vue components from font files, including personal signatures, handwritten wordmarks, font-derived SVG paths, or mask-based handwriting animations. Use only when the user wants font-based output, not general logo design.
 metadata:
-  version: '0.2.0'
+  version: '0.3.0'
 ---
 
 # Signature SVG Generator
@@ -139,13 +139,27 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --component-name MiraChenSignatureCaveat
 ```
 
-Generated output always includes static SVG, animated SVG, bold SVG, animated bold SVG, static Vue component, animated Vue component, bold Vue component, animated bold Vue component, stroke guide SVG, and stroke guide Vue component.
+Generated output always includes static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, stroke guide SVG, and stroke guide Vue component.
 
-Animated mode keeps the font outline as the final shape. Best-quality signature replay requires `handwritingStrokes`: centerline paths drawn in human writing order. The script uses those strokes as a mask timeline and keeps a final complete outline layer for stability.
+Best-quality signature replay requires `handwritingStrokes`: centerline paths drawn in human writing order. The script uses those strokes as a mask timeline for the `Handwriting` outputs.
 
 The script always writes a flat stroke guide SVG and matching Vue component beside the generated assets.
+The script also writes a flat stroke authoring HTML page beside the generated assets. Open
+`<id>.stroke-author.html` in a browser to draw centerline strokes directly over the guide and
+export `handwritingStrokes` JSON.
+The authoring page uses an independent editing scale, defaulting to 4x, so small production
+signatures are easier to trace without changing exported SVG/Vue dimensions or stroke coordinates.
+For conversational use, tell users to click `Copy for Agent` after drawing and paste the copied
+message back into the chat. They should not need to know where a batch config lives or how to merge
+`handwritingStrokes` manually.
 
-Without `handwritingStrokes`, the animated SVG and Vue component use `data-handwriting-mode="fallback-wipe"` and the script also writes a flat stroke template beside the generated assets.
+The `*.animated.svg`, `*.animated.bold.svg`, `*Animated.vue`, and `*AnimatedBold.vue` files are reserved for the fallback-wipe preview and stay `data-handwriting-mode="fallback-wipe"` even after real strokes are provided.
+
+When `handwritingStrokes` are provided, the script additionally writes `*.handwriting.svg`, `*.handwriting.bold.svg`, `*Handwriting.vue`, and `*HandwritingBold.vue` as the true stroke-timeline animation outputs. Use these `Handwriting` artifacts for the final production signature replay.
+
+`Handwriting` outputs intentionally do not add a final unmasked outline layer. The animation stays on the stroke mask result at the end, so it will not flash from a thinner mask-revealed shape to the complete glyph outline. The fallback-wipe `Animated` outputs keep their final outline layer.
+
+Without `handwritingStrokes`, the script writes only the fallback-wipe animated artifacts and also writes a flat stroke template beside the generated assets.
 
 Font outlines do not contain real pen stroke order. For true signature replay from beginning to end, draw or provide `handwritingStrokes`. The legacy `handwritingPaths` field is accepted as an alias, but prefer `handwritingStrokes`.
 
@@ -181,10 +195,14 @@ For high fidelity, provide `handwritingStrokes` as an array on the config varian
 Recommended authoring workflow:
 
 1. Generate once with no strokes.
-2. Open `signatures/<signature-text-slug>/<id>.stroke-guide.svg`.
-3. Draw centerline strokes over the glyphs in natural writing order.
-4. Paste the exported stroke `d` values into `handwritingStrokes`.
-5. Regenerate and verify the SVG/Vue animation.
+2. Open `signatures/<signature-text-slug>/<id>.stroke-author.html`.
+3. Draw centerline strokes over the glyphs in natural writing order. Each pointer down/up gesture becomes one `handwritingStrokes` item.
+4. Use the author scale slider only for editing comfort; it does not change exported coordinates.
+5. Use the stroke width slider so the mask stroke covers the glyph body without revealing adjacent strokes too early.
+6. Click `Copy for Agent` and paste the copied handoff message back into the conversation.
+7. The agent merges the included `handwritingStrokes` into the matching signature config, regenerates, and verifies the new `Handwriting` SVG/Vue animation while preserving the fallback-wipe `Animated` files.
+
+Use `stroke-guide.svg` only when authoring in an external vector tool such as Inkscape, Figma, or Illustrator.
 
 ## Output Contract
 
@@ -195,29 +213,39 @@ signatures/
 └── ting-note/
     ├── tingnote-caveat.svg
     ├── tingnote-caveat.animated.svg
+    ├── tingnote-caveat.handwriting.svg
     ├── tingnote-caveat.bold.svg
     ├── tingnote-caveat.animated.bold.svg
+    ├── tingnote-caveat.handwriting.bold.svg
     ├── TingNoteSignatureCaveat.vue
     ├── TingNoteSignatureCaveatAnimated.vue
+    ├── TingNoteSignatureCaveatHandwriting.vue
     ├── TingNoteSignatureCaveatBold.vue
     ├── TingNoteSignatureCaveatAnimatedBold.vue
+    ├── TingNoteSignatureCaveatHandwritingBold.vue
     ├── TingNoteSignatureCaveatStrokeGuide.vue
     ├── tingnote-caveat.stroke-guide.svg
+    ├── tingnote-caveat.stroke-author.html
     └── tingnote-caveat.strokes.template.json
 ```
 
 Each generated variant must keep together:
 
 - static SVG
-- animated SVG
+- fallback-wipe animated SVG
+- handwriting SVG when `handwritingStrokes` are provided
 - bold SVG
-- animated bold SVG
+- fallback-wipe animated bold SVG
+- handwriting bold SVG when `handwritingStrokes` are provided
 - static Vue component
-- animated Vue component
+- fallback-wipe animated Vue component
+- handwriting Vue component when `handwritingStrokes` are provided
 - bold Vue component
-- animated bold Vue component
+- fallback-wipe animated bold Vue component
+- handwriting bold Vue component when `handwritingStrokes` are provided
 - stroke guide SVG
 - stroke guide Vue component
+- stroke authoring HTML
 - stroke template when `handwritingStrokes` are not provided
 
 Do not copy font files or license files into the output folder.
@@ -232,11 +260,12 @@ For final production use, keep only the selected SVG/component artifacts. Do not
 
 Before claiming completion:
 
-1. Confirm the expected static SVG, animated SVG, bold SVG, animated bold SVG, static Vue component, animated Vue component, bold Vue component, animated bold Vue component, stroke guide SVG, and stroke guide Vue component exist.
+1. Confirm the expected static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, stroke guide SVG, stroke guide Vue component, and stroke authoring HTML exist. When `handwritingStrokes` are provided, also confirm the `Handwriting` SVG/Vue artifacts exist.
 2. Confirm generated files are non-empty and contain real SVG path data.
 3. Confirm bold artifacts contain same-color outline stroke styling and normal artifacts do not.
-4. Confirm the output folder is flat and contains no copied `fonts/`, `generated/`, `components/`, or `authoring/` subfolders.
-5. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), output folder, commercial-use status, and any skipped fonts. Treat a missing local-font license as unknown status, not generation failure.
+4. Confirm the stroke authoring HTML contains the guide path, author scale control, and can export `handwritingStrokes`.
+5. Confirm the output folder is flat and contains no copied `fonts/`, `generated/`, `components/`, or `authoring/` subfolders.
+6. Report the used font path, source (`explicit`, `project`, `bundled`, or `downloaded`), output folder, commercial-use status, and any skipped fonts. Treat a missing local-font license as unknown status, not generation failure.
 
 ## Dependencies
 

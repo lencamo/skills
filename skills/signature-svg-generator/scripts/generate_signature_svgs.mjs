@@ -335,27 +335,37 @@ function outputPaths(variant) {
   const outputDir = path.resolve(rootDir, 'signatures', outputFolderName(variant.text))
   const staticSvg = path.resolve(outputDir, `${variant.id}.svg`)
   const animatedSvg = path.resolve(outputDir, `${variant.id}.animated.svg`)
+  const handwritingSvg = path.resolve(outputDir, `${variant.id}.handwriting.svg`)
   const boldSvg = path.resolve(outputDir, `${variant.id}.bold.svg`)
   const animatedBoldSvg = path.resolve(outputDir, `${variant.id}.animated.bold.svg`)
+  const handwritingBoldSvg = path.resolve(outputDir, `${variant.id}.handwriting.bold.svg`)
   const staticComponent = path.resolve(outputDir, `${variant.component}.vue`)
   const animatedComponent = path.resolve(outputDir, `${variant.component}Animated.vue`)
+  const handwritingComponent = path.resolve(outputDir, `${variant.component}Handwriting.vue`)
   const boldComponent = path.resolve(outputDir, `${variant.component}Bold.vue`)
   const animatedBoldComponent = path.resolve(outputDir, `${variant.component}AnimatedBold.vue`)
+  const handwritingBoldComponent = path.resolve(outputDir, `${variant.component}HandwritingBold.vue`)
   const authoringGuideComponent = path.resolve(outputDir, `${variant.component}StrokeGuide.vue`)
   const authoringGuide = path.resolve(outputDir, `${variant.id}.stroke-guide.svg`)
+  const strokeAuthor = path.resolve(outputDir, `${variant.id}.stroke-author.html`)
   const authoringTemplate = path.resolve(outputDir, `${variant.id}.strokes.template.json`)
 
   for (const outputPath of [
     staticSvg,
     animatedSvg,
+    handwritingSvg,
     boldSvg,
     animatedBoldSvg,
+    handwritingBoldSvg,
     staticComponent,
     animatedComponent,
+    handwritingComponent,
     boldComponent,
     animatedBoldComponent,
+    handwritingBoldComponent,
     authoringGuideComponent,
     authoringGuide,
+    strokeAuthor,
     authoringTemplate
   ]) {
     if (path.dirname(outputPath) !== outputDir) {
@@ -369,14 +379,19 @@ function outputPaths(variant) {
     legacyFontDir: path.join(rootDir, 'signatures/fonts'),
     staticSvg,
     animatedSvg,
+    handwritingSvg,
     boldSvg,
     animatedBoldSvg,
+    handwritingBoldSvg,
     staticComponent,
     animatedComponent,
+    handwritingComponent,
     boldComponent,
     animatedBoldComponent,
+    handwritingBoldComponent,
     authoringGuideComponent,
     authoringGuide,
+    strokeAuthor,
     authoringTemplate
   }
 }
@@ -841,6 +856,46 @@ function staticBoldSourceSvg(svg, variant) {
 `
 }
 
+function shouldRenderFinalLayer(mask) {
+  return mask.mode !== 'path'
+}
+
+function svgFinalLayerMarkup(className, pathData, finalRevealBegin, mask) {
+  if (!shouldRenderFinalLayer(mask)) {
+    return ''
+  }
+
+  return `  <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
+    <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
+  </path>
+`
+}
+
+function vueFinalLayerMarkup(className, pathData, finalRevealBegin, mask) {
+  if (!shouldRenderFinalLayer(mask)) {
+    return ''
+  }
+
+  return `    <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
+      <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
+    </path>
+`
+}
+
+function finalLayerReducedMotionStyles(className, mask) {
+  if (!shouldRenderFinalLayer(mask)) {
+    return ''
+  }
+
+  return `      .${className}__shape--reveal {
+        display: none;
+      }
+      .${className}__shape--final {
+        opacity: 1;
+      }
+`
+}
+
 function animatedSourceSvg(svg, variant) {
   const title = escapeXmlText(`${variant.text} ${variant.label} signature`)
   const pathData = escapeXmlAttribute(svg.d)
@@ -848,28 +903,21 @@ function animatedSourceSvg(svg, variant) {
   const className = `signature-svg-${variant.id}`
   const mask = maskMarkup(className, svg, variant)
   const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = svgFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
 
   return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}">
   <title>${title}</title>
 ${mask.markup}
   <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
-  <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
-    <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
-  </path>
-  <style>
+${finalLayer}  <style>
     .${className}__shape {
       fill: currentColor;
     }
 ${mask.mode === 'path' ? pathMaskStyles(className) : ''}
     @media (prefers-reduced-motion: reduce) {
 ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
-      .${className}__shape--reveal {
-        display: none;
-      }
-      .${className}__shape--final {
-        opacity: 1;
-      }
-    }
+${finalReducedMotionStyles}    }
   </style>
 </svg>
 `
@@ -882,26 +930,19 @@ function animatedBoldSourceSvg(svg, variant) {
   const className = `signature-svg-${variant.id}-bold`
   const mask = maskMarkup(className, svg, variant)
   const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = svgFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
 
   return `<svg xmlns="http://www.w3.org/2000/svg" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}">
   <title>${title}</title>
 ${mask.markup}
   <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
-  <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
-    <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
-  </path>
-  <style>
+${finalLayer}  <style>
 ${boldShapeStyles(className, variant)}
 ${mask.mode === 'path' ? pathMaskStyles(className) : ''}
     @media (prefers-reduced-motion: reduce) {
 ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
-      .${className}__shape--reveal {
-        display: none;
-      }
-      .${className}__shape--final {
-        opacity: 1;
-      }
-    }
+${finalReducedMotionStyles}    }
   </style>
 </svg>
 `
@@ -957,15 +998,14 @@ function animatedVueComponent(svg, variant) {
   const renderMode = animatedRenderMode(variant)
   const mask = maskMarkup(className, svg, variant)
   const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = vueFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
 
   return `<template>
   <svg class="${className}" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
 ${mask.markup}
     <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
-    <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
-      <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
-    </path>
-  </svg>
+${finalLayer}  </svg>
 </template>
 
 <style scoped>
@@ -984,14 +1024,7 @@ ${mask.mode === 'path' ? pathMaskStyles(className) : ''}
 @media (prefers-reduced-motion: reduce) {
 ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
 
-  .${className}__shape--reveal {
-    display: none;
-  }
-
-  .${className}__shape--final {
-    opacity: 1;
-  }
-}
+${finalReducedMotionStyles}}
 </style>
 `
 }
@@ -1002,15 +1035,14 @@ function animatedBoldVueComponent(svg, variant) {
   const renderMode = animatedRenderMode(variant)
   const mask = maskMarkup(className, svg, variant)
   const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = vueFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
 
   return `<template>
   <svg class="${className}" ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
 ${mask.markup}
     <path class="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask="url(#${mask.id})" />
-    <path class="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
-      <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
-    </path>
-  </svg>
+${finalLayer}  </svg>
 </template>
 
 <style scoped>
@@ -1027,14 +1059,7 @@ ${mask.mode === 'path' ? pathMaskStyles(className) : ''}
 @media (prefers-reduced-motion: reduce) {
 ${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
 
-  .${className}__shape--reveal {
-    display: none;
-  }
-
-  .${className}__shape--final {
-    opacity: 1;
-  }
-}
+${finalReducedMotionStyles}}
 </style>
 `
 }
@@ -1097,6 +1122,419 @@ function authoringGuideVueComponent(svg, variant) {
   opacity: 0.7;
 }
 </style>
+`
+}
+
+function strokeAuthorHtml(svg, variant) {
+  const title = escapeXmlText(`${variant.text} ${variant.label} stroke author`)
+  const pathData = escapeXmlAttribute(svg.d)
+  const dimensions = displayDimensions(svg, variant)
+  const { width, height } = parseViewBox(svg.viewBox)
+  const defaultAuthorScale = 4
+  const authorBaseWidth = Math.max(Number(dimensions.width), width)
+  const authorStageWidth = Math.round(authorBaseWidth * defaultAuthorScale)
+  const defaultStrokeWidth = Math.max(8, Math.round(height * 0.16))
+  const signatureRequest = {
+    id: variant.id,
+    component: variant.component,
+    text: variant.text,
+    label: variant.label,
+    fontName: variant.fontName,
+    font: variant.font,
+    width: variant.width,
+    height: variant.height,
+    fontSize: variant.fontSize,
+    boldStrokeWidth: variant.boldStrokeWidth
+  }
+  const initialOutput = escapeXmlText(
+    `请继续生成这个签名动画。\n\n我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG 和 Vue 组件，并保留 fallback-wipe Animated 版本。\n\n${JSON.stringify(
+      {
+        ...signatureRequest,
+        handwritingStrokes: []
+      },
+      null,
+      2
+    )}`
+  )
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f7f9;
+      color: #17202a;
+      --author-scale: ${defaultAuthorScale};
+      --author-stage-width: ${authorStageWidth}px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    header,
+    footer {
+      padding: 16px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #d7dce2;
+    }
+    footer {
+      border-top: 1px solid #d7dce2;
+      border-bottom: 0;
+      color: #5c6875;
+      font-size: 13px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 650;
+    }
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 16px;
+      padding: 16px;
+    }
+    .stage-wrap {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #ffffff;
+      border: 1px solid #d7dce2;
+      border-radius: 8px;
+      overflow: auto;
+    }
+    #stage {
+      width: min(100%, var(--author-stage-width));
+      height: auto;
+      touch-action: none;
+      user-select: none;
+      background: #ffffff;
+      border: 1px dashed #b8c1cc;
+      border-radius: 6px;
+      cursor: crosshair;
+    }
+    .guide-fill {
+      fill: currentColor;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+    .guide-outline {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 0.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.38;
+      pointer-events: none;
+    }
+    .draw-path,
+    .preview-path {
+      fill: none;
+      stroke: #0f766e;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .preview-path {
+      stroke: #dc2626;
+      stroke-dasharray: var(--path-length) var(--path-length);
+      stroke-dashoffset: var(--path-length);
+      animation: draw-preview var(--duration) ease both;
+      animation-delay: var(--delay);
+    }
+    @keyframes draw-preview {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    aside {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .panel {
+      padding: 14px;
+      background: #ffffff;
+      border: 1px solid #d7dce2;
+      border-radius: 8px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      border: 1px solid #b8c1cc;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #17202a;
+      padding: 8px 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #f1f4f7;
+    }
+    label {
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      color: #3c4652;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      resize: vertical;
+      border: 1px solid #b8c1cc;
+      border-radius: 6px;
+      padding: 10px;
+      font: 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      color: #17202a;
+      background: #fbfcfd;
+    }
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>${title}</h1>
+  </header>
+  <main>
+    <section class="stage-wrap">
+      <svg id="stage" width="${dimensions.width}" height="${dimensions.height}" viewBox="${svg.viewBox}" aria-label="${title}">
+        <path class="guide-fill" d="${pathData}"></path>
+        <path class="guide-outline" d="${pathData}"></path>
+        <g id="drawn-strokes"></g>
+        <g id="preview-strokes"></g>
+      </svg>
+    </section>
+    <aside>
+      <section class="panel">
+        <label>
+          Author scale: <span id="author-scale-value">${defaultAuthorScale}x</span>
+          <input id="author-scale" type="range" min="1" max="8" step="0.5" value="${defaultAuthorScale}">
+        </label>
+      </section>
+      <section class="panel">
+        <label>
+          Stroke width: <span id="stroke-width-value">${defaultStrokeWidth}</span>
+          <input id="stroke-width" type="range" min="2" max="${Math.max(32, Math.round(height))}" step="1" value="${defaultStrokeWidth}">
+        </label>
+      </section>
+      <section class="panel controls">
+        <button id="undo" type="button">Undo</button>
+        <button id="clear" type="button">Clear</button>
+        <button id="play" type="button">Play</button>
+        <button id="export" type="button">Update Handoff</button>
+        <button id="copy-for-agent" type="button">Copy for Agent</button>
+        <button id="copy-output" type="button">Copy Text</button>
+      </section>
+      <section class="panel">
+        <textarea id="output" spellcheck="false">${initialOutput}</textarea>
+      </section>
+    </aside>
+  </main>
+  <footer>Draw each natural pen stroke from start to end. Each pointer down/up gesture becomes one handwritingStrokes item.</footer>
+  <script>
+    const viewBox = { x: 0, y: 0, width: ${width}, height: ${height} };
+    const authorBaseWidth = ${authorBaseWidth};
+    const signatureRequest = ${JSON.stringify(signatureRequest)};
+    const stage = document.getElementById('stage');
+    const drawnStrokes = document.getElementById('drawn-strokes');
+    const previewStrokes = document.getElementById('preview-strokes');
+    const authorScaleInput = document.getElementById('author-scale');
+    const authorScaleValue = document.getElementById('author-scale-value');
+    const strokeWidthInput = document.getElementById('stroke-width');
+    const strokeWidthValue = document.getElementById('stroke-width-value');
+    const output = document.getElementById('output');
+    const strokes = [];
+    let current = null;
+
+    function formatNumber(value) {
+      return Number(value.toFixed(2)).toString();
+    }
+
+    function setAuthorScale() {
+      const scale = Number(authorScaleInput.value);
+      document.documentElement.style.setProperty('--author-scale', formatNumber(scale));
+      document.documentElement.style.setProperty('--author-stage-width', formatNumber(authorBaseWidth * scale) + 'px');
+      authorScaleValue.textContent = formatNumber(scale) + 'x';
+    }
+
+    function pointFromEvent(event) {
+      const rect = stage.getBoundingClientRect();
+      return {
+        x: ((event.clientX - rect.left) / rect.width) * viewBox.width + viewBox.x,
+        y: ((event.clientY - rect.top) / rect.height) * viewBox.height + viewBox.y
+      };
+    }
+
+    function pathFromPoints(points) {
+      if (points.length === 0) return '';
+      if (points.length === 1) return 'M' + formatNumber(points[0].x) + ' ' + formatNumber(points[0].y);
+      if (points.length === 2) {
+        return 'M' + formatNumber(points[0].x) + ' ' + formatNumber(points[0].y) +
+          ' L' + formatNumber(points[1].x) + ' ' + formatNumber(points[1].y);
+      }
+
+      let d = 'M' + formatNumber(points[0].x) + ' ' + formatNumber(points[0].y);
+      for (let index = 1; index < points.length - 1; index += 1) {
+        const point = points[index];
+        const next = points[index + 1];
+        const midX = (point.x + next.x) / 2;
+        const midY = (point.y + next.y) / 2;
+        d += ' Q' + formatNumber(point.x) + ' ' + formatNumber(point.y) +
+          ' ' + formatNumber(midX) + ' ' + formatNumber(midY);
+      }
+      const last = points[points.length - 1];
+      return d + ' L' + formatNumber(last.x) + ' ' + formatNumber(last.y);
+    }
+
+    function createPathElement(stroke, className) {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('class', className);
+      path.setAttribute('d', stroke.d);
+      path.setAttribute('stroke-width', stroke.strokeWidth);
+      return path;
+    }
+
+    function renderStrokes() {
+      drawnStrokes.replaceChildren();
+      for (const stroke of strokes) {
+        drawnStrokes.append(createPathElement(stroke, 'draw-path'));
+      }
+      updateOutput();
+    }
+
+    function handoffText() {
+      const payload = {
+        ...signatureRequest,
+        handwritingStrokes: strokes
+      };
+      return '请继续生成这个签名动画。\\n\\n' +
+        '我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG 和 Vue 组件，并保留 fallback-wipe Animated 版本。\\n\\n' +
+        JSON.stringify(payload, null, 2);
+    }
+
+    function updateOutput() {
+      output.value = handoffText();
+    }
+
+    function finishCurrentStroke() {
+      if (!current || current.points.length < 2) {
+        current = null;
+        return;
+      }
+      strokes.push({
+        d: pathFromPoints(current.points),
+        strokeWidth: current.strokeWidth
+      });
+      current = null;
+      renderStrokes();
+    }
+
+    stage.addEventListener('pointerdown', (event) => {
+      stage.setPointerCapture(event.pointerId);
+      const strokeWidth = Number(strokeWidthInput.value);
+      current = {
+        points: [pointFromEvent(event)],
+        strokeWidth
+      };
+    });
+
+    stage.addEventListener('pointermove', (event) => {
+      if (!current) return;
+      current.points.push(pointFromEvent(event));
+      const liveStroke = {
+        d: pathFromPoints(current.points),
+        strokeWidth: current.strokeWidth
+      };
+      drawnStrokes.replaceChildren();
+      for (const stroke of strokes) {
+        drawnStrokes.append(createPathElement(stroke, 'draw-path'));
+      }
+      drawnStrokes.append(createPathElement(liveStroke, 'draw-path'));
+    });
+
+    stage.addEventListener('pointerup', finishCurrentStroke);
+    stage.addEventListener('pointercancel', finishCurrentStroke);
+
+    strokeWidthInput.addEventListener('input', () => {
+      strokeWidthValue.textContent = strokeWidthInput.value;
+    });
+
+    authorScaleInput.addEventListener('input', setAuthorScale);
+
+    document.getElementById('undo').addEventListener('click', () => {
+      strokes.pop();
+      renderStrokes();
+    });
+
+    document.getElementById('clear').addEventListener('click', () => {
+      strokes.length = 0;
+      previewStrokes.replaceChildren();
+      renderStrokes();
+    });
+
+    document.getElementById('export').addEventListener('click', updateOutput);
+
+    document.getElementById('copy-for-agent').addEventListener('click', async () => {
+      updateOutput();
+      await copyText(output.value);
+    });
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      output.focus();
+      output.select();
+      document.execCommand('copy');
+    }
+
+    document.getElementById('copy-output').addEventListener('click', async () => {
+      updateOutput();
+      await copyText(output.value);
+    });
+
+    document.getElementById('play').addEventListener('click', () => {
+      previewStrokes.replaceChildren();
+      let delay = 0;
+      for (const stroke of strokes) {
+        const path = createPathElement(stroke, 'preview-path');
+        previewStrokes.append(path);
+        const length = Math.max(1, path.getTotalLength());
+        const duration = Math.max(180, Math.round(length * 5));
+        path.style.setProperty('--path-length', formatNumber(length));
+        path.style.setProperty('--duration', duration + 'ms');
+        path.style.setProperty('--delay', delay + 'ms');
+        delay += Math.round(duration * 0.82);
+      }
+    });
+
+    setAuthorScale();
+    updateOutput();
+  </script>
+</body>
+</html>
 `
 }
 
@@ -1265,32 +1703,41 @@ async function main() {
     const font = opentype.loadSync(fontResult.path)
     const svg = normalizePath(font, variant.text, variant.fontSize)
     const paths = outputPaths(variant)
+    const fallbackVariant = {
+      ...variant,
+      handwritingStrokes: undefined
+    }
 
     fs.mkdirSync(paths.outputDir, { recursive: true })
     fs.writeFileSync(paths.staticSvg, staticSourceSvg(svg, variant))
-    fs.writeFileSync(paths.animatedSvg, animatedSourceSvg(svg, variant))
+    fs.writeFileSync(paths.animatedSvg, animatedSourceSvg(svg, fallbackVariant))
     fs.writeFileSync(paths.boldSvg, staticBoldSourceSvg(svg, variant))
-    fs.writeFileSync(paths.animatedBoldSvg, animatedBoldSourceSvg(svg, variant))
+    fs.writeFileSync(paths.animatedBoldSvg, animatedBoldSourceSvg(svg, fallbackVariant))
     fs.writeFileSync(paths.staticComponent, staticVueComponent(svg, variant))
-    fs.writeFileSync(paths.animatedComponent, animatedVueComponent(svg, variant))
+    fs.writeFileSync(paths.animatedComponent, animatedVueComponent(svg, fallbackVariant))
     fs.writeFileSync(paths.boldComponent, staticBoldVueComponent(svg, variant))
-    fs.writeFileSync(paths.animatedBoldComponent, animatedBoldVueComponent(svg, variant))
+    fs.writeFileSync(paths.animatedBoldComponent, animatedBoldVueComponent(svg, fallbackVariant))
     fs.writeFileSync(paths.authoringGuide, authoringGuideSvg(svg, variant))
     fs.writeFileSync(paths.authoringGuideComponent, authoringGuideVueComponent(svg, variant))
+    fs.writeFileSync(paths.strokeAuthor, strokeAuthorHtml(svg, variant))
 
     const messages = [
-      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; animated svg: ${paths.animatedSvg}; bold svg: ${paths.boldSvg}; animated bold svg: ${paths.animatedBoldSvg}; component: ${paths.staticComponent}; animated component: ${paths.animatedComponent}; bold component: ${paths.boldComponent}; animated bold component: ${paths.animatedBoldComponent}; stroke guide: ${paths.authoringGuide}; stroke guide component: ${paths.authoringGuideComponent})`
+      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; fallback svg: ${paths.animatedSvg}; bold svg: ${paths.boldSvg}; fallback bold svg: ${paths.animatedBoldSvg}; component: ${paths.staticComponent}; fallback component: ${paths.animatedComponent}; bold component: ${paths.boldComponent}; fallback bold component: ${paths.animatedBoldComponent}; stroke guide: ${paths.authoringGuide}; stroke guide component: ${paths.authoringGuideComponent}; stroke author: ${paths.strokeAuthor})`
     ]
-
-    const renderMode = animatedRenderMode(variant)
 
     if (!hasHandwritingStrokes(variant)) {
       fs.writeFileSync(paths.authoringTemplate, authoringTemplateJson(variant))
       messages.push(
-        `  handwriting: fallback-wipe preview; add handwritingStrokes for signature replay; guide: ${paths.authoringGuide}; template: ${paths.authoringTemplate}`
+        `  handwriting: fallback-wipe preview; add handwritingStrokes for signature replay; guide: ${paths.authoringGuide}; author: ${paths.strokeAuthor}; template: ${paths.authoringTemplate}`
       )
     } else {
-      messages.push(`  handwriting: stroke-timeline (${variant.handwritingStrokes.length} strokes)`)
+      fs.writeFileSync(paths.handwritingSvg, animatedSourceSvg(svg, variant))
+      fs.writeFileSync(paths.handwritingBoldSvg, animatedBoldSourceSvg(svg, variant))
+      fs.writeFileSync(paths.handwritingComponent, animatedVueComponent(svg, variant))
+      fs.writeFileSync(paths.handwritingBoldComponent, animatedBoldVueComponent(svg, variant))
+      messages.push(
+        `  handwriting: stroke-timeline (${variant.handwritingStrokes.length} strokes); svg: ${paths.handwritingSvg}; bold svg: ${paths.handwritingBoldSvg}; component: ${paths.handwritingComponent}; bold component: ${paths.handwritingBoldComponent}`
+      )
     }
 
     console.log(messages.join('\n'))
