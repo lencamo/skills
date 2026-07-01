@@ -2,24 +2,38 @@
 
 该 skill 基于真实字体文件生成签名风格 SVG 和 Vue 组件。输出目录始终是目标项目根目录下的 `signatures/<签名文本slug>/`，并保持扁平结构。
 
-## 默认输出
+## 默认输出（未提供 handwritingStrokes）
 
 以 `Ting Note`、`id=tingnote-caveat`、`component=TingNoteSignatureCaveat` 为例：
 
 ```text
 signatures/
 └── ting-note/
-    ├── tingnote-caveat.svg                    # 静态 SVG，原始字体轮廓
-    ├── tingnote-caveat.animated.svg           # 动画 SVG，原始字体轮廓
-    ├── tingnote-caveat.bold.svg               # 静态 SVG，加粗轮廓
-    ├── tingnote-caveat.animated.bold.svg      # 动画 SVG，加粗轮廓
-    ├── TingNoteSignatureCaveat.vue            # 静态 Vue 组件，原始字体轮廓
-    ├── TingNoteSignatureCaveatAnimated.vue    # 动画 Vue 组件，原始字体轮廓
-    ├── TingNoteSignatureCaveatBold.vue        # 静态 Vue 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatAnimatedBold.vue # 动画 Vue 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatStrokeGuide.vue # 手写路径参考 Vue 组件
-    ├── tingnote-caveat.stroke-guide.svg       # 手写路径参考 SVG
-    └── tingnote-caveat.strokes.template.json  # 无 handwritingStrokes 时生成的模板
+    ├── tingnote-caveat.svg                     # 静态 SVG，原始字体轮廓
+    ├── tingnote-caveat.animated.svg            # fallback-wipe 动画 SVG
+    ├── tingnote-caveat.bold.svg                # 静态 SVG，加粗轮廓
+    ├── tingnote-caveat.animated.bold.svg       # fallback-wipe 动画 SVG，加粗轮廓
+    ├── TingNoteSignatureCaveat.vue             # 静态 Vue 组件，原始字体轮廓
+    ├── TingNoteSignatureCaveatAnimated.vue     # fallback-wipe 动画 Vue 组件
+    ├── TingNoteSignatureCaveatBold.vue         # 静态 Vue 组件，加粗轮廓
+    ├── TingNoteSignatureCaveatAnimatedBold.vue # fallback-wipe 动画 Vue 组件，加粗轮廓
+    ├── TingNoteSignatureCaveatStrokeGuide.vue  # 手写路径参考 Vue 组件
+    ├── tingnote-caveat.stroke-guide.svg        # 手写路径参考 SVG
+    ├── tingnote-caveat.stroke-author.html      # 手写中心线绘制页面
+    └── tingnote-caveat.strokes.template.json   # handwritingStrokes 模板
+```
+
+## 提供 handwritingStrokes 后的额外输出
+
+`*.animated.*` 和 `*Animated*.vue` 始终保留为 `fallback-wipe` 预览。提供 `handwritingStrokes` 后，脚本会额外生成真正按手写中心线播放的 `Handwriting` 产物：
+
+```text
+signatures/
+└── ting-note/
+    ├── tingnote-caveat.handwriting.svg
+    ├── tingnote-caveat.handwriting.bold.svg
+    ├── TingNoteSignatureCaveatHandwriting.vue
+    └── TingNoteSignatureCaveatHandwritingBold.vue
 ```
 
 ## 默认规则
@@ -31,8 +45,10 @@ signatures/
 - 同时传 `width` 和 `height` 时，所有 SVG/Vue 产物都使用这两个显示尺寸。
 - 普通产物只使用 `fill="currentColor"`，保持字体原始轮廓粗细。
 - bold 产物在同一份 path 上增加 `stroke="currentColor"`、`stroke-width` 和 `paint-order="stroke fill"`，用于视觉加粗。
-- 动画产物始终保留最终完整轮廓层；没有 `handwritingStrokes` 时使用 `fallback-wipe` 预览。
+- `Animated` 产物始终是 `fallback-wipe` 预览；真正手写动画使用 `Handwriting` 产物。
+- 没有 `handwritingStrokes` 时不生成 `Handwriting` 产物，只生成模板和 `fallback-wipe` 预览。
 - `stroke-guide` 产物只用于绘制或校对手写中心线，不作为最终签名组件使用。
+- `stroke-author.html` 用于在浏览器里描中心线并导出 `handwritingStrokes`。
 - 输出目录不复制字体文件、license 文件，也不创建 `fonts/`、`generated/`、`components/` 或 `authoring/` 子目录。
 
 ## 可调参数
@@ -57,3 +73,13 @@ signatures/
 - `width` / `height` 改变最终显示尺寸，不改变 path 数据。
 - `boldStrokeWidth` 只影响 bold 产物的视觉加粗，不改变普通产物。
 - `handwritingStrokes[].strokeWidth` 只影响手写 mask 的揭示路径，不改变最终字体轮廓。
+- `animationDurationMs` / `--animation-duration-ms` 只用于固定 fallback 或自动手写动画总时长。
+
+## 手写动画流程
+
+1. 先不提供 `handwritingStrokes` 生成一次。
+2. 打开 `signatures/<签名文本slug>/<id>.stroke-author.html`。
+3. 按自然书写顺序描中心线，每次按下和抬起会生成一条 stroke。
+4. 点击 `Copy for Agent`，把复制内容交回给 agent。
+5. agent 将 `handwritingStrokes` 合并到同一签名配置后重新生成。
+6. 最终使用 `*.handwriting.svg`、`*.handwriting.bold.svg`、`*Handwriting.vue` 或 `*HandwritingBold.vue`。
