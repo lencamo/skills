@@ -56,7 +56,7 @@
     {
       "name": "solution-design-review",
       "description": "Use when the user asks for an implementation plan, bug-fix approach, best solution, root-cause analysis, refactor strategy, or tradeoff discussion before coding.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "development",
       "source": "./skills/solution-design-review",
       "homepage": "https://github.com/lencamo/skills"

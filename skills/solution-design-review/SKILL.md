@@ -2,7 +2,7 @@
 name: solution-design-review
 description: Use when the user asks for an implementation plan, bug-fix approach, best solution, root-cause analysis, refactor strategy, tradeoff discussion, or wants to discuss how to solve a problem before coding.
 metadata:
-  version: '0.1.0'
+  version: '0.1.1'
 ---
 
 # Solution Design Review
@@ -68,6 +68,7 @@ Use this skill before proposing or implementing a solution when the user asks fo
 - Rendered behavior before class-name assumptions.
 - Tradeoffs before recommendation.
 - Best solution means durable, maintainable, and appropriate to the project, not necessarily the largest refactor.
+- When the user explicitly asks for the best solution in a development-stage codebase, optimize for the target design even if that requires refactoring; do not bias the solution toward backward compatibility with existing code unless the user asks for compatibility.
 
 ## Output
 
