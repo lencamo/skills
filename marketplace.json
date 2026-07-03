@@ -1,10 +1,50 @@
 {
   "name": "skills",
-  "description": "Personal agent skill collection: brand-asset-generator, doc-feat-desc, draft-to-project, git-smart-commit, global-project-rules, signature-svg-generator, solution-design-review, split-pencil-file.",
+  "description": "Personal agent skill collection with amo workflow skills plus practical tool skills for engineering workflows.",
   "owner": {
     "name": "lencamo"
   },
   "plugins": [
+    {
+      "name": "amo-feature",
+      "description": "Use when the user asks how to design or implement a new feature, capability, workflow, page, API, or behavior before coding. Do not use for bug fixes, intentional changes to existing behavior, pure refactors, or second-pass solution challenges.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-feature",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "amo-improve",
+      "description": "Use when the user asks how to improve, extend, adjust, or redesign an existing feature or behavior before coding. Do not use for brand-new features, broken behavior, pure refactors, or second-pass solution challenges.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-improve",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "amo-fix",
+      "description": "Use when the user asks why existing behavior is broken, incorrect, flaky, regressed, unexpected, or runtime/build behavior is failing and wants a bug-fix approach before coding. Do not use for planned feature changes, pure refactors, or second-pass solution challenges.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-fix",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "amo-refactor",
+      "description": "Use when the user asks how to refactor, split modules, clarify architecture, move ownership, reduce coupling, or fix unclear state, data-flow, or component boundaries before coding. Do not use for ordinary feature work, bug fixes, or second-pass solution challenges.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-refactor",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "amo-best",
+      "description": "Use when the user challenges an existing proposal, asks whether it is the best solution, asks for a better approach, or wants second-pass review of the chosen best-standard, tradeoffs, scope, compatibility, risk, or refactor depth before implementation.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-best",
+      "homepage": "https://github.com/lencamo/skills"
+    },
     {
       "name": "brand-asset-generator",
       "description": "Use when generating or wiring project-ready brand image assets from a user-provided logo, mark, or icon source image, including transparent source marks, favicon, PWA icons, apple touch icons, desktop app icons, tray icons, ICO, and ICNS outputs.",

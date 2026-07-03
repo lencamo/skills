@@ -1,0 +1,62 @@
+---
+name: amo-fix
+description: Use when the user asks why existing behavior is broken, incorrect, flaky, regressed, unexpected, or runtime/build behavior is failing and wants a bug-fix approach before coding. Do not use for planned feature changes, pure refactors, or second-pass solution challenges.
+metadata:
+  version: '0.2.0'
+---
+
+# Amo Fix
+
+Diagnose a bug from symptom to root cause before choosing the fix.
+
+## Use When
+
+- Existing behavior is wrong, broken, flaky, regressed, inconsistent, or unexpected.
+- Runtime, build, framework, state, data flow, or rendered behavior does not match expectation.
+- A quick patch may hide a deeper ownership, state, or flow problem.
+
+## Do Not Use
+
+- The requested change is intentional product behavior; use `amo-improve`.
+- The task is a new capability; use `amo-feature`.
+- Structure is the primary problem with no bug symptom; use `amo-refactor`.
+- A proposed fix needs challenge; use `amo-best`.
+
+## Best Standard
+
+Select and state one before recommending a fix:
+
+- **Target-state best**: default for development-stage work when no explicit constraint is stated; prioritize correct boundaries, long-term maintainability, refactoring when needed, and not bending the design around legacy implementation.
+- **Constraint best**: use when the user requires compatibility, minimal change, short-term delivery, or limited scope.
+- **Evolutionary best**: use when the root fix needs target design work, but should be delivered in safe, staged steps.
+- **Lowest-risk best**: use when production, data, security, auth, payment, migration, or rollback risk dominates.
+
+## Workflow
+
+1. State symptom and expected behavior.
+2. Select the best standard and explain why.
+3. Inspect the real code path, state/data flow, runtime behavior, or rendered output.
+4. Separate root cause from symptoms and secondary effects.
+5. Recommend one fix with tradeoffs, regression risk, and verification.
+
+## Key Rules
+
+- Root cause before fix.
+- Do not present a workaround as the best fix.
+- Do not add speculative compatibility paths, fallback branches, or legacy handling without evidence from the codebase or explicit user requirements.
+- If the real fix requires refactoring, say so explicitly.
+- If implementation reveals a better approach, pause and explain before switching.
+
+## Output
+
+```text
+当前场景：Bug 修复
+最佳标准：
+现象：
+根因判断：
+推荐修复：
+取舍：
+影响范围：
+验证方式：
+后续：如需二次压力测试，使用 amo-best
+```

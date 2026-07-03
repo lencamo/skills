@@ -6,7 +6,27 @@ Practical agent skills for real engineering workflows.
 
 Repository: `https://github.com/lencamo/skills`
 
-## Skills
+## Workflow Skills
+
+| Skill                                                    | Goal                                                       | Trigger                                                                      |
+| :------------------------------------------------------- | :--------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| [`amo-feature`](skills/amo-feature/SKILL.md)             | Design a new feature and choose the right best-standard     | "How should we implement this new feature?"                                  |
+| [`amo-improve`](skills/amo-improve/SKILL.md)             | Plan existing-feature changes with the right best-standard  | "How should we improve or change this existing behavior?"                    |
+| [`amo-fix`](skills/amo-fix/SKILL.md)                     | Diagnose a bug and choose the right fix standard            | "Why is this bug happening, and what is the right fix?"                      |
+| [`amo-refactor`](skills/amo-refactor/SKILL.md)           | Plan refactors and architecture boundaries by standard      | "Should this be refactored, and where should the boundary be?"              |
+| [`amo-best`](skills/amo-best/SKILL.md)                   | Re-check the chosen best-standard and pressure-test a plan  | "Is this the best solution, or is there a better approach?"                 |
+
+Typical workflow:
+
+```text
+amo-feature / amo-improve / amo-fix / amo-refactor
+→ amo-best
+→ implement
+```
+
+The primary workflow skills choose a best-standard first: target-state, constraint, evolutionary, or lowest-risk. `amo-best` is only for second-pass review of an existing proposal.
+
+## Tool Skills
 
 | Skill                                                                | When                                                                                                                                | What it does                                                                                                    |
 | :------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
@@ -46,6 +66,11 @@ npx skills add lencamo/skills -a claude-code -g -y
 Install selected skills for a specific agent:
 
 ```bash
+npx skills add lencamo/skills -a codex -g -y -s amo-feature
+npx skills add lencamo/skills -a codex -g -y -s amo-improve
+npx skills add lencamo/skills -a codex -g -y -s amo-fix
+npx skills add lencamo/skills -a codex -g -y -s amo-refactor
+npx skills add lencamo/skills -a codex -g -y -s amo-best
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project

@@ -6,7 +6,27 @@
 
 仓库地址：`https://github.com/lencamo/skills`
 
-## Skills
+## 工作流类 Skills
+
+| Skill                                            | 目标                                      | 触发方式                                      |
+| :----------------------------------------------- | :---------------------------------------- | :-------------------------------------------- |
+| [`amo-feature`](skills/amo-feature/SKILL.md)     | 新功能方案设计，并选择最佳标准            | “新增一个功能怎么做？”“这个需求怎么实现？”   |
+| [`amo-improve`](skills/amo-improve/SKILL.md)     | 已有功能改造，并选择最佳标准              | “现有功能要改成这样，怎么改最好？”           |
+| [`amo-fix`](skills/amo-fix/SKILL.md)             | Bug 根因分析，并选择修复标准              | “这个 bug 为什么出现？”“怎么修才对？”        |
+| [`amo-refactor`](skills/amo-refactor/SKILL.md)   | 按标准规划重构、模块边界、职责归属        | “这块是不是该重构？”“边界怎么拆？”           |
+| [`amo-best`](skills/amo-best/SKILL.md)           | 复核最佳标准，并对已有方案做压力测试      | “这是最佳方案吗？”“有没有更优方案？”         |
+
+典型链路：
+
+```text
+amo-feature / amo-improve / amo-fix / amo-refactor
+→ amo-best
+→ implement
+```
+
+主工作流 skill 会先选择最佳标准：目标态最佳、约束内最佳、演进式最佳或风险最低最佳。`amo-best` 只用于对已有方案做二次复核。
+
+## 工具类 Skills
 
 | Skill                                                                | 适用场景                                                                         | 功能说明                                                                        |
 | :------------------------------------------------------------------- | :------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
@@ -46,6 +66,11 @@ npx skills add lencamo/skills -a claude-code -g -y
 按需为指定 agent 安装指定 skill：
 
 ```bash
+npx skills add lencamo/skills -a codex -g -y -s amo-feature
+npx skills add lencamo/skills -a codex -g -y -s amo-improve
+npx skills add lencamo/skills -a codex -g -y -s amo-fix
+npx skills add lencamo/skills -a codex -g -y -s amo-refactor
+npx skills add lencamo/skills -a codex -g -y -s amo-best
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
