@@ -20,6 +20,7 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | `amo-fix` | `🛠️ [amo-fix]` |
 | `amo-refactor` | `🧱 [amo-refactor]` |
 | `amo-best` | `🏆 [amo-best]` |
+| `amo-review` | `🧹 [amo-review]` |
 
 标记必须和第一行内容放在同一行，不要单独成段。
 
@@ -32,10 +33,11 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | 解释并修复错误、异常、不稳定、回归或失败的已有行为 | `amo-fix` |
 | 调整结构、职责归属、耦合、状态/数据流、模块边界或组件边界 | `amo-refactor` |
 | 挑战已有方案：“这是最佳方案吗？”“有没有更好方案？”“取舍/范围是否正确？” | `amo-best` |
+| 审查已实现代码是否存在冗余、不必要抽象、TypeScript 类型噪音或 composable 行为来源不清晰 | `amo-review` |
 
 ## 最佳标准路由
 
-所有 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。
+方案类 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。
 
 | 用户信号 | 标准 |
 | :------- | :--- |
@@ -53,7 +55,8 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 3. 已有行为错误或失败：使用 `amo-fix`；只有根因需要边界调整时才在修复方案里说明重构。
 4. 没有行为变化，只有结构问题：使用 `amo-refactor`。
 5. 已经有候选方案，用户询问是否最佳：使用 `amo-best`。
-6. 用户只是要求直接编辑、写文档、生成资产或 commit message：不要使用 `amo-*`，除非用户先要求方案设计。
+6. 已有实现代码，用户要求审查冗余、风格或 TypeScript 类型表达：使用 `amo-review`。
+7. 用户只是要求直接编辑、写文档、生成资产或 commit message：不要使用 `amo-*`，除非用户先要求方案设计。
 
 ## 串联
 
@@ -65,9 +68,11 @@ Skill 不会自动串联。
 amo-feature / amo-improve / amo-fix / amo-refactor
 -> amo-best
 -> implementation
+-> amo-review
 ```
 
 只有在已有具体方案后，才把 `amo-best` 作为二次压力测试使用。
+只有在已有代码后，才使用 `amo-review`。
 
 ## 维护规则
 

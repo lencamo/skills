@@ -20,6 +20,7 @@ All `amo-*` workflow skills prefix the first output line inline with their skill
 | `amo-fix` | `🛠️ [amo-fix]` |
 | `amo-refactor` | `🧱 [amo-refactor]` |
 | `amo-best` | `🏆 [amo-best]` |
+| `amo-review` | `🧹 [amo-review]` |
 
 Keep the marker inline with the first line, not as a standalone paragraph.
 
@@ -32,10 +33,11 @@ Keep the marker inline with the first line, not as a standalone paragraph.
 | Explain and fix broken, wrong, flaky, regressed, or failing existing behavior | `amo-fix` |
 | Change structure, ownership, coupling, state/data flow, module boundaries, or component boundaries | `amo-refactor` |
 | Challenge an existing proposal: "is this best?", "better way?", "tradeoff right?", "scope right?" | `amo-best` |
+| Review implemented code for redundancy, unnecessary abstractions, TypeScript type noise, or composable usage clarity | `amo-review` |
 
 ## Best Standard Routing
 
-All `amo-*` skills must choose one primary best standard before recommending a solution.
+Design-oriented `amo-*` skills must choose one primary best standard before recommending a solution.
 
 | User signal | Standard |
 | :---------- | :------- |
@@ -53,7 +55,8 @@ Default to target-state best when no constraint is stated. Do not invent compati
 3. Existing behavior is wrong or failing: use `amo-fix`; mention refactor only if root cause requires boundary work.
 4. No behavior change, only structure: use `amo-refactor`.
 5. A candidate proposal already exists and the user asks whether it is best: use `amo-best`.
-6. The user asks for a direct edit, docs, assets, or commit message: do not use `amo-*` unless they ask for solution design first.
+6. Implemented code exists and the user asks for redundancy, style, or TypeScript type review: use `amo-review`.
+7. The user asks for a direct edit, docs, assets, or commit message: do not use `amo-*` unless they ask for solution design first.
 
 ## Chaining
 
@@ -65,9 +68,11 @@ Typical manual chain:
 amo-feature / amo-improve / amo-fix / amo-refactor
 -> amo-best
 -> implementation
+-> amo-review
 ```
 
 Use `amo-best` only as a second-pass pressure test after a concrete proposal exists.
+Use `amo-review` only after code exists.
 
 ## Maintenance Rule
 
