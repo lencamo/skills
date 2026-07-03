@@ -26,6 +26,8 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 
 主工作流 skill 会先选择最佳标准：目标态最佳、约束内最佳、演进式最佳或风险最低最佳。`amo-best` 只用于对已有方案做二次复核。
 
+`amo-*` 工作流的详细路由和歧义场景规则见 [`skills/RESOLVER.zh-CN.md`](skills/RESOLVER.zh-CN.md)。
+
 ## 工具类 Skills
 
 | Skill                                                                | 适用场景                                                                         | 功能说明                                                                        |

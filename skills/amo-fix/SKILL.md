@@ -9,6 +9,10 @@ metadata:
 
 Diagnose a bug from symptom to root cause before choosing the fix.
 
+## Shared Output Marker
+
+Prefix the first output line inline with `🛠️ [amo-fix]`. Do not put the marker in a separate paragraph.
+
 ## Use When
 
 - Existing behavior is wrong, broken, flaky, regressed, inconsistent, or unexpected.
@@ -27,9 +31,9 @@ Diagnose a bug from symptom to root cause before choosing the fix.
 Select and state one before recommending a fix:
 
 - **Target-state best**: default for development-stage work when no explicit constraint is stated; prioritize correct boundaries, long-term maintainability, refactoring when needed, and not bending the design around legacy implementation.
-- **Constraint best**: use when the user requires compatibility, minimal change, short-term delivery, or limited scope.
+- **Constraint best**: use when the user requires fast delivery, compatibility, minimal change, short-term delivery, or limited scope.
 - **Evolutionary best**: use when the root fix needs target design work, but should be delivered in safe, staged steps.
-- **Lowest-risk best**: use when production, data, security, auth, payment, migration, or rollback risk dominates.
+- **Lowest-risk best**: use when production, data, security, auth/permission, payment, migration, or rollback risk dominates.
 
 ## Workflow
 
@@ -50,7 +54,7 @@ Select and state one before recommending a fix:
 ## Output
 
 ```text
-当前场景：Bug 修复
+🛠️ [amo-fix] 当前场景：Bug 修复
 最佳标准：
 现象：
 根因判断：

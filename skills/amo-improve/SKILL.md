@@ -9,6 +9,10 @@ metadata:
 
 Plan intentional changes to existing functionality without letting old implementation details decide the target design.
 
+## Shared Output Marker
+
+Prefix the first output line inline with `🧰 [amo-improve]`. Do not put the marker in a separate paragraph.
+
 ## Use When
 
 - Current behavior exists, but the desired behavior is different.
@@ -27,9 +31,9 @@ Plan intentional changes to existing functionality without letting old implement
 Select and state one before recommending a solution:
 
 - **Target-state best**: default for development-stage work when no explicit constraint is stated; prioritize correct boundaries, long-term maintainability, refactoring when needed, and not bending the design around legacy implementation.
-- **Constraint best**: use when the user requires compatibility, minimal change, short-term delivery, or limited scope.
+- **Constraint best**: use when the user requires fast delivery, compatibility, minimal change, short-term delivery, or limited scope.
 - **Evolutionary best**: use when the target design is right, but should be delivered in safe, staged steps.
-- **Lowest-risk best**: use when production, data, security, auth, payment, migration, or rollback risk dominates.
+- **Lowest-risk best**: use when production, data, security, auth/permission, payment, migration, or rollback risk dominates.
 
 ## Workflow
 
@@ -50,7 +54,7 @@ Select and state one before recommending a solution:
 ## Output
 
 ```text
-当前场景：已有功能改造
+🧰 [amo-improve] 当前场景：已有功能改造
 最佳标准：
 当前行为：
 目标行为：

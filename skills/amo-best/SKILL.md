@@ -9,6 +9,10 @@ metadata:
 
 Re-check the selected best standard and pressure-test an existing proposal.
 
+## Shared Output Marker
+
+Prefix the first output line inline with `🏆 [amo-best]`. Do not put the marker in a separate paragraph.
+
 ## Use When
 
 - A candidate solution already exists.
@@ -26,9 +30,9 @@ Re-check the selected best standard and pressure-test an existing proposal.
 Re-evaluate the candidate against exactly one primary standard:
 
 - **Target-state best**: default for development-stage work when no explicit constraint is stated; prioritize correct boundaries, long-term maintainability, refactoring when needed, and not bending the design around legacy implementation.
-- **Constraint best**: best within compatibility, minimal-change, short-term delivery, or limited-scope constraints.
-- **Evolutionary best**: best staged path toward the target design when one-step delivery is too broad or risky.
-- **Lowest-risk best**: best at reducing production, data, security, auth, payment, migration, or rollback risk.
+- **Constraint best**: use when the user requires fast delivery, compatibility, minimal change, short-term delivery, or limited scope.
+- **Evolutionary best**: use when the target design is right, but should be delivered in safe, staged steps.
+- **Lowest-risk best**: use when production, data, security, auth/permission, payment, migration, or rollback risk dominates.
 
 If the proposal used the wrong standard, say so before judging the implementation approach.
 
@@ -52,7 +56,7 @@ If the proposal used the wrong standard, say so before judging the implementatio
 ## Output
 
 ```text
-当前场景：最佳案压力测试
+🏆 [amo-best] 当前场景：最佳案压力测试
 原方案：
 最佳标准复核：
 结论：保留 / 调整 / 替换

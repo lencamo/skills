@@ -26,6 +26,8 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 
 The primary workflow skills choose a best-standard first: target-state, constraint, evolutionary, or lowest-risk. `amo-best` is only for second-pass review of an existing proposal.
 
+Detailed `amo-*` workflow routing and ambiguous-case rules live in [`skills/RESOLVER.md`](skills/RESOLVER.md).
+
 ## Tool Skills
 
 | Skill                                                                | When                                                                                                                                | What it does                                                                                                    |

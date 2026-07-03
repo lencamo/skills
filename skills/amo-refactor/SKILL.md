@@ -9,6 +9,10 @@ metadata:
 
 Plan structural changes when boundaries, ownership, or coupling are the primary problem.
 
+## Shared Output Marker
+
+Prefix the first output line inline with `🧱 [amo-refactor]`. Do not put the marker in a separate paragraph.
+
 ## Use When
 
 - The user asks whether code should be refactored or how to refactor it.
@@ -27,9 +31,9 @@ Plan structural changes when boundaries, ownership, or coupling are the primary 
 Select and state one before recommending a refactor:
 
 - **Target-state best**: default for development-stage work when no explicit constraint is stated; prioritize correct boundaries, long-term maintainability, refactoring when needed, and not bending the design around legacy implementation.
-- **Constraint best**: use when the user requires compatibility, minimal change, short-term delivery, or limited scope.
+- **Constraint best**: use when the user requires fast delivery, compatibility, minimal change, short-term delivery, or limited scope.
 - **Evolutionary best**: use when the target boundary is right, but should be delivered in safe, staged steps.
-- **Lowest-risk best**: use when production, data, security, auth, payment, migration, or rollback risk dominates.
+- **Lowest-risk best**: use when production, data, security, auth/permission, payment, migration, or rollback risk dominates.
 
 ## Workflow
 
@@ -50,7 +54,7 @@ Select and state one before recommending a refactor:
 ## Output
 
 ```text
-当前场景：重构 / 架构边界
+🧱 [amo-refactor] 当前场景：重构 / 架构边界
 最佳标准：
 结构问题：
 目标边界：
