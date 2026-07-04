@@ -1,15 +1,15 @@
 ---
 name: signature-svg-generator
-description: Use when generating reusable signature-style SVG assets or Vue components from font files, including personal signatures, handwritten wordmarks, font-derived SVG paths, or mask-based handwriting animations. Use only when the user wants font-based output, not general logo design.
+description: Use when generating reusable signature-style SVG assets, Vue components, or React components from font files, including personal signatures, handwritten wordmarks, font-derived SVG paths, or mask-based handwriting animations. Use only when the user wants font-based output, not general logo design.
 metadata:
-  version: '0.3.0'
+  version: '0.4.0'
 ---
 
 # Signature SVG Generator
 
 ## Purpose
 
-Generate reusable signature-style SVG and Vue component assets from real font files. Use the bundled script as the source of truth for font resolution, SVG output, and Vue component output.
+Generate reusable signature-style SVG, Vue component, and React component assets from real font files. Use the bundled script as the source of truth for font resolution, SVG output, Vue component output, and React component output.
 
 ## When Not To Use
 
@@ -85,16 +85,16 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 
 Use `--font <file>` instead of `--font-name <name>` for an explicit local font path.
 
-Generated SVG files and Vue components use the same root `width`, `height`, and `viewBox`.
+Generated SVG files, Vue components, and React components use the same root `width`, `height`, and `viewBox`.
 If `width` and `height` are omitted, display dimensions are derived from the generated `viewBox`.
 If only one dimension is provided, the other is derived proportionally from the `viewBox`.
-If both dimensions are provided, both SVG and Vue artifacts use those exact display dimensions.
+If both dimensions are provided, SVG, Vue, and React artifacts use those exact display dimensions.
 
 `fontSize` controls the generated font outline path. The legacy `strokeWidth` / `--stroke-width`
 input does not change static glyph thickness; handwriting mask strokes should specify their own
 `strokeWidth` inside `handwritingStrokes`.
 
-The script also emits bold SVG and Vue artifacts. Bold artifacts use the same font outline path
+The script also emits bold SVG, Vue, and React artifacts. Bold artifacts use the same font outline path
 with an additional same-color outline stroke. `boldStrokeWidth` / `--bold-stroke-width` controls
 that outline stroke and defaults to `1.4`.
 
@@ -139,23 +139,23 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --component-name MiraChenSignatureCaveat
 ```
 
-Generated output always includes static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, stroke guide SVG, and stroke guide Vue component.
+Generated output always includes static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, static React component, fallback-wipe animated React component, bold React component, fallback-wipe animated bold React component, stroke guide SVG, stroke guide Vue component, and stroke guide React component.
 
 Best-quality signature replay requires `handwritingStrokes`: centerline paths drawn in human writing order. The script uses those strokes as a mask timeline for the `Handwriting` outputs.
 
-The script always writes a flat stroke guide SVG and matching Vue component beside the generated assets.
+The script always writes a flat stroke guide SVG and matching Vue/React components beside the generated assets.
 The script also writes a flat stroke authoring HTML page beside the generated assets. Open
 `<id>.stroke-author.html` in a browser to draw centerline strokes directly over the guide and
 export `handwritingStrokes` JSON.
 The authoring page uses an independent editing scale, defaulting to 4x, so small production
-signatures are easier to trace without changing exported SVG/Vue dimensions or stroke coordinates.
+signatures are easier to trace without changing exported SVG/Vue/React dimensions or stroke coordinates.
 For conversational use, tell users to click `Copy for Agent` after drawing and paste the copied
 message back into the chat. They should not need to know where a batch config lives or how to merge
 `handwritingStrokes` manually.
 
 The `*.animated.svg`, `*.animated.bold.svg`, `*Animated.vue`, and `*AnimatedBold.vue` files are reserved for the fallback-wipe preview and stay `data-handwriting-mode="fallback-wipe"` even after real strokes are provided.
 
-When `handwritingStrokes` are provided, the script additionally writes `*.handwriting.svg`, `*.handwriting.bold.svg`, `*Handwriting.vue`, and `*HandwritingBold.vue` as the true stroke-timeline animation outputs. Use these `Handwriting` artifacts for the final production signature replay.
+When `handwritingStrokes` are provided, the script additionally writes `*.handwriting.svg`, `*.handwriting.bold.svg`, `*Handwriting.vue`, `*HandwritingBold.vue`, `*Handwriting.tsx`, and `*HandwritingBold.tsx` as the true stroke-timeline animation outputs. Use these `Handwriting` artifacts for the final production signature replay.
 
 `Handwriting` outputs intentionally do not add a final unmasked outline layer. The animation stays on the stroke mask result at the end, so it will not flash from a thinner mask-revealed shape to the complete glyph outline. The fallback-wipe `Animated` outputs keep their final outline layer.
 
@@ -200,7 +200,7 @@ Recommended authoring workflow:
 4. Use the author scale slider only for editing comfort; it does not change exported coordinates.
 5. Use the stroke width slider so the mask stroke covers the glyph body without revealing adjacent strokes too early.
 6. Click `Copy for Agent` and paste the copied handoff message back into the conversation.
-7. The agent merges the included `handwritingStrokes` into the matching signature config, regenerates, and verifies the new `Handwriting` SVG/Vue animation while preserving the fallback-wipe `Animated` files.
+7. The agent merges the included `handwritingStrokes` into the matching signature config, regenerates, and verifies the new `Handwriting` SVG/Vue/React animation while preserving the fallback-wipe `Animated` files.
 
 Use `stroke-guide.svg` only when authoring in an external vector tool such as Inkscape, Figma, or Illustrator.
 
@@ -224,6 +224,13 @@ signatures/
     ├── TingNoteSignatureCaveatAnimatedBold.vue
     ├── TingNoteSignatureCaveatHandwritingBold.vue
     ├── TingNoteSignatureCaveatStrokeGuide.vue
+    ├── TingNoteSignatureCaveat.tsx
+    ├── TingNoteSignatureCaveatAnimated.tsx
+    ├── TingNoteSignatureCaveatHandwriting.tsx
+    ├── TingNoteSignatureCaveatBold.tsx
+    ├── TingNoteSignatureCaveatAnimatedBold.tsx
+    ├── TingNoteSignatureCaveatHandwritingBold.tsx
+    ├── TingNoteSignatureCaveatStrokeGuide.tsx
     ├── tingnote-caveat.stroke-guide.svg
     ├── tingnote-caveat.stroke-author.html
     └── tingnote-caveat.strokes.template.json
@@ -243,16 +250,24 @@ Each generated variant must keep together:
 - bold Vue component
 - fallback-wipe animated bold Vue component
 - handwriting bold Vue component when `handwritingStrokes` are provided
+- static React component
+- fallback-wipe animated React component
+- handwriting React component when `handwritingStrokes` are provided
+- bold React component
+- fallback-wipe animated bold React component
+- handwriting bold React component when `handwritingStrokes` are provided
 - stroke guide SVG
 - stroke guide Vue component
+- stroke guide React component
 - stroke authoring HTML
 - stroke template when `handwritingStrokes` are not provided
 
 Do not copy font files or license files into the output folder.
 
-## Vue Usage
+## Component Usage
 
 For comparison, import generated components into a local preview UI and render them via `<component :is="...">`.
+For React previews, import the generated `.tsx` component directly and render it as a normal React component.
 
 For final production use, keep only the selected SVG/component artifacts. Do not create a global font picker unless the user asks for productized settings.
 
@@ -260,7 +275,7 @@ For final production use, keep only the selected SVG/component artifacts. Do not
 
 Before claiming completion:
 
-1. Confirm the expected static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, stroke guide SVG, stroke guide Vue component, and stroke authoring HTML exist. When `handwritingStrokes` are provided, also confirm the `Handwriting` SVG/Vue artifacts exist.
+1. Confirm the expected static SVG, fallback-wipe animated SVG, bold SVG, fallback-wipe animated bold SVG, static Vue component, fallback-wipe animated Vue component, bold Vue component, fallback-wipe animated bold Vue component, static React component, fallback-wipe animated React component, bold React component, fallback-wipe animated bold React component, stroke guide SVG, stroke guide Vue component, stroke guide React component, and stroke authoring HTML exist. When `handwritingStrokes` are provided, also confirm the `Handwriting` SVG/Vue/React artifacts exist.
 2. Confirm generated files are non-empty and contain real SVG path data.
 3. Confirm bold artifacts contain same-color outline stroke styling and normal artifacts do not.
 4. Confirm the stroke authoring HTML contains the guide path, author scale control, and can export `handwritingStrokes`.

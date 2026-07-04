@@ -1,6 +1,6 @@
 # Signature SVG Generator 输出说明
 
-该 skill 基于真实字体文件生成签名风格 SVG 和 Vue 组件。输出目录始终是目标项目根目录下的 `signatures/<签名文本slug>/`，并保持扁平结构。
+该 skill 基于真实字体文件生成签名风格 SVG、Vue 组件和 React 组件。输出目录始终是目标项目根目录下的 `signatures/<签名文本slug>/`，并保持扁平结构。
 
 ## 默认输出（未提供 handwritingStrokes）
 
@@ -18,6 +18,11 @@ signatures/
     ├── TingNoteSignatureCaveatBold.vue         # 静态 Vue 组件，加粗轮廓
     ├── TingNoteSignatureCaveatAnimatedBold.vue # fallback-wipe 动画 Vue 组件，加粗轮廓
     ├── TingNoteSignatureCaveatStrokeGuide.vue  # 手写路径参考 Vue 组件
+    ├── TingNoteSignatureCaveat.tsx             # 静态 React 组件，原始字体轮廓
+    ├── TingNoteSignatureCaveatAnimated.tsx     # fallback-wipe 动画 React 组件
+    ├── TingNoteSignatureCaveatBold.tsx         # 静态 React 组件，加粗轮廓
+    ├── TingNoteSignatureCaveatAnimatedBold.tsx # fallback-wipe 动画 React 组件，加粗轮廓
+    ├── TingNoteSignatureCaveatStrokeGuide.tsx  # 手写路径参考 React 组件
     ├── tingnote-caveat.stroke-guide.svg        # 手写路径参考 SVG
     ├── tingnote-caveat.stroke-author.html      # 手写中心线绘制页面
     └── tingnote-caveat.strokes.template.json   # handwritingStrokes 模板
@@ -25,7 +30,7 @@ signatures/
 
 ## 提供 handwritingStrokes 后的额外输出
 
-`*.animated.*` 和 `*Animated*.vue` 始终保留为 `fallback-wipe` 预览。提供 `handwritingStrokes` 后，脚本会额外生成真正按手写中心线播放的 `Handwriting` 产物：
+`*.animated.*`、`*Animated*.vue` 和 `*Animated*.tsx` 始终保留为 `fallback-wipe` 预览。提供 `handwritingStrokes` 后，脚本会额外生成真正按手写中心线播放的 `Handwriting` 产物：
 
 ```text
 signatures/
@@ -33,16 +38,18 @@ signatures/
     ├── tingnote-caveat.handwriting.svg
     ├── tingnote-caveat.handwriting.bold.svg
     ├── TingNoteSignatureCaveatHandwriting.vue
-    └── TingNoteSignatureCaveatHandwritingBold.vue
+    ├── TingNoteSignatureCaveatHandwritingBold.vue
+    ├── TingNoteSignatureCaveatHandwriting.tsx
+    └── TingNoteSignatureCaveatHandwritingBold.tsx
 ```
 
 ## 默认规则
 
-- 静态 SVG、动画 SVG、Vue 组件和 stroke guide 使用同一份字体 path 数据。
-- SVG 文件和 Vue 组件使用一致的根节点 `width`、`height` 和 `viewBox`。
+- 静态 SVG、动画 SVG、Vue 组件、React 组件和 stroke guide 使用同一份字体 path 数据。
+- SVG 文件、Vue 组件和 React 组件使用一致的根节点 `width`、`height` 和 `viewBox`。
 - 未传 `width` 和 `height` 时，显示尺寸来自生成后的 `viewBox`。
 - 只传 `width` 或只传 `height` 时，另一边按 `viewBox` 比例自动推导。
-- 同时传 `width` 和 `height` 时，所有 SVG/Vue 产物都使用这两个显示尺寸。
+- 同时传 `width` 和 `height` 时，所有 SVG/Vue/React 产物都使用这两个显示尺寸。
 - 普通产物只使用 `fill="currentColor"`，保持字体原始轮廓粗细。
 - bold 产物在同一份 path 上增加 `stroke="currentColor"`、`stroke-width` 和 `paint-order="stroke fill"`，用于视觉加粗。
 - `Animated` 产物始终是 `fallback-wipe` 预览；真正手写动画使用 `Handwriting` 产物。
@@ -57,7 +64,7 @@ signatures/
 - `--font-name <name>`：字体名，会按项目字体、内置字体、Google Fonts 顺序解析。
 - `--font <file>`：显式使用本地 `.ttf` 或 `.otf` 字体文件。
 - `--id <id>`：输出 SVG 文件名前缀。
-- `--component-name <PascalCase>`：输出 Vue 组件名前缀。
+- `--component-name <PascalCase>`：输出 Vue/React 组件名前缀。
 - `--label <label>`：写入 SVG title 的字体或变体标签。
 - `--width <number>`：显示宽度；只传宽度时高度按比例推导。
 - `--height <number>`：显示高度；只传高度时宽度按比例推导。
@@ -82,4 +89,4 @@ signatures/
 3. 按自然书写顺序描中心线，每次按下和抬起会生成一条 stroke。
 4. 点击 `Copy for Agent`，把复制内容交回给 agent。
 5. agent 将 `handwritingStrokes` 合并到同一签名配置后重新生成。
-6. 最终使用 `*.handwriting.svg`、`*.handwriting.bold.svg`、`*Handwriting.vue` 或 `*HandwritingBold.vue`。
+6. 最终使用 `*.handwriting.svg`、`*.handwriting.bold.svg`、`*Handwriting.vue`、`*HandwritingBold.vue`、`*Handwriting.tsx` 或 `*HandwritingBold.tsx`。

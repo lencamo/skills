@@ -346,6 +346,16 @@ function outputPaths(variant) {
   const animatedBoldComponent = path.resolve(outputDir, `${variant.component}AnimatedBold.vue`)
   const handwritingBoldComponent = path.resolve(outputDir, `${variant.component}HandwritingBold.vue`)
   const authoringGuideComponent = path.resolve(outputDir, `${variant.component}StrokeGuide.vue`)
+  const staticReactComponent = path.resolve(outputDir, `${variant.component}.tsx`)
+  const animatedReactComponent = path.resolve(outputDir, `${variant.component}Animated.tsx`)
+  const handwritingReactComponent = path.resolve(outputDir, `${variant.component}Handwriting.tsx`)
+  const boldReactComponent = path.resolve(outputDir, `${variant.component}Bold.tsx`)
+  const animatedBoldReactComponent = path.resolve(outputDir, `${variant.component}AnimatedBold.tsx`)
+  const handwritingBoldReactComponent = path.resolve(
+    outputDir,
+    `${variant.component}HandwritingBold.tsx`
+  )
+  const authoringGuideReactComponent = path.resolve(outputDir, `${variant.component}StrokeGuide.tsx`)
   const authoringGuide = path.resolve(outputDir, `${variant.id}.stroke-guide.svg`)
   const strokeAuthor = path.resolve(outputDir, `${variant.id}.stroke-author.html`)
   const authoringTemplate = path.resolve(outputDir, `${variant.id}.strokes.template.json`)
@@ -364,6 +374,13 @@ function outputPaths(variant) {
     animatedBoldComponent,
     handwritingBoldComponent,
     authoringGuideComponent,
+    staticReactComponent,
+    animatedReactComponent,
+    handwritingReactComponent,
+    boldReactComponent,
+    animatedBoldReactComponent,
+    handwritingBoldReactComponent,
+    authoringGuideReactComponent,
     authoringGuide,
     strokeAuthor,
     authoringTemplate
@@ -390,6 +407,13 @@ function outputPaths(variant) {
     animatedBoldComponent,
     handwritingBoldComponent,
     authoringGuideComponent,
+    staticReactComponent,
+    animatedReactComponent,
+    handwritingReactComponent,
+    boldReactComponent,
+    animatedBoldReactComponent,
+    handwritingBoldReactComponent,
+    authoringGuideReactComponent,
     authoringGuide,
     strokeAuthor,
     authoringTemplate
@@ -1064,6 +1088,247 @@ ${finalReducedMotionStyles}}
 `
 }
 
+function reactImports() {
+  return `import * as React from 'react'\n`
+}
+
+function reactResolvedClassSetup(className) {
+  return `  const { className, ...svgProps } = props
+  const resolvedClassName = ['${className}', className].filter(Boolean).join(' ')
+`
+}
+
+function reactStyleBlock(styles) {
+  return `      <style>{\`
+${styles.trim()}
+\`}</style>`
+}
+
+function staticReactComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}`
+  const pathData = escapeXmlAttribute(svg.d)
+
+  return `${reactImports()}export default function ${variant.component}(props: React.SVGProps<SVGSVGElement>) {
+${reactResolvedClassSetup(className)}
+  return (
+    <svg {...svgProps} className={resolvedClassName} ${svgSizingAttributes(svg, variant)} aria-hidden="true">
+      <path className="${className}__shape" d="${pathData}" fill="currentColor" />
+${reactStyleBlock(`
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+.${className}__shape {
+  fill: currentColor;
+}
+`)}
+    </svg>
+  )
+}
+`
+}
+
+function staticBoldReactComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}-bold`
+  const pathData = escapeXmlAttribute(svg.d)
+
+  return `${reactImports()}export default function ${variant.component}Bold(props: React.SVGProps<SVGSVGElement>) {
+${reactResolvedClassSetup(className)}
+  return (
+    <svg {...svgProps} className={resolvedClassName} ${svgSizingAttributes(svg, variant)} aria-hidden="true">
+      <path className="${className}__shape" d="${pathData}" fill="currentColor" />
+${reactStyleBlock(`
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+${boldShapeStyles(className, variant).trimStart()}
+`)}
+    </svg>
+  )
+}
+`
+}
+
+function pathMaskReactMarkup(className, svg, variant) {
+  const strokes = getHandwritingStrokes(svg, variant)
+  const segments = resolveHandwritingTiming(svg, variant, strokes)
+  const totalDuration = Math.max(...segments.map((segment) => segment.delay + segment.duration))
+
+  const pathMarkup = strokes
+    .map((stroke, index) => {
+      const pathLength = formatPathLength(
+        segments[index].pathLength * HANDWRITING_DASH_LENGTH_PADDING
+      )
+      return `          <path
+            className="${className}__draw ${className}__draw--${index + 1}"
+            d="${escapeXmlAttribute(stroke.d)}"
+            fill="none"
+            stroke="white"
+            strokeWidth="${stroke.strokeWidth}"
+            strokeLinejoin="round"
+            strokeLinecap="butt"
+            strokeDasharray="${pathLength} ${pathLength}"
+            strokeDashoffset="${pathLength}"
+            style={{
+              strokeDasharray: '${pathLength} ${pathLength}',
+              strokeDashoffset: '${pathLength}',
+              '--duration': '${segments[index].duration}ms',
+              '--delay': '${segments[index].delay}ms',
+              '--stroke-width': '${stroke.strokeWidth}',
+              '--path-length': '${pathLength}',
+            } as React.CSSProperties}
+          />`
+    })
+    .join('\n')
+
+  return {
+    mode: 'path',
+    totalDuration,
+    markup: `      <defs>
+        <mask id={maskId} maskUnits="userSpaceOnUse">
+${pathMarkup}
+        </mask>
+      </defs>`
+  }
+}
+
+function wipeMaskReactMarkup(className, svg, variant) {
+  const { width } = parseViewBox(svg.viewBox)
+  const totalDuration = resolveHandwritingDurationMs(svg, variant, width, 1)
+
+  return {
+    mode: 'wipe',
+    totalDuration,
+    markup: `      <defs>
+        <mask id={maskId} maskUnits="userSpaceOnUse">
+          <rect
+            className="${className}__wipe"
+            x="0"
+            y="0"
+            width="0"
+            height="100%"
+            fill="white"
+          >
+            <animate
+              attributeName="width"
+              from="0"
+              to="${width}"
+              dur="${secondsValue(totalDuration)}"
+              fill="freeze"
+              calcMode="spline"
+              keyTimes="0;1"
+              keySplines="0.65 0 0.35 1"
+            />
+          </rect>
+        </mask>
+      </defs>`
+  }
+}
+
+function reactMaskMarkup(className, svg, variant) {
+  if (hasHandwritingStrokes(variant)) {
+    return pathMaskReactMarkup(className, svg, variant)
+  }
+
+  return wipeMaskReactMarkup(className, svg, variant)
+}
+
+function reactFinalLayerMarkup(className, pathData, finalRevealBegin, mask) {
+  if (!shouldRenderFinalLayer(mask)) {
+    return ''
+  }
+
+  return `      <path className="${className}__shape ${className}__shape--final" d="${pathData}" fill="currentColor" opacity="0">
+        <set attributeName="opacity" to="1" begin="${finalRevealBegin}" fill="freeze" />
+      </path>
+`
+}
+
+function animatedReactComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}`
+  const pathData = escapeXmlAttribute(svg.d)
+  const renderMode = animatedRenderMode(variant)
+  const mask = reactMaskMarkup(className, svg, variant)
+  const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = reactFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
+
+  return `${reactImports()}export default function ${variant.component}${hasHandwritingStrokes(variant) ? 'Handwriting' : 'Animated'}(props: React.SVGProps<SVGSVGElement>) {
+  const reactId = React.useId()
+  const maskId = \`${className}-mask-\${reactId.replace(/:/g, '')}\`
+${reactResolvedClassSetup(className)}
+  return (
+    <svg {...svgProps} className={resolvedClassName} ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
+${mask.markup}
+      <path className="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask={\`url(#\${maskId})\`} />
+${finalLayer}${reactStyleBlock(`
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+.${className}__shape {
+  fill: currentColor;
+}
+
+${mask.mode === 'path' ? pathMaskStyles(className) : ''}
+
+@media (prefers-reduced-motion: reduce) {
+${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
+
+${finalReducedMotionStyles}}
+`)}
+    </svg>
+  )
+}
+`
+}
+
+function animatedBoldReactComponent(svg, variant) {
+  const className = `signature-svg-${variant.id}-bold`
+  const pathData = escapeXmlAttribute(svg.d)
+  const renderMode = animatedRenderMode(variant)
+  const mask = reactMaskMarkup(className, svg, variant)
+  const finalRevealBegin = secondsValue(mask.totalDuration)
+  const finalLayer = reactFinalLayerMarkup(className, pathData, finalRevealBegin, mask)
+  const finalReducedMotionStyles = finalLayerReducedMotionStyles(className, mask)
+
+  return `${reactImports()}export default function ${variant.component}${hasHandwritingStrokes(variant) ? 'HandwritingBold' : 'AnimatedBold'}(props: React.SVGProps<SVGSVGElement>) {
+  const reactId = React.useId()
+  const maskId = \`${className}-mask-\${reactId.replace(/:/g, '')}\`
+${reactResolvedClassSetup(className)}
+  return (
+    <svg {...svgProps} className={resolvedClassName} ${svgSizingAttributes(svg, variant)} data-handwriting-mode="${renderMode}" aria-hidden="true">
+${mask.markup}
+      <path className="${className}__shape ${className}__shape--reveal" d="${pathData}" fill="currentColor" mask={\`url(#\${maskId})\`} />
+${finalLayer}${reactStyleBlock(`
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+${boldShapeStyles(className, variant).trimStart()}
+
+${mask.mode === 'path' ? pathMaskStyles(className) : ''}
+
+@media (prefers-reduced-motion: reduce) {
+${mask.mode === 'path' ? pathMaskReducedMotionStyles(className) : ''}
+
+${finalReducedMotionStyles}}
+`)}
+    </svg>
+  )
+}
+`
+}
+
 function authoringGuideSvg(svg, variant) {
   const title = escapeXmlText(`${variant.text} handwriting stroke guide`)
   const pathData = escapeXmlAttribute(svg.d)
@@ -1125,6 +1390,43 @@ function authoringGuideVueComponent(svg, variant) {
 `
 }
 
+function authoringGuideReactComponent(svg, variant) {
+  const className = `signature-guide-${variant.id}`
+  const pathData = escapeXmlAttribute(svg.d)
+
+  return `${reactImports()}export default function ${variant.component}StrokeGuide(props: React.SVGProps<SVGSVGElement>) {
+${reactResolvedClassSetup(className)}
+  return (
+    <svg {...svgProps} className={resolvedClassName} ${svgSizingAttributes(svg, variant)} aria-hidden="true">
+      <path className="signature-authoring__fill" d="${pathData}" />
+      <path className="signature-authoring__outline" d="${pathData}" />
+${reactStyleBlock(`
+.${className} {
+  display: block;
+  color: currentColor;
+  overflow: visible;
+}
+
+.signature-authoring__fill {
+  fill: currentColor;
+  opacity: 0.12;
+}
+
+.signature-authoring__outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+`)}
+    </svg>
+  )
+}
+`
+}
+
 function strokeAuthorHtml(svg, variant) {
   const title = escapeXmlText(`${variant.text} ${variant.label} stroke author`)
   const pathData = escapeXmlAttribute(svg.d)
@@ -1147,7 +1449,7 @@ function strokeAuthorHtml(svg, variant) {
     boldStrokeWidth: variant.boldStrokeWidth
   }
   const initialOutput = escapeXmlText(
-    `请继续生成这个签名动画。\n\n我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG 和 Vue 组件，并保留 fallback-wipe Animated 版本。\n\n${JSON.stringify(
+    `请继续生成这个签名动画。\n\n我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG、Vue 和 React 组件，并保留 fallback-wipe Animated 版本。\n\n${JSON.stringify(
       {
         ...signatureRequest,
         handwritingStrokes: []
@@ -1429,7 +1731,7 @@ function strokeAuthorHtml(svg, variant) {
         handwritingStrokes: strokes
       };
       return '请继续生成这个签名动画。\\n\\n' +
-        '我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG 和 Vue 组件，并保留 fallback-wipe Animated 版本。\\n\\n' +
+        '我已经在 stroke author 页面里画好了 handwritingStrokes。请把下面 JSON 应用到同一个签名配置，重新生成最终 Handwriting SVG、Vue 和 React 组件，并保留 fallback-wipe Animated 版本。\\n\\n' +
         JSON.stringify(payload, null, 2);
     }
 
@@ -1662,7 +1964,7 @@ function validateVariant(variant) {
   }
   if (!/^[A-Z][A-Za-z0-9]*$/.test(variant.component)) {
     throw new Error(
-      `Variant ${variant.id} component "${variant.component}" must be a PascalCase Vue component filename.`
+      `Variant ${variant.id} component "${variant.component}" must be a PascalCase component filename.`
     )
   }
   if (!['none', 'wipe'].includes(variant.handwritingFallback)) {
@@ -1719,10 +2021,15 @@ async function main() {
     fs.writeFileSync(paths.animatedBoldComponent, animatedBoldVueComponent(svg, fallbackVariant))
     fs.writeFileSync(paths.authoringGuide, authoringGuideSvg(svg, variant))
     fs.writeFileSync(paths.authoringGuideComponent, authoringGuideVueComponent(svg, variant))
+    fs.writeFileSync(paths.staticReactComponent, staticReactComponent(svg, variant))
+    fs.writeFileSync(paths.animatedReactComponent, animatedReactComponent(svg, fallbackVariant))
+    fs.writeFileSync(paths.boldReactComponent, staticBoldReactComponent(svg, variant))
+    fs.writeFileSync(paths.animatedBoldReactComponent, animatedBoldReactComponent(svg, fallbackVariant))
+    fs.writeFileSync(paths.authoringGuideReactComponent, authoringGuideReactComponent(svg, variant))
     fs.writeFileSync(paths.strokeAuthor, strokeAuthorHtml(svg, variant))
 
     const messages = [
-      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; fallback svg: ${paths.animatedSvg}; bold svg: ${paths.boldSvg}; fallback bold svg: ${paths.animatedBoldSvg}; component: ${paths.staticComponent}; fallback component: ${paths.animatedComponent}; bold component: ${paths.boldComponent}; fallback bold component: ${paths.animatedBoldComponent}; stroke guide: ${paths.authoringGuide}; stroke guide component: ${paths.authoringGuideComponent}; stroke author: ${paths.strokeAuthor})`
+      `${variant.component}: ${svg.viewBox} (${fontDisplayName(fontResult.path)}; source: ${fontResult.source}; commercial use: ${fontResult.commercialUse}; path: ${fontResult.path}; output: ${paths.outputDir}; svg: ${paths.staticSvg}; fallback svg: ${paths.animatedSvg}; bold svg: ${paths.boldSvg}; fallback bold svg: ${paths.animatedBoldSvg}; vue component: ${paths.staticComponent}; fallback vue component: ${paths.animatedComponent}; bold vue component: ${paths.boldComponent}; fallback bold vue component: ${paths.animatedBoldComponent}; react component: ${paths.staticReactComponent}; fallback react component: ${paths.animatedReactComponent}; bold react component: ${paths.boldReactComponent}; fallback bold react component: ${paths.animatedBoldReactComponent}; stroke guide: ${paths.authoringGuide}; stroke guide vue component: ${paths.authoringGuideComponent}; stroke guide react component: ${paths.authoringGuideReactComponent}; stroke author: ${paths.strokeAuthor})`
     ]
 
     if (!hasHandwritingStrokes(variant)) {
@@ -1735,8 +2042,10 @@ async function main() {
       fs.writeFileSync(paths.handwritingBoldSvg, animatedBoldSourceSvg(svg, variant))
       fs.writeFileSync(paths.handwritingComponent, animatedVueComponent(svg, variant))
       fs.writeFileSync(paths.handwritingBoldComponent, animatedBoldVueComponent(svg, variant))
+      fs.writeFileSync(paths.handwritingReactComponent, animatedReactComponent(svg, variant))
+      fs.writeFileSync(paths.handwritingBoldReactComponent, animatedBoldReactComponent(svg, variant))
       messages.push(
-        `  handwriting: stroke-timeline (${variant.handwritingStrokes.length} strokes); svg: ${paths.handwritingSvg}; bold svg: ${paths.handwritingBoldSvg}; component: ${paths.handwritingComponent}; bold component: ${paths.handwritingBoldComponent}`
+        `  handwriting: stroke-timeline (${variant.handwritingStrokes.length} strokes); svg: ${paths.handwritingSvg}; bold svg: ${paths.handwritingBoldSvg}; vue component: ${paths.handwritingComponent}; bold vue component: ${paths.handwritingBoldComponent}; react component: ${paths.handwritingReactComponent}; bold react component: ${paths.handwritingBoldReactComponent}`
       )
     }
 

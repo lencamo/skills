@@ -5,14 +5,14 @@
 ## 元数据
 
 - name: `signature-svg-generator`
-- description: 当需要从字体文件生成可复用的签名风格 SVG 资产或 Vue 组件时使用，包括个人签名、手写 wordmark、字体生成的 SVG paths，或基于 mask 的手写动画。只在用户想要基于字体的输出时使用，不用于通用 logo 设计。
-- version: `0.3.0`
+- description: 当需要从字体文件生成可复用的签名风格 SVG 资产、Vue 组件或 React 组件时使用，包括个人签名、手写 wordmark、字体生成的 SVG paths，或基于 mask 的手写动画。只在用户想要基于字体的输出时使用，不用于通用 logo 设计。
+- version: `0.4.0`
 
 # Signature SVG Generator
 
 ## 目的
 
-从真实字体文件生成可复用的签名风格 SVG 和 Vue 组件资产。使用内置脚本作为字体解析、SVG 输出和 Vue 组件输出的事实来源。
+从真实字体文件生成可复用的签名风格 SVG、Vue 组件和 React 组件资产。使用内置脚本作为字体解析、SVG 输出、Vue 组件输出和 React 组件输出的事实来源。
 
 ## 不使用场景
 
@@ -88,11 +88,11 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 
 对于显式本地字体路径，使用 `--font <file>` 代替 `--font-name <name>`。
 
-生成的 SVG 文件和 Vue 组件使用相同的 root `width`、`height` 和 `viewBox`。如果省略 `width` 和 `height`，显示尺寸从生成的 `viewBox` 推导。如果只提供一个尺寸，另一个尺寸从 `viewBox` 按比例推导。如果两个尺寸都提供，SVG 和 Vue 产物都使用这些精确显示尺寸。
+生成的 SVG 文件、Vue 组件和 React 组件使用相同的 root `width`、`height` 和 `viewBox`。如果省略 `width` 和 `height`，显示尺寸从生成的 `viewBox` 推导。如果只提供一个尺寸，另一个尺寸从 `viewBox` 按比例推导。如果两个尺寸都提供，SVG、Vue 和 React 产物都使用这些精确显示尺寸。
 
 `fontSize` 控制生成的字体轮廓 path。旧的 `strokeWidth` / `--stroke-width` 输入不会改变静态 glyph 厚度；手写 mask strokes 应在 `handwritingStrokes` 内指定自己的 `strokeWidth`。
 
-脚本也会输出加粗 SVG 和 Vue 产物。加粗产物使用相同字体轮廓 path，并添加同色 outline stroke。`boldStrokeWidth` / `--bold-stroke-width` 控制该 outline stroke，默认是 `1.4`。
+脚本也会输出加粗 SVG、Vue 和 React 产物。加粗产物使用相同字体轮廓 path，并添加同色 outline stroke。`boldStrokeWidth` / `--bold-stroke-width` 控制该 outline stroke，默认是 `1.4`。
 
 ## 批量生成
 
@@ -135,15 +135,15 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
   --component-name MiraChenSignatureCaveat
 ```
 
-生成输出始终包含 static SVG、fallback-wipe animated SVG、bold SVG、fallback-wipe animated bold SVG、static Vue component、fallback-wipe animated Vue component、bold Vue component、fallback-wipe animated bold Vue component、stroke guide SVG 和 stroke guide Vue component。
+生成输出始终包含 static SVG、fallback-wipe animated SVG、bold SVG、fallback-wipe animated bold SVG、static Vue component、fallback-wipe animated Vue component、bold Vue component、fallback-wipe animated bold Vue component、static React component、fallback-wipe animated React component、bold React component、fallback-wipe animated bold React component、stroke guide SVG、stroke guide Vue component 和 stroke guide React component。
 
 最佳质量的签名回放需要 `handwritingStrokes`：按人类书写顺序绘制的 centerline paths。脚本把这些 strokes 用作 `Handwriting` 输出的 mask timeline。
 
-脚本始终在生成资产旁边写入 flat stroke guide SVG 和匹配的 Vue component。脚本也会在生成资产旁边写入 flat stroke authoring HTML page。在浏览器中打开 `<id>.stroke-author.html`，即可直接在 guide 上绘制 centerline strokes，并导出 `handwritingStrokes` JSON。authoring page 使用独立编辑比例，默认 4x，因此小尺寸生产签名更容易描摹，而且不会改变导出的 SVG/Vue 尺寸或 stroke 坐标。对话式使用时，告诉用户绘制后点击 `Copy for Agent`，并把复制的消息粘回聊天。用户不需要知道 batch config 在哪里，也不需要手动合并 `handwritingStrokes`。
+脚本始终在生成资产旁边写入 flat stroke guide SVG 和匹配的 Vue/React component。脚本也会在生成资产旁边写入 flat stroke authoring HTML page。在浏览器中打开 `<id>.stroke-author.html`，即可直接在 guide 上绘制 centerline strokes，并导出 `handwritingStrokes` JSON。authoring page 使用独立编辑比例，默认 4x，因此小尺寸生产签名更容易描摹，而且不会改变导出的 SVG/Vue/React 尺寸或 stroke 坐标。对话式使用时，告诉用户绘制后点击 `Copy for Agent`，并把复制的消息粘回聊天。用户不需要知道 batch config 在哪里，也不需要手动合并 `handwritingStrokes`。
 
 即使提供了真实 strokes，`*.animated.svg`、`*.animated.bold.svg`、`*Animated.vue` 和 `*AnimatedBold.vue` 文件仍保留给 fallback-wipe 预览，并保持 `data-handwriting-mode="fallback-wipe"`。
 
-当提供 `handwritingStrokes` 时，脚本会额外写入 `*.handwriting.svg`、`*.handwriting.bold.svg`、`*Handwriting.vue` 和 `*HandwritingBold.vue`，作为真正的 stroke-timeline 动画输出。最终生产签名回放应使用这些 `Handwriting` 产物。
+当提供 `handwritingStrokes` 时，脚本会额外写入 `*.handwriting.svg`、`*.handwriting.bold.svg`、`*Handwriting.vue`、`*HandwritingBold.vue`、`*Handwriting.tsx` 和 `*HandwritingBold.tsx`，作为真正的 stroke-timeline 动画输出。最终生产签名回放应使用这些 `Handwriting` 产物。
 
 `Handwriting` 输出有意不添加最终未遮罩的 outline 层。动画结束时保持 stroke mask 结果，因此不会从较细的 mask-revealed 形状闪变为完整 glyph outline。fallback-wipe `Animated` 输出保留其最终 outline 层。
 
@@ -188,7 +188,7 @@ stroke timing 默认按 path length 自动计算，除非 stroke 提供 `duratio
 4. 只把 author scale slider 用于编辑舒适度；它不会改变导出坐标。
 5. 使用 stroke width slider，让 mask stroke 覆盖 glyph body，同时避免过早露出相邻 strokes。
 6. 点击 `Copy for Agent`，并把复制的 handoff message 粘回对话。
-7. agent 把包含的 `handwritingStrokes` 合并到匹配的签名 config，重新生成，并在保留 fallback-wipe `Animated` 文件的同时，验证新的 `Handwriting` SVG/Vue 动画。
+7. agent 把包含的 `handwritingStrokes` 合并到匹配的签名 config，重新生成，并在保留 fallback-wipe `Animated` 文件的同时，验证新的 `Handwriting` SVG/Vue/React 动画。
 
 只有在使用 Inkscape、Figma 或 Illustrator 等外部矢量工具 authoring 时，才使用 `stroke-guide.svg`。
 
@@ -212,6 +212,13 @@ signatures/
     ├── TingNoteSignatureCaveatAnimatedBold.vue
     ├── TingNoteSignatureCaveatHandwritingBold.vue
     ├── TingNoteSignatureCaveatStrokeGuide.vue
+    ├── TingNoteSignatureCaveat.tsx
+    ├── TingNoteSignatureCaveatAnimated.tsx
+    ├── TingNoteSignatureCaveatHandwriting.tsx
+    ├── TingNoteSignatureCaveatBold.tsx
+    ├── TingNoteSignatureCaveatAnimatedBold.tsx
+    ├── TingNoteSignatureCaveatHandwritingBold.tsx
+    ├── TingNoteSignatureCaveatStrokeGuide.tsx
     ├── tingnote-caveat.stroke-guide.svg
     ├── tingnote-caveat.stroke-author.html
     └── tingnote-caveat.strokes.template.json
@@ -231,16 +238,24 @@ signatures/
 - bold Vue component
 - fallback-wipe animated bold Vue component
 - 提供 `handwritingStrokes` 时的 handwriting bold Vue component
+- static React component
+- fallback-wipe animated React component
+- 提供 `handwritingStrokes` 时的 handwriting React component
+- bold React component
+- fallback-wipe animated bold React component
+- 提供 `handwritingStrokes` 时的 handwriting bold React component
 - stroke guide SVG
 - stroke guide Vue component
+- stroke guide React component
 - stroke authoring HTML
 - 未提供 `handwritingStrokes` 时的 stroke template
 
 不要把字体文件或 license 文件复制进输出文件夹。
 
-## Vue 用法
+## 组件用法
 
 用于比较时，把生成组件导入本地 preview UI，并通过 `<component :is="...">` 渲染。
+用于 React 预览时，直接导入生成的 `.tsx` 组件，并像普通 React 组件一样渲染。
 
 最终生产使用时，只保留选定的 SVG/component 产物。除非用户要求产品化设置，否则不要创建全局字体选择器。
 
@@ -248,7 +263,7 @@ signatures/
 
 声明完成前：
 
-1. 确认预期的 static SVG、fallback-wipe animated SVG、bold SVG、fallback-wipe animated bold SVG、static Vue component、fallback-wipe animated Vue component、bold Vue component、fallback-wipe animated bold Vue component、stroke guide SVG、stroke guide Vue component 和 stroke authoring HTML 存在。提供 `handwritingStrokes` 时，还要确认 `Handwriting` SVG/Vue 产物存在。
+1. 确认预期的 static SVG、fallback-wipe animated SVG、bold SVG、fallback-wipe animated bold SVG、static Vue component、fallback-wipe animated Vue component、bold Vue component、fallback-wipe animated bold Vue component、static React component、fallback-wipe animated React component、bold React component、fallback-wipe animated bold React component、stroke guide SVG、stroke guide Vue component、stroke guide React component 和 stroke authoring HTML 存在。提供 `handwritingStrokes` 时，还要确认 `Handwriting` SVG/Vue/React 产物存在。
 2. 确认生成文件非空，并包含真实 SVG path data。
 3. 确认 bold 产物包含同色 outline stroke styling，而 normal 产物不包含。
 4. 确认 stroke authoring HTML 包含 guide path、author scale control，并能导出 `handwritingStrokes`。
