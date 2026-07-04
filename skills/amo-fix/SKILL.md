@@ -53,14 +53,16 @@ Select and state one before recommending a fix:
 
 ## Output
 
+Use the user's language for output labels and content.
+
 ```text
-🛠️ [amo-fix] 当前场景：Bug 修复
-最佳标准：
-现象：
-根因判断：
-推荐修复：
-取舍：
-影响范围：
-验证方式：
-后续：如需二次压力测试，使用 amo-best
+🛠️ [amo-fix] Scenario: bug fix
+Best standard:
+Symptom:
+Root-cause judgment:
+Recommended fix:
+Tradeoffs:
+Impact scope:
+Verification:
+Next: use amo-best for second-pass pressure testing if needed
 ```

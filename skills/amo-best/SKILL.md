@@ -55,14 +55,16 @@ If the proposal used the wrong standard, say so before judging the implementatio
 
 ## Output
 
+Use the user's language for output labels and content.
+
 ```text
-🏆 [amo-best] 当前场景：最佳案压力测试
-原方案：
-最佳标准复核：
-结论：保留 / 调整 / 替换
-是否解决根因 / 目标：
-主要取舍：
-更优方案：
-最终建议：
-验证方式：
+🏆 [amo-best] Scenario: best-solution pressure test
+Original proposal:
+Best standard review:
+Verdict: keep / adjust / replace
+Root goal fit:
+Main tradeoffs:
+Better approach:
+Final recommendation:
+Verification:
 ```

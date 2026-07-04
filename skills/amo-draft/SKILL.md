@@ -42,7 +42,7 @@ Use target context as content. Use reference context only as form. Exclude proce
 
 - Keep the target artifact centered on the user's target subject.
 - Do not let reference-project facts become target-product facts.
-- Do not mention the conversation, Codex, implementation struggles, debugging path, rejected options, or writing process unless requested.
+- Do not mention the conversation, the agent, implementation struggles, debugging path, rejected options, or writing process unless requested.
 - Do not add notes, risks, limitations, implementation problems, or attention sections unless the user asks for them.
 - Do not invent product claims, business facts, dates, metrics, scope, or constraints.
 - If required target context is missing, ask briefly or write with explicit placeholders.
@@ -60,6 +60,8 @@ Use target context as content. Use reference context only as form. Exclude proce
 
 ## Output
 
+Use the user's language for output labels and content.
+
 For simple drafting, output only the final artifact:
 
 ```text
@@ -70,10 +72,10 @@ For simple drafting, output only the final artifact:
 For complex or polluted context, include a short triage summary first:
 
 ```text
-📝 [amo-draft] 当前场景：目标驱动内容草稿
-上下文分拣：
-- 已纳入：
-- 仅作参考：
-- 已排除：
-正文：
+📝 [amo-draft] Scenario: target-focused content draft
+Context triage:
+- Included:
+- Reference only:
+- Excluded:
+Draft:
 ```

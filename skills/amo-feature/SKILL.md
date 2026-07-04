@@ -53,13 +53,15 @@ Select and state one before recommending a solution:
 
 ## Output
 
+Use the user's language for output labels and content.
+
 ```text
-🧩 [amo-feature] 当前场景：新功能方案
-最佳标准：
-目标行为：
-推荐方案：
-取舍：
-影响范围：
-验证方式：
-后续：如需二次压力测试，使用 amo-best
+🧩 [amo-feature] Scenario: new feature design
+Best standard:
+Target behavior:
+Recommended approach:
+Tradeoffs:
+Impact scope:
+Verification:
+Next: use amo-best for second-pass pressure testing if needed
 ```

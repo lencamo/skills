@@ -53,14 +53,16 @@ Select and state one before recommending a refactor:
 
 ## Output
 
+Use the user's language for output labels and content.
+
 ```text
-🧱 [amo-refactor] 当前场景：重构 / 架构边界
-最佳标准：
-结构问题：
-目标边界：
-推荐方案：
-取舍：
-影响范围：
-验证方式：
-后续：如需二次压力测试，使用 amo-best
+🧱 [amo-refactor] Scenario: refactor / architecture boundary
+Best standard:
+Structural issue:
+Target boundary:
+Recommended approach:
+Tradeoffs:
+Impact scope:
+Verification:
+Next: use amo-best for second-pass pressure testing if needed
 ```

@@ -1,6 +1,6 @@
 ---
 name: doc-feat-desc
-description: Use when the user wants user-facing docs for an implemented feature. Inspect the real implementation first, then write help-center, site-copy, and in-product docs under `doc/<requirement-name>/`.
+description: Use when the user wants user-facing docs for an implemented feature. Inspect the real implementation first, then write help-center, site-copy, and in-product docs under `doc/{requirement-name}/`.
 metadata:
   version: '0.1.0'
 ---

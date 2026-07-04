@@ -34,21 +34,21 @@ Prefix the first output line inline with `🧹 [amo-review]`. Do not put the mar
 4. Separate must-fix issues from optional cleanup.
 5. Provide exact file/line references when available.
 
-## 代码规范
+## Code Style Rules
 
-- 禁止为单一调用点、单行逻辑创建或保留 helper / wrapper / adapter / parser / 类型守卫等中间抽象；移动代码位置、提升作用域、导出 API 或重构后也必须按调用点重新审查，除非它显著提升错误边界、可测试性或可读性，否则直接内联表达。
-- 使用 composable 返回值时，展示用的 ref/computed 变量可以按需解构；会触发状态变更或副作用的函数默认保留 composable 命名空间调用，以保持行为来源清晰。
+- Do not create or keep helper, wrapper, adapter, parser, type guard, or similar intermediate abstractions for a single call site or one-line logic. After moving code, lifting scope, exporting APIs, or refactoring, re-check by call site. Inline the expression unless the abstraction clearly improves error boundaries, testability, or readability.
+- When using composable return values, destructure display-only ref/computed values as needed. Keep state-changing or side-effect functions under the composable namespace by default so the behavior source stays clear.
 
-## TypeScript 类型约定
+## TypeScript Type Rules
 
-- 优先依赖 TS 推断，避免为中间变量、内部函数和简单返回值补冗余类型。
-- 公共边界显式声明类型：DTO、组件 props、导出函数入参、公共协议、请求 payload、响应 data 结构。
-- 不重复表达已由泛型或封装确定的类型，例如业务 API、Controller、Store 不手写 `Promise<ApiResponse<T>>`、`Promise<ApiResult<T>>`。
-- 第三方库或工厂函数已能可靠推导的返回类型，不手写复杂泛型重复描述；需要复用时优先使用 `ReturnType<typeof fn>` 等简单工具类型。
-- 类型设计保持简单，优先使用直接的 `interface` / `type`；避免为了少量代码引入复杂泛型、条件类型、映射类型或过度抽象。
-- 不为了“语义化命名”“未来扩展”或“通用化”添加没有当前收益的别名、包装函数、动态 key 解析器或中间抽象；自己维护且结构明确的代码优先直接访问和直接调用，让类型和值的来源保持单一、可追踪。
-- TypeScript 类型收窄优先用直接表达和已有数据结构完成；不要为了收窄新增只被一个地方使用的类型守卫函数。只有当判断逻辑复杂、被多处复用、或作为公共边界 API 时，才允许提取类型守卫。
-- 共享类型按需抽取：只有多个 app/package 稳定复用同一批类型时，才考虑新增共享类型包。
+- Prefer TypeScript inference. Avoid redundant type annotations for intermediate variables, internal functions, and simple return values.
+- Declare explicit types at public boundaries: DTOs, component props, exported function parameters, public protocols, request payloads, and response data structures.
+- Do not repeat types already determined by generics or framework wrappers. For example, business APIs, controllers, and stores should not handwrite `Promise<ApiResponse<T>>` or `Promise<ApiResult<T>>`.
+- Do not handwrite complex generic return types that third-party libraries or factory functions can reliably infer. When reuse is needed, prefer simple utility types such as `ReturnType<typeof fn>`.
+- Keep type design simple. Prefer direct `interface` / `type`; avoid complex generics, conditional types, mapped types, or over-abstracted type models for small amounts of code.
+- Do not add aliases, wrapper functions, dynamic key parsers, or intermediate abstractions only for semantic naming, future extension, or generalization when they have no current payoff. In self-maintained code with clear structure, prefer direct access and direct calls so type and value sources stay singular and traceable.
+- Prefer direct expressions and existing data structures for TypeScript narrowing. Do not add a type guard used by only one call site. Extract a type guard only when the predicate is complex, reused in multiple places, or part of a public boundary API.
+- Extract shared types on demand. Add a shared type package only when multiple apps or packages stably reuse the same group of types.
 
 ## Key Rules
 
@@ -59,11 +59,13 @@ Prefix the first output line inline with `🧹 [amo-review]`. Do not put the mar
 
 ## Output
 
+Use the user's language for output labels and content.
+
 ```text
-🧹 [amo-review] 当前场景：代码风格审查
-结论：
-必须修改：
-建议清理：
-无需修改：
-验证方式：
+🧹 [amo-review] Scenario: code style review
+Conclusion:
+Must fix:
+Suggested cleanup:
+No change needed:
+Verification:
 ```

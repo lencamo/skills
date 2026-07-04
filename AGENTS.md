@@ -17,6 +17,7 @@ Goals:
 
 ```text
 skills/<skill-name>/SKILL.md
+skills/<skill-name>/docs/SKILL.zh-CN.md
 skills/<skill-name>/references/
 README.md
 README.zh-CN.md
@@ -29,7 +30,8 @@ Rules:
 1. Each skill lives in `skills/<skill-name>/`.
 2. Directory names use `kebab-case`.
 3. Each skill must include `SKILL.md`.
-4. Add `references/` only when supporting material is actually needed.
+4. `docs/SKILL.zh-CN.md` is an optional faithful Chinese translation for human readers, not an executable skill file.
+5. Add `references/` only when supporting material is actually needed.
 
 ## Skill Design
 
@@ -40,6 +42,7 @@ Rules:
 - Keep the main instructions short and move details into `references/` when appropriate.
 - If execution depends on a reference file, `SKILL.md` should explicitly say to read it first.
 - Do not duplicate the same rule in both `SKILL.md` and `references/`.
+- Keep executable skill behavior in `SKILL.md`. Chinese docs under `docs/SKILL.zh-CN.md` are for readers and should faithfully translate the corresponding `SKILL.md` without becoming a second source of truth.
 
 ## Skill Maintenance
 
