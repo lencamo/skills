@@ -21,6 +21,7 @@ All `amo-*` workflow skills prefix the first output line inline with their skill
 | `amo-refactor` | `🧱 [amo-refactor]` |
 | `amo-best` | `🏆 [amo-best]` |
 | `amo-review` | `🧹 [amo-review]` |
+| `amo-draft` | `📝 [amo-draft]` |
 
 Keep the marker inline with the first line, not as a standalone paragraph.
 
@@ -34,10 +35,11 @@ Keep the marker inline with the first line, not as a standalone paragraph.
 | Change structure, ownership, coupling, state/data flow, module boundaries, or component boundaries | `amo-refactor` |
 | Challenge an existing proposal: "is this best?", "better way?", "tradeoff right?", "scope right?" | `amo-best` |
 | Review implemented code for redundancy, unnecessary abstractions, TypeScript type noise, or composable usage clarity | `amo-review` |
+| Write or edit target-focused page copy, requirement notes, implementation docs, version notes, release notes, or temporary project documentation | `amo-draft` |
 
 ## Best Standard Routing
 
-Design-oriented `amo-*` skills must choose one primary best standard before recommending a solution.
+Design-oriented `amo-*` skills must choose one primary best standard before recommending a solution. `amo-review` and `amo-draft` do not choose a best standard.
 
 | User signal | Standard |
 | :---------- | :------- |
@@ -56,7 +58,8 @@ Default to target-state best when no constraint is stated. Do not invent compati
 4. No behavior change, only structure: use `amo-refactor`.
 5. A candidate proposal already exists and the user asks whether it is best: use `amo-best`.
 6. Implemented code exists and the user asks for redundancy, style, or TypeScript type review: use `amo-review`.
-7. The user asks for a direct edit, docs, assets, or commit message: do not use `amo-*` unless they ask for solution design first.
+7. The user asks to write clean target content from context, reference style, examples, or implementation history: use `amo-draft`.
+8. The user asks for a direct edit, assets, or commit message: do not use `amo-*` unless they ask for solution design first.
 
 ## Chaining
 
@@ -69,10 +72,12 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 -> amo-best
 -> implementation
 -> amo-review
+-> amo-draft
 ```
 
 Use `amo-best` only as a second-pass pressure test after a concrete proposal exists.
 Use `amo-review` only after code exists.
+Use `amo-draft` when the next artifact is content, not code.
 
 ## Maintenance Rule
 

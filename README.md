@@ -16,6 +16,7 @@ Repository: `https://github.com/lencamo/skills`
 | [`amo-refactor`](skills/amo-refactor/SKILL.md)           | Plan refactors and architecture boundaries by standard      | "Should this be refactored, and where should the boundary be?"              |
 | [`amo-best`](skills/amo-best/SKILL.md)                   | Re-check the chosen best-standard and pressure-test a plan  | "Is this the best solution, or is there a better approach?"                 |
 | [`amo-review`](skills/amo-review/SKILL.md)               | Review implemented code style, redundancy, and TS typing    | "Review this code for redundancy, style, and type issues."                  |
+| [`amo-draft`](skills/amo-draft/SKILL.md)                 | Write target-focused docs and copy without context pollution | "Write clean page copy or requirement docs from this context."             |
 
 Typical workflow:
 
@@ -24,9 +25,10 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 → amo-best
 → implement
 → amo-review
+→ amo-draft
 ```
 
-The primary design workflow skills choose a best-standard first: target-state, constraint, evolutionary, or lowest-risk. `amo-best` is only for second-pass review of an existing proposal. `amo-review` is for implemented-code style review.
+The primary design workflow skills choose a best-standard first: target-state, constraint, evolutionary, or lowest-risk. `amo-best` is only for second-pass review of an existing proposal. `amo-review` is for implemented-code style review. `amo-draft` is for target-focused content drafting.
 
 Detailed `amo-*` workflow routing and ambiguous-case rules live in [`skills/RESOLVER.md`](skills/RESOLVER.md).
 
@@ -76,6 +78,7 @@ npx skills add lencamo/skills -a codex -g -y -s amo-fix
 npx skills add lencamo/skills -a codex -g -y -s amo-refactor
 npx skills add lencamo/skills -a codex -g -y -s amo-best
 npx skills add lencamo/skills -a codex -g -y -s amo-review
+npx skills add lencamo/skills -a codex -g -y -s amo-draft
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project

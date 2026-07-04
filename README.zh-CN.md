@@ -16,6 +16,7 @@
 | [`amo-refactor`](skills/amo-refactor/SKILL.md)   | 按标准规划重构、模块边界、职责归属        | “这块是不是该重构？”“边界怎么拆？”           |
 | [`amo-best`](skills/amo-best/SKILL.md)           | 复核最佳标准，并对已有方案做压力测试      | “这是最佳方案吗？”“有没有更优方案？”         |
 | [`amo-review`](skills/amo-review/SKILL.md)       | 审查已实现代码的风格、冗余和 TS 类型表达  | “帮我看看这段代码是否冗余、风格是否合理？”   |
+| [`amo-draft`](skills/amo-draft/SKILL.md)         | 编写目标聚焦的文档和文案，避免上下文污染  | “基于这些上下文写一份干净的页面文案/需求文档。” |
 
 典型链路：
 
@@ -24,9 +25,10 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 → amo-best
 → implement
 → amo-review
+→ amo-draft
 ```
 
-主方案类工作流 skill 会先选择最佳标准：目标态最佳、约束内最佳、演进式最佳或风险最低最佳。`amo-best` 只用于对已有方案做二次复核。`amo-review` 用于已实现代码的风格审查。
+主方案类工作流 skill 会先选择最佳标准：目标态最佳、约束内最佳、演进式最佳或风险最低最佳。`amo-best` 只用于对已有方案做二次复核。`amo-review` 用于已实现代码的风格审查。`amo-draft` 用于目标聚焦的内容草稿。
 
 `amo-*` 工作流的详细路由和歧义场景规则见 [`skills/RESOLVER.zh-CN.md`](skills/RESOLVER.zh-CN.md)。
 
@@ -76,6 +78,7 @@ npx skills add lencamo/skills -a codex -g -y -s amo-fix
 npx skills add lencamo/skills -a codex -g -y -s amo-refactor
 npx skills add lencamo/skills -a codex -g -y -s amo-best
 npx skills add lencamo/skills -a codex -g -y -s amo-review
+npx skills add lencamo/skills -a codex -g -y -s amo-draft
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
