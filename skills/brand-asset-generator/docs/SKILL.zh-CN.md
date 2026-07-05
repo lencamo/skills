@@ -6,7 +6,7 @@
 
 - name: `brand-asset-generator`
 - description: 当需要从用户提供的 logo、mark 或 icon 源图片生成或接入项目可用的品牌图片资产时使用，包括透明 source mark、favicon、PWA 图标、apple touch 图标、桌面应用图标、托盘图标、ICO 和 ICNS 输出。
-- version: `0.1.2`
+- version: `0.1.3`
 
 # Brand Asset Generator
 
@@ -67,6 +67,7 @@ python3 <skill-dir>/scripts/generate_brand_assets.py \
 - `--web-corner-radius <0..0.5>`：常规 PWA web 图标的圆角背景半径比例；默认是 `0.22`。
 - `--favicon-container-inset <0..0.4>`：覆盖 favicon PNG 输出的透明外边距；默认按尺寸决定。
 - `--web-container-inset <0..0.4>`：常规 PWA web 图标的透明外边距；默认是 `0.08`。
+- `--line-width-ratio <0..0.2>`：fill 派生 line source mark 的描边粗细；默认是 `0.035`。
 - `--background-threshold <n>`：RGB 边缘背景移除容差；默认是 `28`。
 - `--force-background`：对所有生成的 PNG 和 ICO/ICNS 输出应用背景。
 - `--transparent-background`：即使通常会使用默认背景，也保持输出透明。
@@ -98,6 +99,8 @@ python3 -m pip install --user pillow
   source/
     <name>-mark-app.png
     <name>-mark-web.png
+    <name>-mark-app-line.png    # 仅当输入源被检测为 fill 时生成
+    <name>-mark-web-line.png    # 仅当输入源被检测为 fill 时生成
   web/
     favicon-16x16.png
     favicon-32x32.png
@@ -136,6 +139,9 @@ python3 -m pip install --user pillow
 - 对 RGB 源图只移除与边缘连通的背景；保留同色内部细节。
 - 输入已经有透明度时，保留既有 alpha。
 - source mark 写为 512x512 RGBA 透明 PNG。
+- 当源主体被检测为 fill mark 时，同时写入 512x512 RGBA 透明 line 变体：`mark-app-line` 和 `mark-web-line`。
+- 使用 `--line-width-ratio` 控制 fill 派生 line 的粗细；该值会乘以裁剪后源主体的最长边。
+- 不为 line mark 输入创建 fill 变体。
 - favicon、常规 PWA 图标和托盘图标使用 `mark-web`。
 - apple touch、maskable PWA 图标、桌面应用图标、`.ico` 和 `.icns` 使用 `mark-app`。
 - 默认给 web favicon、常规 PWA 图标、maskable PWA 图标、`apple-touch-icon.png`、`desktop/icon.png`、`desktop/icons/*.png`、`desktop/icon.ico` 和 `desktop/icon.icns` 添加背景。
@@ -150,6 +156,7 @@ python3 -m pip install --user pillow
 生成后验证：
 
 - source mark 是 `RGBA`、512x512，并且角落透明。
+- fill mark 输入会额外生成 `mark-app-line` 和 `mark-web-line`；line mark 输入不会生成。
 - web PNG 尺寸与文件名匹配。
 - web favicon 输出和常规 PWA 图标默认有透明圆角和预期外边距。
 - maskable PWA 图标和 `apple-touch-icon.png` 默认有不透明背景角。

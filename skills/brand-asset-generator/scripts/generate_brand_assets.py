@@ -8,7 +8,7 @@ from collections import deque
 from pathlib import Path
 
 try:
-    from PIL import Image, ImageDraw
+    from PIL import Image, ImageChops, ImageDraw, ImageFilter
 except ImportError:
     print(
         "Error: Pillow is required. Install it with `python3 -m pip install --user pillow`.",
@@ -32,6 +32,8 @@ WEB_PNGS = [
 DESKTOP_ICON_SIZES = [16, 24, 32, 48, 64, 96, 128, 256, 512, 1024]
 ICO_SIZES = [16, 24, 32, 48, 64, 128, 256]
 FAVICON_ICO_SIZES = [16, 32, 48]
+FILL_ALPHA_DENSITY_THRESHOLD = 0.45
+DEFAULT_LINE_WIDTH_RATIO = 0.035
 
 
 def parse_hex_color(value: str) -> tuple[int, int, int, int]:
@@ -73,6 +75,16 @@ def parse_inset(value: str) -> float:
     if not 0 <= inset <= 0.4:
         raise argparse.ArgumentTypeError("container inset must be greater than or equal to 0 and less than or equal to 0.4")
     return inset
+
+
+def parse_line_width_ratio(value: str) -> float:
+    try:
+        ratio = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("line width ratio must be a number between 0 and 0.2") from exc
+    if not 0 < ratio <= 0.2:
+        raise argparse.ArgumentTypeError("line width ratio must be greater than 0 and less than or equal to 0.2")
+    return ratio
 
 
 def slug_from_path(path: Path) -> str:
@@ -169,6 +181,48 @@ def make_mark(subject: Image.Image, size: int, fill: float) -> Image.Image:
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     canvas.alpha_composite(resized, ((size - resized.width) // 2, (size - resized.height) // 2))
     return canvas
+
+
+def alpha_density(image: Image.Image) -> float:
+    alpha = image.convert("RGBA").getchannel("A")
+    box = alpha.getbbox()
+    if box is None:
+        return 0
+    cropped = alpha.crop(box)
+    visible = sum(1 for value in cropped.getdata() if value > 16)
+    return visible / (cropped.width * cropped.height)
+
+
+def is_fill_mark(subject: Image.Image) -> bool:
+    return alpha_density(subject) >= FILL_ALPHA_DENSITY_THRESHOLD
+
+
+def visible_average_color(image: Image.Image) -> tuple[int, int, int]:
+    total_r = total_g = total_b = total_alpha = 0
+    for r, g, b, alpha in image.convert("RGBA").getdata():
+        if alpha <= 16:
+            continue
+        total_r += r * alpha
+        total_g += g * alpha
+        total_b += b * alpha
+        total_alpha += alpha
+    if total_alpha == 0:
+        return 0, 0, 0
+    return total_r // total_alpha, total_g // total_alpha, total_b // total_alpha
+
+
+def make_line_variant(subject: Image.Image, line_width_ratio: float) -> Image.Image:
+    rgba = subject.convert("RGBA")
+    alpha = rgba.getchannel("A").point(lambda value: 255 if value > 16 else 0)
+    filter_size = max(3, round(max(rgba.size) * line_width_ratio))
+    if filter_size % 2 == 0:
+        filter_size += 1
+    dilated = alpha.filter(ImageFilter.MaxFilter(filter_size))
+    eroded = alpha.filter(ImageFilter.MinFilter(filter_size))
+    outline = ImageChops.subtract(dilated, eroded)
+    line = Image.new("RGBA", rgba.size, (*visible_average_color(rgba), 255))
+    line.putalpha(outline)
+    return crop_subject(line)
 
 
 def with_background(image: Image.Image, background: tuple[int, int, int, int] | None) -> Image.Image:
@@ -280,7 +334,7 @@ def save_template(source: Image.Image, output_path: Path, size: int) -> None:
     template.save(output_path)
 
 
-def build_source(input_path: Path, output_dir: Path, name: str, args: argparse.Namespace) -> tuple[Path, Path]:
+def build_source(input_path: Path, output_dir: Path, name: str, args: argparse.Namespace) -> tuple[Path, Path, list[Path]]:
     source_dir = output_dir / "source"
     source_dir.mkdir(parents=True, exist_ok=True)
     image = Image.open(input_path).convert("RGBA")
@@ -291,7 +345,15 @@ def build_source(input_path: Path, output_dir: Path, name: str, args: argparse.N
     mark_web_path = source_dir / f"{name}-mark-web.png"
     mark_app.save(mark_app_path)
     mark_web.save(mark_web_path)
-    return mark_app_path, mark_web_path
+    extra_paths = []
+    if is_fill_mark(subject):
+        line_subject = make_line_variant(subject, args.line_width_ratio)
+        mark_app_line_path = source_dir / f"{name}-mark-app-line.png"
+        mark_web_line_path = source_dir / f"{name}-mark-web-line.png"
+        make_mark(line_subject, 512, args.app_fill).save(mark_app_line_path)
+        make_mark(line_subject, 512, args.web_fill).save(mark_web_line_path)
+        extra_paths.extend([mark_app_line_path, mark_web_line_path])
+    return mark_app_path, mark_web_path, extra_paths
 
 
 def build_web(output_dir: Path, mark_app: Image.Image, mark_web: Image.Image, args: argparse.Namespace) -> None:
@@ -374,6 +436,9 @@ def print_summary(output_dir: Path, name: str, profile: str, args: argparse.Name
     print("source:")
     print(f"- source/{name}-mark-app.png")
     print(f"- source/{name}-mark-web.png")
+    if (output_dir / "source" / f"{name}-mark-app-line.png").exists():
+        print(f"- source/{name}-mark-app-line.png")
+        print(f"- source/{name}-mark-web-line.png")
     if profile in {"web", "all"}:
         print("web:")
         for filename, size, default_background, _source_kind, radius_kind, default_inset in WEB_PNGS:
@@ -417,6 +482,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--web-corner-radius", type=parse_corner_radius, default=0.22)
     parser.add_argument("--favicon-container-inset", type=parse_inset)
     parser.add_argument("--web-container-inset", type=parse_inset, default=0.08)
+    parser.add_argument("--line-width-ratio", type=parse_line_width_ratio, default=DEFAULT_LINE_WIDTH_RATIO)
     parser.add_argument("--background-threshold", type=int, default=28)
     parser.add_argument("--force-background", action="store_true")
     parser.add_argument("--transparent-background", action="store_true")
@@ -436,7 +502,7 @@ def main() -> int:
 
     name = args.name or slug_from_path(input_path)
     output_dir.mkdir(parents=True, exist_ok=True)
-    mark_app_path, mark_web_path = build_source(input_path, output_dir, name, args)
+    mark_app_path, mark_web_path, extra_source_paths = build_source(input_path, output_dir, name, args)
     mark_app = Image.open(mark_app_path).convert("RGBA")
     mark_web = Image.open(mark_web_path).convert("RGBA")
 
@@ -445,7 +511,7 @@ def main() -> int:
     if args.profile in {"desktop", "all"}:
         build_desktop(output_dir, mark_app, mark_web, args)
 
-    preview_paths = [mark_app_path, mark_web_path]
+    preview_paths = [mark_app_path, mark_web_path, *extra_source_paths]
     if args.profile in {"web", "all"}:
         preview_paths.extend((output_dir / "web" / item[0]) for item in WEB_PNGS)
     if args.profile in {"desktop", "all"}:

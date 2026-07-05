@@ -8,6 +8,8 @@
 source/
   <name>-mark-app.png       # 透明，用于 app/desktop/maskable 图标源
   <name>-mark-web.png       # 透明，用于 web/favicon/tray 图标源
+  <name>-mark-app-line.png  # 透明，仅当输入被检测为 fill 时生成
+  <name>-mark-web-line.png  # 透明，仅当输入被检测为 fill 时生成
 
 web/
   favicon-16x16.png         # 白底圆角，无外层透明边距
@@ -56,6 +58,7 @@ preview.png                 # 预览图
 - `desktop/icon.*` 和 `desktop/icons/*.png` 默认白底方形，优先保证桌面平台和安装器的多尺寸兼容性。
 - `tray.*` 和 `trayTemplate*.png` 默认透明，适合系统托盘和 macOS template icon。
 - `source/*` 默认透明，作为后续图标生成的中间源图。
+- 如果输入 source 被检测为 fill mark，会额外生成 `source/*-line.png` 两个透明 line 变体；line 输入不会额外生成 fill 变体。
 
 ## 可调参数
 
@@ -64,5 +67,6 @@ preview.png                 # 预览图
 - `--web-corner-radius <0..0.5>`：设置普通 PWA 图标圆角比例，默认 `0.22`。
 - `--favicon-container-inset <0..0.4>`：覆盖 favicon PNG 的外层透明边距；不传时按尺寸使用默认值。
 - `--web-container-inset <0..0.4>`：设置普通 PWA 图标外层透明边距，默认 `0.08`。
+- `--line-width-ratio <0..0.2>`：设置 fill 派生 line source mark 的描边粗细，默认 `0.035`。
 - `--force-background`：强制给通常透明的输出也加背景。
 - `--transparent-background`：所有输出尽量保持透明，覆盖默认背景规则。

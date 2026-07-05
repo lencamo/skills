@@ -2,7 +2,7 @@
 name: brand-asset-generator
 description: Use when generating or wiring project-ready brand image assets from a user-provided logo, mark, or icon source image, including transparent source marks, favicon, PWA icons, apple touch icons, desktop app icons, tray icons, ICO, and ICNS outputs.
 metadata:
-  version: '0.1.2'
+  version: '0.1.3'
 ---
 
 # Brand Asset Generator
@@ -64,6 +64,7 @@ Options:
 - `--web-corner-radius <0..0.5>`: rounded background radius ratio for regular PWA web icons; default is `0.22`.
 - `--favicon-container-inset <0..0.4>`: override transparent outer inset for favicon PNG outputs; default is per-size.
 - `--web-container-inset <0..0.4>`: transparent outer inset for regular PWA web icons; default is `0.08`.
+- `--line-width-ratio <0..0.2>`: outline thickness for fill-derived line source marks; default is `0.035`.
 - `--background-threshold <n>`: RGB edge-background removal tolerance; default is `28`.
 - `--force-background`: apply background to all generated PNG and ICO/ICNS outputs.
 - `--transparent-background`: keep outputs transparent even when they normally get the default background.
@@ -95,6 +96,8 @@ The script writes:
   source/
     <name>-mark-app.png
     <name>-mark-web.png
+    <name>-mark-app-line.png    # only when the input source is detected as fill
+    <name>-mark-web-line.png    # only when the input source is detected as fill
   web/
     favicon-16x16.png
     favicon-32x32.png
@@ -133,6 +136,9 @@ The script writes:
 - Remove only the edge-connected background for RGB sources; keep same-colored interior details.
 - Preserve existing alpha when the input already has transparency.
 - Write source marks as 512x512 RGBA transparent PNGs.
+- When the source subject is detected as a fill mark, also write 512x512 RGBA transparent line variants as `mark-app-line` and `mark-web-line`.
+- Control fill-derived line thickness with `--line-width-ratio`; the value is multiplied by the cropped source subject's largest side.
+- Do not create fill variants for line-mark inputs.
 - Use `mark-web` for favicons, regular PWA icons, and tray icons.
 - Use `mark-app` for apple touch, maskable PWA icons, desktop app icons, `.ico`, and `.icns`.
 - Add background by default to web favicons, regular PWA icons, maskable PWA icons, `apple-touch-icon.png`, `desktop/icon.png`, `desktop/icons/*.png`, `desktop/icon.ico`, and `desktop/icon.icns`.
@@ -147,6 +153,7 @@ The script writes:
 After generation, verify:
 
 - source marks are `RGBA`, 512x512, and have transparent corners.
+- fill-mark inputs additionally produce `mark-app-line` and `mark-web-line`; line-mark inputs do not.
 - web PNG dimensions match their filenames.
 - web favicon outputs and regular PWA icons have transparent rounded corners and expected outer inset by default.
 - maskable PWA icons and `apple-touch-icon.png` have opaque background corners by default.
