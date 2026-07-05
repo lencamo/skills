@@ -53,6 +53,7 @@ function parseArgs(argv) {
     'id',
     'label',
     'component-name',
+    'output-dir',
     'bundled-font-dir',
     'font-candidate-dir',
     'width',
@@ -102,6 +103,7 @@ Required generation intent:
 
 Useful options:
   --font <file>              Advanced: use an explicit .ttf/.otf path instead of --font-name.
+  --output-dir <dir>         Output parent directory. Writes to <dir>/<signature-text-slug>/.
   --bundled-font-dir <dir>   Bundled recommendation directory. Default: ${DEFAULT_BUNDLED_FONT_DIR}
   --font-candidate-dir <dir> Legacy Vue candidate directory for --list-fonts. Default: ${DEFAULT_FONT_CANDIDATE_DIR}
   --handwriting-animation true  Legacy flag. Static and animated artifacts are always emitted.
@@ -332,7 +334,10 @@ function commercialStatus(fontPath, source) {
 
 function outputPaths(variant) {
   const rootDir = path.resolve(variant.projectRoot)
-  const outputDir = path.resolve(rootDir, 'signatures', outputFolderName(variant.text))
+  const outputBaseDir = variant.outputDir
+    ? path.resolve(rootDir, variant.outputDir)
+    : path.resolve(rootDir, 'signatures')
+  const outputDir = path.resolve(outputBaseDir, outputFolderName(variant.text))
   const staticSvg = path.resolve(outputDir, `${variant.id}.svg`)
   const animatedSvg = path.resolve(outputDir, `${variant.id}.animated.svg`)
   const handwritingSvg = path.resolve(outputDir, `${variant.id}.handwriting.svg`)
@@ -1882,6 +1887,7 @@ function normalizeVariant(input, defaults = {}) {
     component: input.component ?? `Signature${toPascalCase(id)}`,
     font: input.font,
     fontName: input.fontName ?? input['font-name'],
+    outputDir: input.outputDir ?? input['output-dir'] ?? defaults.outputDir,
     projectRoot: process.cwd(),
     bundledFontDir: input.bundledFontDir ?? defaults.bundledFontDir ?? DEFAULT_BUNDLED_FONT_DIR,
     fontCandidateDir:
@@ -1911,6 +1917,7 @@ function loadJobs(args) {
     return config.variants.map((variantInput) =>
       normalizeVariant(variantInput, {
         text: config.text,
+        outputDir: config.outputDir ?? config['output-dir'],
         bundledFontDir: config.bundledFontDir,
         fontCandidateDir: config.fontCandidateDir,
         handwritingFallback: config.handwritingFallback
@@ -1925,6 +1932,7 @@ function loadJobs(args) {
     component: args['component-name'],
     font: args.font,
     fontName: args['font-name'],
+    outputDir: args['output-dir'],
     bundledFontDir: args['bundled-font-dir'],
     fontCandidateDir: args['font-candidate-dir'],
     width: args.width,

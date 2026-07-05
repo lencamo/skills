@@ -1,31 +1,31 @@
 # Signature SVG Generator 输出说明
 
-该 skill 基于真实字体文件生成签名风格 SVG、Vue 组件和 React 组件。输出目录始终是目标项目根目录下的 `signatures/<签名文本slug>/`，并保持扁平结构。
+该 skill 基于真实字体文件生成签名风格 SVG、Vue 组件和 React 组件。默认输出目录是目标项目根目录下的 `signatures/<签名文本slug>/`；传入 `--output-dir <dir>` 时，输出到 `<dir>/<签名文本slug>/`。输出目录保持扁平结构。
 
 ## 默认输出（未提供 handwritingStrokes）
 
-以 `Ting Note`、`id=tingnote-caveat`、`component=TingNoteSignatureCaveat` 为例：
+以 `Avery Stone`、`id=avery-stone-caveat`、`component=AveryStoneSignatureCaveat` 为例：
 
 ```text
 signatures/
-└── ting-note/
-    ├── tingnote-caveat.svg                     # 静态 SVG，原始字体轮廓
-    ├── tingnote-caveat.animated.svg            # fallback-wipe 动画 SVG
-    ├── tingnote-caveat.bold.svg                # 静态 SVG，加粗轮廓
-    ├── tingnote-caveat.animated.bold.svg       # fallback-wipe 动画 SVG，加粗轮廓
-    ├── TingNoteSignatureCaveat.vue             # 静态 Vue 组件，原始字体轮廓
-    ├── TingNoteSignatureCaveatAnimated.vue     # fallback-wipe 动画 Vue 组件
-    ├── TingNoteSignatureCaveatBold.vue         # 静态 Vue 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatAnimatedBold.vue # fallback-wipe 动画 Vue 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatStrokeGuide.vue  # 手写路径参考 Vue 组件
-    ├── TingNoteSignatureCaveat.tsx             # 静态 React 组件，原始字体轮廓
-    ├── TingNoteSignatureCaveatAnimated.tsx     # fallback-wipe 动画 React 组件
-    ├── TingNoteSignatureCaveatBold.tsx         # 静态 React 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatAnimatedBold.tsx # fallback-wipe 动画 React 组件，加粗轮廓
-    ├── TingNoteSignatureCaveatStrokeGuide.tsx  # 手写路径参考 React 组件
-    ├── tingnote-caveat.stroke-guide.svg        # 手写路径参考 SVG
-    ├── tingnote-caveat.stroke-author.html      # 手写中心线绘制页面
-    └── tingnote-caveat.strokes.template.json   # handwritingStrokes 模板
+└── avery-stone/
+    ├── avery-stone-caveat.svg                     # 静态 SVG，原始字体轮廓
+    ├── avery-stone-caveat.animated.svg            # fallback-wipe 动画 SVG
+    ├── avery-stone-caveat.bold.svg                # 静态 SVG，加粗轮廓
+    ├── avery-stone-caveat.animated.bold.svg       # fallback-wipe 动画 SVG，加粗轮廓
+    ├── AveryStoneSignatureCaveat.vue              # 静态 Vue 组件，原始字体轮廓
+    ├── AveryStoneSignatureCaveatAnimated.vue      # fallback-wipe 动画 Vue 组件
+    ├── AveryStoneSignatureCaveatBold.vue          # 静态 Vue 组件，加粗轮廓
+    ├── AveryStoneSignatureCaveatAnimatedBold.vue  # fallback-wipe 动画 Vue 组件，加粗轮廓
+    ├── AveryStoneSignatureCaveatStrokeGuide.vue   # 手写路径参考 Vue 组件
+    ├── AveryStoneSignatureCaveat.tsx              # 静态 React 组件，原始字体轮廓
+    ├── AveryStoneSignatureCaveatAnimated.tsx      # fallback-wipe 动画 React 组件
+    ├── AveryStoneSignatureCaveatBold.tsx          # 静态 React 组件，加粗轮廓
+    ├── AveryStoneSignatureCaveatAnimatedBold.tsx  # fallback-wipe 动画 React 组件，加粗轮廓
+    ├── AveryStoneSignatureCaveatStrokeGuide.tsx   # 手写路径参考 React 组件
+    ├── avery-stone-caveat.stroke-guide.svg        # 手写路径参考 SVG
+    ├── avery-stone-caveat.stroke-author.html      # 手写中心线绘制页面
+    └── avery-stone-caveat.strokes.template.json   # handwritingStrokes 模板
 ```
 
 ## 提供 handwritingStrokes 后的额外输出
@@ -34,13 +34,13 @@ signatures/
 
 ```text
 signatures/
-└── ting-note/
-    ├── tingnote-caveat.handwriting.svg
-    ├── tingnote-caveat.handwriting.bold.svg
-    ├── TingNoteSignatureCaveatHandwriting.vue
-    ├── TingNoteSignatureCaveatHandwritingBold.vue
-    ├── TingNoteSignatureCaveatHandwriting.tsx
-    └── TingNoteSignatureCaveatHandwritingBold.tsx
+└── avery-stone/
+    ├── avery-stone-caveat.handwriting.svg
+    ├── avery-stone-caveat.handwriting.bold.svg
+    ├── AveryStoneSignatureCaveatHandwriting.vue
+    ├── AveryStoneSignatureCaveatHandwritingBold.vue
+    ├── AveryStoneSignatureCaveatHandwriting.tsx
+    └── AveryStoneSignatureCaveatHandwritingBold.tsx
 ```
 
 ## 默认规则
@@ -63,6 +63,7 @@ signatures/
 - `--text "<text>"`：签名文本，必填。
 - `--font-name <name>`：字体名，会按项目字体、内置字体、Google Fonts 顺序解析。
 - `--font <file>`：显式使用本地 `.ttf` 或 `.otf` 字体文件。
+- `--output-dir <dir>`：覆盖输出父目录，实际输出到 `<dir>/<签名文本slug>/`。
 - `--id <id>`：输出 SVG 文件名前缀。
 - `--component-name <PascalCase>`：输出 Vue/React 组件名前缀。
 - `--label <label>`：写入 SVG title 的字体或变体标签。
@@ -85,7 +86,7 @@ signatures/
 ## 手写动画流程
 
 1. 先不提供 `handwritingStrokes` 生成一次。
-2. 打开 `signatures/<签名文本slug>/<id>.stroke-author.html`。
+2. 打开 `<输出目录>/<id>.stroke-author.html`；默认是 `signatures/<签名文本slug>/<id>.stroke-author.html`。
 3. 按自然书写顺序描中心线，每次按下和抬起会生成一条 stroke。
 4. 点击 `Copy for Agent`，把复制内容交回给 agent。
 5. agent 将 `handwritingStrokes` 合并到同一签名配置后重新生成。

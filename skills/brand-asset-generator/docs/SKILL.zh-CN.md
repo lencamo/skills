@@ -6,7 +6,7 @@
 
 - name: `brand-asset-generator`
 - description: 当需要从用户提供的 logo、mark 或 icon 源图片生成或接入项目可用的品牌图片资产时使用，包括透明 source mark、favicon、PWA 图标、apple touch 图标、桌面应用图标、托盘图标、ICO 和 ICNS 输出。
-- version: `0.1.3`
+- version: `0.1.4`
 
 # Brand Asset Generator
 
@@ -16,7 +16,7 @@
 
 1. 确认源图片路径和预期输出目标。
 2. 如果用户希望接入已有应用，先检查项目并识别预期的 public/static/icon 路径。
-3. 使用内置脚本把资产生成到临时目录或显式输出目录。
+3. 使用内置脚本把资产生成到目标项目根目录下的 `brand/<name>/`，或在用户要求时生成到 `<output-dir>/<name>/`。
 4. 只有当用户要求集成，或项目明显已有匹配图标路径时，才把生成文件复制到应用路径。
 5. 验证生成尺寸、透明/背景行为，以及任何已复制的项目引用。
 
@@ -40,9 +40,9 @@
 需要：
 
 - `--input <file>`：源图片路径。
-- `--output-dir <dir>`：生成资产根目录。
 
 当 source mark 需要稳定前缀时使用 `--name <name>`。如果省略，则从输入文件名派生。
+默认把资产写入当前工作目录下的 `brand/<name>/`。只有当用户希望覆盖输出父目录时，才使用 `--output-dir <dir>`。
 
 ## 脚本
 
@@ -51,7 +51,6 @@
 ```bash
 python3 <skill-dir>/scripts/generate_brand_assets.py \
   --input path/to/source.png \
-  --output-dir path/to/output \
   --name brand \
   --profile all \
   --background "#ffffff"
@@ -60,6 +59,7 @@ python3 <skill-dir>/scripts/generate_brand_assets.py \
 选项：
 
 - `--profile source|web|desktop|all`：选择输出组；默认是 `all`。
+- `--output-dir <dir>`：覆盖默认输出父目录；资产会写入 `<dir>/<name>/`。
 - `--background "#rrggbb"`：非透明输出的默认背景；默认是 `#ffffff`。
 - `--web-fill <0..1>`：web source mark 的可见主体比例；默认是 `0.86`。
 - `--app-fill <0..1>`：app/desktop source mark 的可见主体比例；默认是 `0.68`。
@@ -92,47 +92,50 @@ python3 -m pip install --user pillow
 
 ## 输出契约
 
-脚本写入：
+脚本会在 `brand/` 下写入一个根据 `--name` 或输入文件名 slug 命名的目录。例如，`--name sample-brand` 会写入：
 
 ```text
-<output-dir>/
-  source/
-    <name>-mark-app.png
-    <name>-mark-web.png
-    <name>-mark-app-line.png    # 仅当输入源被检测为 fill 时生成
-    <name>-mark-web-line.png    # 仅当输入源被检测为 fill 时生成
-  web/
-    favicon-16x16.png
-    favicon-32x32.png
-    favicon-48x48.png
-    favicon.png
-    favicon.ico
-    icon-192.png
-    icon-512.png
-    icon-192-maskable.png
-    icon-512-maskable.png
-    apple-touch-icon.png
-  desktop/
-    icon.icns
-    icon.ico
-    icon.png
-    icons/
-      16x16.png
-      24x24.png
-      32x32.png
-      48x48.png
-      64x64.png
-      96x96.png
-      128x128.png
-      256x256.png
-      512x512.png
-      1024x1024.png
-    tray.ico
-    tray.png
-    trayTemplate.png
-    trayTemplate@2x.png
-  preview.png
+brand/
+  sample-brand/
+    source/
+      sample-brand-mark-app.png
+      sample-brand-mark-web.png
+      sample-brand-mark-app-line.png    # 仅当输入源被检测为 fill 时生成
+      sample-brand-mark-web-line.png    # 仅当输入源被检测为 fill 时生成
+    web/
+      favicon-16x16.png
+      favicon-32x32.png
+      favicon-48x48.png
+      favicon.png
+      favicon.ico
+      icon-192.png
+      icon-512.png
+      icon-192-maskable.png
+      icon-512-maskable.png
+      apple-touch-icon.png
+    desktop/
+      icon.icns
+      icon.ico
+      icon.png
+      icons/
+        16x16.png
+        24x24.png
+        32x32.png
+        48x48.png
+        64x64.png
+        96x96.png
+        128x128.png
+        256x256.png
+        512x512.png
+        1024x1024.png
+      tray.ico
+      tray.png
+      trayTemplate.png
+      trayTemplate@2x.png
+    preview.png
 ```
+
+当传入 `--output-dir <dir>` 时，相同的 `source/`、`web/`、`desktop/` 和 `preview.png` 结构会写入 `<dir>/<name>/` 下。
 
 ## 生成规则
 

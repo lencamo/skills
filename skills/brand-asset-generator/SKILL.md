@@ -2,7 +2,7 @@
 name: brand-asset-generator
 description: Use when generating or wiring project-ready brand image assets from a user-provided logo, mark, or icon source image, including transparent source marks, favicon, PWA icons, apple touch icons, desktop app icons, tray icons, ICO, and ICNS outputs.
 metadata:
-  version: '0.1.3'
+  version: '0.1.4'
 ---
 
 # Brand Asset Generator
@@ -13,7 +13,7 @@ Generate a reusable image asset package from one logo, mark, or icon source imag
 
 1. Confirm the source image path and intended output target.
 2. If the user wants integration into an existing app, inspect the project first and identify the expected public/static/icon paths.
-3. Generate assets into a temporary or explicit output directory with the bundled script.
+3. Generate assets into `brand/<name>/` under the target project root, or into `<output-dir>/<name>/` when requested.
 4. Copy generated files into app paths only when the user asks for integration or the project clearly already has matching icon paths.
 5. Verify generated dimensions, transparency/background behavior, and any copied project references.
 
@@ -37,9 +37,9 @@ Generate a reusable image asset package from one logo, mark, or icon source imag
 Require:
 
 - `--input <file>`: source image path.
-- `--output-dir <dir>`: generated asset root.
 
 Use `--name <name>` when the source marks need a stable prefix. If omitted, derive it from the input filename.
+By default, assets are written to `brand/<name>/` under the current working directory. Use `--output-dir <dir>` only when the user wants to override the output parent directory.
 
 ## Script
 
@@ -48,7 +48,6 @@ Run the bundled script:
 ```bash
 python3 <skill-dir>/scripts/generate_brand_assets.py \
   --input path/to/source.png \
-  --output-dir path/to/output \
   --name brand \
   --profile all \
   --background "#ffffff"
@@ -57,6 +56,7 @@ python3 <skill-dir>/scripts/generate_brand_assets.py \
 Options:
 
 - `--profile source|web|desktop|all`: choose the output group; default is `all`.
+- `--output-dir <dir>`: override the default output parent directory; assets are written to `<dir>/<name>/`.
 - `--background "#rrggbb"`: default background for non-transparent outputs; default is `#ffffff`.
 - `--web-fill <0..1>`: visible subject scale for web source mark; default is `0.86`.
 - `--app-fill <0..1>`: visible subject scale for app/desktop source mark; default is `0.68`.
@@ -89,47 +89,50 @@ If there is no existing convention and the user did not request direct integrati
 
 ## Output Contract
 
-The script writes:
+The script writes a folder under `brand/` named from `--name` or the input filename slug. For example, `--name sample-brand` writes:
 
 ```text
-<output-dir>/
-  source/
-    <name>-mark-app.png
-    <name>-mark-web.png
-    <name>-mark-app-line.png    # only when the input source is detected as fill
-    <name>-mark-web-line.png    # only when the input source is detected as fill
-  web/
-    favicon-16x16.png
-    favicon-32x32.png
-    favicon-48x48.png
-    favicon.png
-    favicon.ico
-    icon-192.png
-    icon-512.png
-    icon-192-maskable.png
-    icon-512-maskable.png
-    apple-touch-icon.png
-  desktop/
-    icon.icns
-    icon.ico
-    icon.png
-    icons/
-      16x16.png
-      24x24.png
-      32x32.png
-      48x48.png
-      64x64.png
-      96x96.png
-      128x128.png
-      256x256.png
-      512x512.png
-      1024x1024.png
-    tray.ico
-    tray.png
-    trayTemplate.png
-    trayTemplate@2x.png
-  preview.png
+brand/
+  sample-brand/
+    source/
+      sample-brand-mark-app.png
+      sample-brand-mark-web.png
+      sample-brand-mark-app-line.png    # only when the input source is detected as fill
+      sample-brand-mark-web-line.png    # only when the input source is detected as fill
+    web/
+      favicon-16x16.png
+      favicon-32x32.png
+      favicon-48x48.png
+      favicon.png
+      favicon.ico
+      icon-192.png
+      icon-512.png
+      icon-192-maskable.png
+      icon-512-maskable.png
+      apple-touch-icon.png
+    desktop/
+      icon.icns
+      icon.ico
+      icon.png
+      icons/
+        16x16.png
+        24x24.png
+        32x32.png
+        48x48.png
+        64x64.png
+        96x96.png
+        128x128.png
+        256x256.png
+        512x512.png
+        1024x1024.png
+      tray.ico
+      tray.png
+      trayTemplate.png
+      trayTemplate@2x.png
+    preview.png
 ```
+
+When `--output-dir <dir>` is provided, the same `source/`, `web/`, `desktop/`, and `preview.png` structure is written under `<dir>/<name>/`.
 
 ## Generation Rules
 

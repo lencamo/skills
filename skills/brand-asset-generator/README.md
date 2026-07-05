@@ -4,47 +4,53 @@
 
 ## 默认输出
 
+默认输出目录为当前项目根目录下的 `brand/<name>/`。例如 `--name sample-brand` 会生成：
+
 ```text
-source/
-  <name>-mark-app.png       # 透明，用于 app/desktop/maskable 图标源
-  <name>-mark-web.png       # 透明，用于 web/favicon/tray 图标源
-  <name>-mark-app-line.png  # 透明，仅当输入被检测为 fill 时生成
-  <name>-mark-web-line.png  # 透明，仅当输入被检测为 fill 时生成
+brand/
+  sample-brand/
+    source/
+      sample-brand-mark-app.png       # 透明，用于 app/desktop/maskable 图标源
+      sample-brand-mark-web.png       # 透明，用于 web/favicon/tray 图标源
+      sample-brand-mark-app-line.png  # 透明，仅当输入被检测为 fill 时生成
+      sample-brand-mark-web-line.png  # 透明，仅当输入被检测为 fill 时生成
 
-web/
-  favicon-16x16.png         # 白底圆角，无外层透明边距
-  favicon-32x32.png         # 白底圆角，无外层透明边距
-  favicon-48x48.png         # 白底圆角，4% 外层透明边距
-  favicon.png               # 白底圆角，6% 外层透明边距
-  favicon.ico               # 白底圆角，多尺寸：16、32、48，无外层透明边距
-  icon-192.png              # 白底圆角，8% 外层透明边距
-  icon-512.png              # 白底圆角，8% 外层透明边距
-  icon-192-maskable.png     # 白底方形，不裁圆角
-  icon-512-maskable.png     # 白底方形，不裁圆角
-  apple-touch-icon.png      # 白底方形，不裁圆角
+    web/
+      favicon-16x16.png         # 白底圆角，无外层透明边距
+      favicon-32x32.png         # 白底圆角，无外层透明边距
+      favicon-48x48.png         # 白底圆角，4% 外层透明边距
+      favicon.png               # 白底圆角，6% 外层透明边距
+      favicon.ico               # 白底圆角，多尺寸：16、32、48，无外层透明边距
+      icon-192.png              # 白底圆角，8% 外层透明边距
+      icon-512.png              # 白底圆角，8% 外层透明边距
+      icon-192-maskable.png     # 白底方形，不裁圆角
+      icon-512-maskable.png     # 白底方形，不裁圆角
+      apple-touch-icon.png      # 白底方形，不裁圆角
 
-desktop/
-  icon.png                  # 白底方形
-  icon.ico                  # 白底方形，多尺寸：16、24、32、48、64、128、256
-  icon.icns                 # 白底方形
-  icons/
-    16x16.png               # 白底方形
-    24x24.png               # 白底方形
-    32x32.png               # 白底方形
-    48x48.png               # 白底方形
-    64x64.png               # 白底方形
-    96x96.png               # 白底方形
-    128x128.png             # 白底方形
-    256x256.png             # 白底方形
-    512x512.png             # 白底方形
-    1024x1024.png           # 白底方形
-  tray.ico                  # 透明，多尺寸：16、24、32、48、64、128、256
-  tray.png                  # 透明
-  trayTemplate.png          # 透明 template
-  trayTemplate@2x.png       # 透明 template
+    desktop/
+      icon.png                  # 白底方形
+      icon.ico                  # 白底方形，多尺寸：16、24、32、48、64、128、256
+      icon.icns                 # 白底方形
+      icons/
+        16x16.png               # 白底方形
+        24x24.png               # 白底方形
+        32x32.png               # 白底方形
+        48x48.png               # 白底方形
+        64x64.png               # 白底方形
+        96x96.png               # 白底方形
+        128x128.png             # 白底方形
+        256x256.png             # 白底方形
+        512x512.png             # 白底方形
+        1024x1024.png           # 白底方形
+      tray.ico                  # 透明，多尺寸：16、24、32、48、64、128、256
+      tray.png                  # 透明
+      trayTemplate.png          # 透明 template
+      trayTemplate@2x.png       # 透明 template
 
-preview.png                 # 预览图
+    preview.png                 # 预览图
 ```
+
+传入 `--output-dir <dir>` 时，上面的结构会写入 `<dir>/<name>/`。
 
 ## 默认规则
 

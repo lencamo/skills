@@ -2,7 +2,7 @@
 name: signature-svg-generator
 description: Use when generating reusable signature-style SVG assets, Vue components, or React components from font files, including personal signatures, handwritten wordmarks, font-derived SVG paths, or mask-based handwriting animations. Use only when the user wants font-based output, not general logo design.
 metadata:
-  version: '0.4.0'
+  version: '0.4.1'
 ---
 
 # Signature SVG Generator
@@ -84,6 +84,7 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 ```
 
 Use `--font <file>` instead of `--font-name <name>` for an explicit local font path.
+Use `--output-dir <dir>` when the user wants to override the output parent directory. With this option, generated files are written to `<dir>/<signature-text-slug>/`.
 
 Generated SVG files, Vue components, and React components use the same root `width`, `height`, and `viewBox`.
 If `width` and `height` are omitted, display dimensions are derived from the generated `viewBox`.
@@ -105,6 +106,7 @@ Use a JSON config when generating or comparing multiple variants:
 ```json
 {
   "text": "Avery Stone",
+  "outputDir": "signature-assets",
   "variants": [
     {
       "id": "avery-stone-sacramento",
@@ -126,6 +128,8 @@ Run:
 ```bash
 node <skill-dir>/scripts/generate_signature_svgs.mjs --config signature-batch.json
 ```
+
+In batch config, `outputDir` can be set at the top level or per variant. It is treated as the output parent directory, so each variant writes to `<outputDir>/<signature-text-slug>/`.
 
 ## Handwriting Animation
 
@@ -195,7 +199,7 @@ For high fidelity, provide `handwritingStrokes` as an array on the config varian
 Recommended authoring workflow:
 
 1. Generate once with no strokes.
-2. Open `signatures/<signature-text-slug>/<id>.stroke-author.html`.
+2. Open `<output-folder>/<id>.stroke-author.html`; by default this is `signatures/<signature-text-slug>/<id>.stroke-author.html`.
 3. Draw centerline strokes over the glyphs in natural writing order. Each pointer down/up gesture becomes one `handwritingStrokes` item.
 4. Use the author scale slider only for editing comfort; it does not change exported coordinates.
 5. Use the stroke width slider so the mask stroke covers the glyph body without revealing adjacent strokes too early.
@@ -206,34 +210,35 @@ Use `stroke-guide.svg` only when authoring in an external vector tool such as In
 
 ## Output Contract
 
-When generation succeeds, the script writes a flat folder under `signatures/` named from the signature text. For example, `Ting Note!` becomes `signatures/ting-note/`.
+When generation succeeds, the script writes a flat folder named from the signature text. By default, it is written under `signatures/`; for example, `Avery Stone!` becomes `signatures/avery-stone/`.
+When `--output-dir <dir>` or config `outputDir` is provided, the same flat folder is written under that parent directory; for example, `<dir>/avery-stone/`.
 
 ```text
 signatures/
-└── ting-note/
-    ├── tingnote-caveat.svg
-    ├── tingnote-caveat.animated.svg
-    ├── tingnote-caveat.handwriting.svg
-    ├── tingnote-caveat.bold.svg
-    ├── tingnote-caveat.animated.bold.svg
-    ├── tingnote-caveat.handwriting.bold.svg
-    ├── TingNoteSignatureCaveat.vue
-    ├── TingNoteSignatureCaveatAnimated.vue
-    ├── TingNoteSignatureCaveatHandwriting.vue
-    ├── TingNoteSignatureCaveatBold.vue
-    ├── TingNoteSignatureCaveatAnimatedBold.vue
-    ├── TingNoteSignatureCaveatHandwritingBold.vue
-    ├── TingNoteSignatureCaveatStrokeGuide.vue
-    ├── TingNoteSignatureCaveat.tsx
-    ├── TingNoteSignatureCaveatAnimated.tsx
-    ├── TingNoteSignatureCaveatHandwriting.tsx
-    ├── TingNoteSignatureCaveatBold.tsx
-    ├── TingNoteSignatureCaveatAnimatedBold.tsx
-    ├── TingNoteSignatureCaveatHandwritingBold.tsx
-    ├── TingNoteSignatureCaveatStrokeGuide.tsx
-    ├── tingnote-caveat.stroke-guide.svg
-    ├── tingnote-caveat.stroke-author.html
-    └── tingnote-caveat.strokes.template.json
+└── avery-stone/
+    ├── avery-stone-caveat.svg
+    ├── avery-stone-caveat.animated.svg
+    ├── avery-stone-caveat.handwriting.svg
+    ├── avery-stone-caveat.bold.svg
+    ├── avery-stone-caveat.animated.bold.svg
+    ├── avery-stone-caveat.handwriting.bold.svg
+    ├── AveryStoneSignatureCaveat.vue
+    ├── AveryStoneSignatureCaveatAnimated.vue
+    ├── AveryStoneSignatureCaveatHandwriting.vue
+    ├── AveryStoneSignatureCaveatBold.vue
+    ├── AveryStoneSignatureCaveatAnimatedBold.vue
+    ├── AveryStoneSignatureCaveatHandwritingBold.vue
+    ├── AveryStoneSignatureCaveatStrokeGuide.vue
+    ├── AveryStoneSignatureCaveat.tsx
+    ├── AveryStoneSignatureCaveatAnimated.tsx
+    ├── AveryStoneSignatureCaveatHandwriting.tsx
+    ├── AveryStoneSignatureCaveatBold.tsx
+    ├── AveryStoneSignatureCaveatAnimatedBold.tsx
+    ├── AveryStoneSignatureCaveatHandwritingBold.tsx
+    ├── AveryStoneSignatureCaveatStrokeGuide.tsx
+    ├── avery-stone-caveat.stroke-guide.svg
+    ├── avery-stone-caveat.stroke-author.html
+    └── avery-stone-caveat.strokes.template.json
 ```
 
 Each generated variant must keep together:

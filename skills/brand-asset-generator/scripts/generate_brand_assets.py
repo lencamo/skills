@@ -472,7 +472,7 @@ def print_summary(output_dir: Path, name: str, profile: str, args: argparse.Name
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate brand image assets from one source image.")
     parser.add_argument("--input", required=True, help="Source image path.")
-    parser.add_argument("--output-dir", required=True, help="Output root directory.")
+    parser.add_argument("--output-dir", help="Output parent directory. Writes to <dir>/<name>/. Defaults to ./brand/<name>.")
     parser.add_argument("--name", help="Output source mark filename prefix. Defaults to input filename slug.")
     parser.add_argument("--profile", choices=["source", "web", "desktop", "all"], default="all")
     parser.add_argument("--background", type=parse_hex_color, default=parse_hex_color("#ffffff"))
@@ -492,7 +492,6 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
     input_path = Path(args.input).expanduser().resolve()
-    output_dir = Path(args.output_dir).expanduser().resolve()
     if not input_path.exists():
         raise SystemExit(f"Missing input file: {input_path}")
     if args.background_threshold < 0:
@@ -501,6 +500,11 @@ def main() -> int:
         raise SystemExit("--force-background and --transparent-background cannot be used together")
 
     name = args.name or slug_from_path(input_path)
+    output_dir = (
+        (Path(args.output_dir).expanduser() / name).resolve()
+        if args.output_dir
+        else (Path.cwd() / "brand" / name).resolve()
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     mark_app_path, mark_web_path, extra_source_paths = build_source(input_path, output_dir, name, args)
     mark_app = Image.open(mark_app_path).convert("RGBA")

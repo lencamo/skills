@@ -6,7 +6,7 @@
 
 - name: `signature-svg-generator`
 - description: 当需要从字体文件生成可复用的签名风格 SVG 资产、Vue 组件或 React 组件时使用，包括个人签名、手写 wordmark、字体生成的 SVG paths，或基于 mask 的手写动画。只在用户想要基于字体的输出时使用，不用于通用 logo 设计。
-- version: `0.4.0`
+- version: `0.4.1`
 
 # Signature SVG Generator
 
@@ -87,6 +87,7 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 ```
 
 对于显式本地字体路径，使用 `--font <file>` 代替 `--font-name <name>`。
+当用户希望覆盖输出父目录时，使用 `--output-dir <dir>`。传入该选项后，生成文件会写入 `<dir>/<signature-text-slug>/`。
 
 生成的 SVG 文件、Vue 组件和 React 组件使用相同的 root `width`、`height` 和 `viewBox`。如果省略 `width` 和 `height`，显示尺寸从生成的 `viewBox` 推导。如果只提供一个尺寸，另一个尺寸从 `viewBox` 按比例推导。如果两个尺寸都提供，SVG、Vue 和 React 产物都使用这些精确显示尺寸。
 
@@ -101,6 +102,7 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 ```json
 {
   "text": "Avery Stone",
+  "outputDir": "signature-assets",
   "variants": [
     {
       "id": "avery-stone-sacramento",
@@ -122,6 +124,8 @@ node <skill-dir>/scripts/generate_signature_svgs.mjs \
 ```bash
 node <skill-dir>/scripts/generate_signature_svgs.mjs --config signature-batch.json
 ```
+
+在批量配置中，`outputDir` 可以放在顶层，也可以放在单个 variant 上。它表示输出父目录，因此每个 variant 会写入 `<outputDir>/<signature-text-slug>/`。
 
 ## 手写动画
 
@@ -183,7 +187,7 @@ stroke timing 默认按 path length 自动计算，除非 stroke 提供 `duratio
 推荐 authoring 工作流：
 
 1. 先在没有 strokes 的情况下生成一次。
-2. 打开 `signatures/<signature-text-slug>/<id>.stroke-author.html`。
+2. 打开 `<output-folder>/<id>.stroke-author.html`；默认是 `signatures/<signature-text-slug>/<id>.stroke-author.html`。
 3. 按自然书写顺序在 glyphs 上绘制 centerline strokes。每次 pointer down/up 手势都会成为一个 `handwritingStrokes` item。
 4. 只把 author scale slider 用于编辑舒适度；它不会改变导出坐标。
 5. 使用 stroke width slider，让 mask stroke 覆盖 glyph body，同时避免过早露出相邻 strokes。
@@ -194,34 +198,35 @@ stroke timing 默认按 path length 自动计算，除非 stroke 提供 `duratio
 
 ## 输出契约
 
-生成成功时，脚本会在 `signatures/` 下写入一个根据签名文本命名的 flat folder。例如，`Ting Note!` 会变成 `signatures/ting-note/`。
+生成成功时，脚本会写入一个根据签名文本命名的 flat folder。默认写入 `signatures/` 下；例如，`Avery Stone!` 会变成 `signatures/avery-stone/`。
+当传入 `--output-dir <dir>` 或 config `outputDir` 时，相同的 flat folder 会写入该父目录下；例如 `<dir>/avery-stone/`。
 
 ```text
 signatures/
-└── ting-note/
-    ├── tingnote-caveat.svg
-    ├── tingnote-caveat.animated.svg
-    ├── tingnote-caveat.handwriting.svg
-    ├── tingnote-caveat.bold.svg
-    ├── tingnote-caveat.animated.bold.svg
-    ├── tingnote-caveat.handwriting.bold.svg
-    ├── TingNoteSignatureCaveat.vue
-    ├── TingNoteSignatureCaveatAnimated.vue
-    ├── TingNoteSignatureCaveatHandwriting.vue
-    ├── TingNoteSignatureCaveatBold.vue
-    ├── TingNoteSignatureCaveatAnimatedBold.vue
-    ├── TingNoteSignatureCaveatHandwritingBold.vue
-    ├── TingNoteSignatureCaveatStrokeGuide.vue
-    ├── TingNoteSignatureCaveat.tsx
-    ├── TingNoteSignatureCaveatAnimated.tsx
-    ├── TingNoteSignatureCaveatHandwriting.tsx
-    ├── TingNoteSignatureCaveatBold.tsx
-    ├── TingNoteSignatureCaveatAnimatedBold.tsx
-    ├── TingNoteSignatureCaveatHandwritingBold.tsx
-    ├── TingNoteSignatureCaveatStrokeGuide.tsx
-    ├── tingnote-caveat.stroke-guide.svg
-    ├── tingnote-caveat.stroke-author.html
-    └── tingnote-caveat.strokes.template.json
+└── avery-stone/
+    ├── avery-stone-caveat.svg
+    ├── avery-stone-caveat.animated.svg
+    ├── avery-stone-caveat.handwriting.svg
+    ├── avery-stone-caveat.bold.svg
+    ├── avery-stone-caveat.animated.bold.svg
+    ├── avery-stone-caveat.handwriting.bold.svg
+    ├── AveryStoneSignatureCaveat.vue
+    ├── AveryStoneSignatureCaveatAnimated.vue
+    ├── AveryStoneSignatureCaveatHandwriting.vue
+    ├── AveryStoneSignatureCaveatBold.vue
+    ├── AveryStoneSignatureCaveatAnimatedBold.vue
+    ├── AveryStoneSignatureCaveatHandwritingBold.vue
+    ├── AveryStoneSignatureCaveatStrokeGuide.vue
+    ├── AveryStoneSignatureCaveat.tsx
+    ├── AveryStoneSignatureCaveatAnimated.tsx
+    ├── AveryStoneSignatureCaveatHandwriting.tsx
+    ├── AveryStoneSignatureCaveatBold.tsx
+    ├── AveryStoneSignatureCaveatAnimatedBold.tsx
+    ├── AveryStoneSignatureCaveatHandwritingBold.tsx
+    ├── AveryStoneSignatureCaveatStrokeGuide.tsx
+    ├── avery-stone-caveat.stroke-guide.svg
+    ├── avery-stone-caveat.stroke-author.html
+    └── avery-stone-caveat.strokes.template.json
 ```
 
 每个生成变体必须把以下内容保持在一起：
