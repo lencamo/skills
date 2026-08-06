@@ -2,7 +2,7 @@
 name: generate-daily-report
 description: Generate or improve structured daily work reports from brief task notes, tomorrow plans, screenshots, report forms, historical reports, or review feedback. Use when the user asks to write, organize, polish, or improve a daily report, 日报, or daily work summary and needs factual completion results, gaps, blockers, actionable next steps, reflections, or project-aware wording.
 metadata:
-  version: '0.1.0'
+  version: '0.2.0'
 ---
 
 # Generate Daily Report
@@ -28,7 +28,7 @@ Read [references/report-quality.md](references/report-quality.md) before draftin
 
 ## Calibrate from Feedback
 
-When historical reports, scores, or reviewer feedback are available, apply the feedback-calibration rules in the quality reference before drafting.
+When historical reports, scores, or reviewer feedback are available, apply the feedback-calibration rules in the quality reference before drafting. Match the proven structure, level of detail, and readability without copying historical facts or writing for the score at the expense of accuracy.
 
 ## Select the Context Mode
 
@@ -70,13 +70,19 @@ Classify each planned sentence internally:
 2. Calibrate from supplied historical scores or feedback when available.
 3. Extract completed work, scope, progress, validation, gaps, blockers, tomorrow's work, and lessons.
 4. Select the context mode and gather only the minimum relevant context.
-5. Draft every required field using the field requirements and safe transformations in the quality reference.
-6. Run its final checklist, then output content that can be pasted directly into the target form.
+5. Identify the likely reader and translate implementation details into the clearest accurate workplace language for that reader.
+6. Draft every required field using the field requirements and safe transformations in the quality reference.
+7. Remove overlapping items, unsupported project backlog, and jargon that is not needed to understand the result.
+8. Run the final checklist, then output content that can be pasted directly into the target form.
 
 ## Key Rules
 
 - Treat the source priority and sentence classification above as binding for every report statement.
 - Stay within the selected context mode, and keep strict-verification mismatches outside the report.
+- Use repository evidence to clarify the user's task, not to silently expand today's ownership or tomorrow's scope into the full project backlog.
+- Do not infer missing product requirements from an adjacent module. A similar page with charts, filters, or metrics does not prove that tomorrow's task needs the same features.
+- Do not present a repository limitation as today's blocker or execution gap unless the user or a daily-work artifact connects it to today's work.
+- Prefer plain language that a teammate can understand on first read. Keep technical terms only when the user, form, or audience requires them; explain an unavoidable term in context.
 - Apply the quality reference without weakening its factuality, field, or checklist requirements.
 - Ask a brief question only when missing information would materially change the report. Otherwise draft conservatively.
 
@@ -93,3 +99,5 @@ Today's Reflection
 ```
 
 For a concise request without a required form, return only the requested sections, usually today's summary and tomorrow's plan. Never omit a field required by a supplied form. Do not include source analysis, confidence labels, or drafting commentary inside the report unless the user asks for them.
+
+When historical reports show a stable heading style, numbering pattern, or use of icons, follow that presentation style unless the user asks for a different one.
