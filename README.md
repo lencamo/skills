@@ -39,6 +39,7 @@ Detailed `amo-*` workflow routing and ambiguous-case rules live in [`skills/RESO
 | [`brand-asset-generator`](skills/brand-asset-generator/SKILL.md)     | When source logo images should become reusable web, PWA, desktop app, tray, ICO, or ICNS assets, or be wired into an app project    | Generates transparent source marks plus `web/` and `desktop/` image asset packages with background and shape rules |
 | [`doc-feat-desc`](skills/doc-feat-desc/SKILL.md)                     | When an implemented feature needs user-facing documentation                                                                         | Generates three docs under `doc/<requirement-name>/` from the real implementation                               |
 | [`draft-to-project`](skills/draft-to-project/SKILL.md)               | When a UI draft such as a screenshot, HTML draft, local `file://` prototype, or mockup should be implemented in a real project page | Reuses existing components and styles while keeping the provided draft layout structure close to the source     |
+| [`generate-daily-report`](skills/generate-daily-report/SKILL.md)     | When brief work notes, report forms, or review feedback should become a factual daily report                                      | Generates structured summaries, gaps, blockers, actionable next steps, and reflections with optional project context |
 | [`git-smart-commit`](skills/git-smart-commit/SKILL.md)               | When a commit message needs to match repo conventions                                                                               | Detects commit rules and drafts a short matching header, with body or split guidance only when needed           |
 | [`global-project-rules`](skills/global-project-rules/SKILL.md)       | When a project needs always-on agent behavior rules                                                                                 | Enforces Chinese replies, senior engineer style, simple maintainable solutions, and protected git changes       |
 | [`signature-svg-generator`](skills/signature-svg-generator/SKILL.md) | When reusable font-based signature SVG assets, Vue components, or React components should be generated                              | Emits static and animated SVG/Vue/React signature artifacts under `signatures/<text-slug>/` by default from real font paths |
@@ -82,6 +83,7 @@ npx skills add lencamo/skills -a codex -g -y -s amo-draft
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
+npx skills add lencamo/skills -a codex -g -y -s generate-daily-report
 npx skills add lencamo/skills -a codex -g -y -s global-project-rules
 npx skills add lencamo/skills -a codex -g -y -s signature-svg-generator
 npx skills add lencamo/skills -a codex -g -y -s solution-design-review

@@ -86,6 +86,14 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
+      "name": "generate-daily-report",
+      "description": "Generate or improve structured daily work reports from brief task notes, tomorrow plans, screenshots, report forms, historical reports, or review feedback, with factual results and optional project-aware wording.",
+      "version": "0.1.0",
+      "category": "workflow",
+      "source": "./skills/generate-daily-report",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
       "name": "git-smart-commit",
       "description": "Use when the user wants a commit message or wants to refine one. Detect the repo's commit convention first, then generate a matching header; include a short body when one intent spans multiple areas.",
       "version": "0.2.1",
