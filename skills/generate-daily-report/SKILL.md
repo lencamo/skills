@@ -1,6 +1,8 @@
 ---
 name: generate-daily-report
 description: Generate or improve structured daily work reports from brief task notes, tomorrow plans, screenshots, report forms, historical reports, or review feedback. Use when the user asks to write, organize, polish, or improve a daily report, 日报, or daily work summary and needs factual completion results, gaps, blockers, actionable next steps, reflections, or project-aware wording.
+metadata:
+  version: '0.1.0'
 ---
 
 # Generate Daily Report
@@ -26,7 +28,7 @@ Read [references/report-quality.md](references/report-quality.md) before draftin
 
 ## Calibrate from Feedback
 
-When historical reports, scores, or reviewer feedback are available, derive the required fields, recurring deductions, preferred specificity, and expected level of detail before drafting. Treat them as quality constraints, not as proof of today's work. Apply the calibration silently unless the user asks for an analysis.
+When historical reports, scores, or reviewer feedback are available, apply the feedback-calibration rules in the quality reference before drafting.
 
 ## Select the Context Mode
 
@@ -68,25 +70,14 @@ Classify each planned sentence internally:
 2. Calibrate from supplied historical scores or feedback when available.
 3. Extract completed work, scope, progress, validation, gaps, blockers, tomorrow's work, and lessons.
 4. Select the context mode and gather only the minimum relevant context.
-5. Rewrite completed items as `action + object + supported scope + supported result + validation or value`; omit unsupported components.
-6. Write gaps as real unfinished work, concrete missed scenarios, limitations, missed validation, or process improvements. Include impact and follow-up when known; do not turn every tomorrow task into today's failure.
-7. Write blockers from explicit unresolved issues. If the form requires the field and no blocker was provided, state that there is currently no progress-blocking issue.
-8. Rewrite tomorrow items as `action + scope + completion or verification condition`. Split broad tasks into concrete substeps when the source supports them. Include priority or timing only when supplied or required by the form.
-9. Derive a concrete reflection from today's work: a root cause, reusable method, decision, risk, or process change. Avoid generic motivational text.
-10. Run the completeness, factuality, specificity, and language checks, then output content that can be pasted directly into the target form.
+5. Draft every required field using the field requirements and safe transformations in the quality reference.
+6. Run its final checklist, then output content that can be pasted directly into the target form.
 
 ## Key Rules
 
-- Preserve the user's intended completion status and do not exaggerate it.
-- Do not invent test coverage, release status, production stability, percentages, performance gains, supported types, coordination results, or business metrics.
-- Do not claim "self-tested", "jointly verified", "deployed", or "fully resolved" unless a source supports it.
-- Use project context to explain terminology and value, not to manufacture daily activity.
-- Do not infer workload, affected scope, priority, timing, or validation from a task title alone.
-- Keep task-specific nouns and distinguish completed results from next actions.
-- Do not silently omit a required field. Use the restrained fallback from the quality rules when the source provides no content for it.
-- Replace vague wording such as "improve edge cases" with concrete scenarios only when those scenarios are supplied or supported.
-- Consolidate closely related items only when doing so does not hide distinct outcomes.
-- Use professional, direct language, consistent terminology, and correct spelling; avoid padded management jargon.
+- Treat the source priority and sentence classification above as binding for every report statement.
+- Stay within the selected context mode, and keep strict-verification mismatches outside the report.
+- Apply the quality reference without weakening its factuality, field, or checklist requirements.
 - Ask a brief question only when missing information would materially change the report. Otherwise draft conservatively.
 
 ## Output
