@@ -39,7 +39,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 | [`brand-asset-generator`](skills/brand-asset-generator/docs/SKILL.zh-CN.md)     | 需要把源 logo 图片生成通用 web、PWA、桌面应用、托盘、ICO 或 ICNS 资产并接入项目时 | 生成透明 source mark，输出带背景和形状规则的 `web/` 与 `desktop/` 图片资产包 |
 | [`doc-feat-desc`](skills/doc-feat-desc/docs/SKILL.zh-CN.md)                     | 已有功能需要补充面向用户的文档时                                                 | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档                         |
 | [`draft-to-project`](skills/draft-to-project/docs/SKILL.zh-CN.md)               | 需要把截图、HTML 草图、本地 `file://` 原型页或设计稿等 UI 草稿落到真实项目页面时 | 复用已有组件和样式，同时让最终实现的布局结构贴近提供的草图                      |
-| [`generate-daily-report`](skills/generate-daily-report/docs/SKILL.zh-CN.md)     | 需要把简短工作记录、日报表单或评审反馈整理成真实、结构化日报时                 | 生成工作总结、不足、阻塞、可执行的明日计划和思考，并可选结合项目上下文        |
+| [`generate-daily-report`](skills/generate-daily-report/docs/SKILL.zh-CN.md)     | 需要把工作记录、日报表单或当天仓库改动整理成真实日报时                       | 生成可直接提交的总结、不足、阻塞、计划和思考，不在正文暴露取证过程            |
 | [`git-smart-commit`](skills/git-smart-commit/docs/SKILL.zh-CN.md)               | 需要生成符合仓库约定的提交信息时                                                 | 检测仓库提交规范并产出简短 commit 标题，仅在需要时补充正文或拆分建议            |
 | [`global-project-rules`](skills/global-project-rules/docs/SKILL.zh-CN.md)       | 需要为项目启用全局 Agent 行为规则时                                              | 固定中文回复、资深工程师风格、简单可维护方案，并保护 git 状态变更               |
 | [`signature-svg-generator`](skills/signature-svg-generator/docs/SKILL.zh-CN.md) | 需要基于字体生成可复用签名 SVG、Vue 组件或 React 组件时                          | 基于真实字体路径默认输出到 `signatures/<签名文本slug>/` 下的静态和动画 SVG/Vue/React 产物 |

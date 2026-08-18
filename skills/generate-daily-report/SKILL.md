@@ -1,103 +1,81 @@
 ---
 name: generate-daily-report
-description: Generate or improve structured daily work reports from brief task notes, tomorrow plans, screenshots, report forms, historical reports, or review feedback. Use when the user asks to write, organize, polish, or improve a daily report, 日报, or daily work summary and needs factual completion results, gaps, blockers, actionable next steps, reflections, or project-aware wording.
+description: Generate or improve ready-to-submit daily work reports from task notes, screenshots, forms, historical reports, review feedback, or the current repository's same-day Git commits and worktree changes. Use when the user asks to write, organize, polish, or improve a 日报 or daily work summary, including requests based on today's development record.
 metadata:
-  version: '0.2.0'
+  version: '0.3.0'
 ---
 
 # Generate Daily Report
 
-Turn sparse work notes into a concise, factual report that explains what changed, what remains, and what happens next.
+Turn the day's real work into a concise report that can be pasted directly into the user's reporting form.
 
 ## Use When
 
-- The user provides completed tasks and tomorrow's plan and wants a ready-to-submit daily report.
-- A report form, screenshot, historical report, or reviewer feedback defines the required structure or quality bar.
-- Brief task names need clearer results, progress, business value, gaps, or acceptance criteria.
-- Project terminology should improve the wording without inventing project facts.
+- The user provides completed work, unfinished work, blockers, reflections, or tomorrow's plan.
+- The user asks for a report based on today's commits, code changes, or development record.
+- A relevant repository is available and the user asks for a daily report without supplying enough task notes; use the current user's same-day commits and worktree changes as the default task input.
+- Screenshots, historical reports, scores, or reviewer feedback establish the required form and writing style.
 
 ## Do Not Use
 
-- Do not use for weekly, monthly, performance-review, or project-retrospective writing unless the user explicitly wants a daily-report structure.
+- Do not use for weekly, monthly, performance-review, or retrospective writing unless the user explicitly wants a daily-report structure.
 - Do not inspect a repository when the user requests input-only drafting.
-- Do not treat repository changes as proof that the user completed, tested, released, or owned the work.
+- Do not claim testing, deployment, acceptance, metrics, or production results merely because code exists.
 
 ## Read the Quality Rules
 
-Read [references/report-quality.md](references/report-quality.md) before drafting. Use its field requirements, transformation rules, and final checklist. Treat its examples as structural guidance only.
+Read [references/report-quality.md](references/report-quality.md) completely before drafting. It defines repository evidence handling, field requirements, historical-style calibration, natural fallback text, and the final checklist.
 
-## Calibrate from Feedback
+## Choose the Source Mode
 
-When historical reports, scores, or reviewer feedback are available, apply the feedback-calibration rules in the quality reference before drafting. Match the proven structure, level of detail, and readability without copying historical facts or writing for the score at the expense of accuracy.
+Choose one primary mode from the request and available context:
 
-## Select the Context Mode
+1. **Input-only**: Use only the user's notes and supplied artifacts when requested, when no relevant repository is available, or when the report spans unrelated projects.
+2. **Repository-backed**: Use when the user mentions Git, commits, code changes, the worktree, or asks for today's report while working in a relevant repository without providing a complete task list.
+3. **Strict verification**: Apply only when the user explicitly asks to verify their stated work against the repository. Keep material mismatches outside the report body.
 
-Choose one mode from the user's wording and available context:
+In repository-backed mode:
 
-1. **Input-only**: Use only the user's notes and supplied artifacts when requested, when no project is available, or when the report spans unrelated projects.
-2. **Project-aware**: Use this by default when the notes contain project-specific terms and a relevant workspace is available. Read only the context needed to understand terminology and impact.
-3. **Strict verification**: Use only when the user explicitly asks to verify the report against current project changes. Report mismatches separately; never silently replace the user's stated facts.
+- Treat same-day commits authored by the current Git user as completed development work unless their wording or diff clearly indicates investigation or partial progress.
+- Treat staged, unstaged, and relevant untracked work as today's work too, but describe its actual status; uncommitted work is normally “推进中” or “完善中”, not automatically completed.
+- Add any extra tasks the user explicitly supplies, even when they are outside the repository.
+- Group related commits and files by work outcome instead of producing one item per commit or file.
 
-For project-aware mode, prefer this order:
+Use `.codex/daily-report-context.md`, applicable `AGENTS.md`, README files, and targeted project documentation only when needed to interpret project terminology or impact. Do not turn the wider project backlog into today's work.
 
-1. Read `.codex/daily-report-context.md` if it exists.
-2. Read applicable `AGENTS.md`, README files, and targeted project documentation.
-3. Inspect relevant code or read-only Git evidence only when needed to clarify a term or verify an explicitly requested claim.
+## Evidence and Writing Boundary
 
-Treat `.codex/daily-report-context.md` as optional. Continue normally when it is absent. Do not require every task to belong to the current repository, and do not import unrelated repository facts into the report.
+Use evidence internally, but write the report as a normal first-person workplace update. Unless the user asks for an audit trail:
 
-## Apply Source Priority
+- Never write phrases such as “根据 Git 提交”, “提交记录显示”, “工作区中”, “现有信息未体现”, or “无法从记录确认” in the report.
+- Do not turn missing evidence into a shortcoming, blocker, or disclaimer. In particular, absence of recorded tests does not prove that testing was omitted.
+- Do not include commit hashes, file counts, diff statistics, confidence labels, source analysis, or drafting notes.
+- Do not preface the report with how it was generated. Return only the paste-ready report.
 
-Use sources in this order:
-
-1. The user's explicit completion status, results, blockers, and plan.
-2. User-provided forms, screenshots, historical reports, and review feedback.
-3. Optional project context and targeted project documentation.
-4. Read-only repository evidence.
-5. General domain knowledge for cautious, non-quantified value framing.
-
-Resolve conflicts in favor of the user's explicit statement, but mention a material evidence mismatch outside the report when strict verification was requested.
-
-Classify each planned sentence internally:
-
-- **Confirmed fact**: explicitly supplied by the user or source artifact.
-- **Supported interpretation**: a conservative explanation of capability or value supported by the task wording or project context.
-- **Unsupported claim**: a test, release, metric, scope, ownership, or outcome not supported by a source. Exclude it.
+The user's explicit status and plans override repository interpretation. Exclude unsupported claims about validation, release, metrics, effort, ownership, and business outcome.
 
 ## Workflow
 
-1. Identify the report language, target form, required fields, and requested level of detail.
-2. Calibrate from supplied historical scores or feedback when available.
-3. Extract completed work, scope, progress, validation, gaps, blockers, tomorrow's work, and lessons.
-4. Select the context mode and gather only the minimum relevant context.
-5. Identify the likely reader and translate implementation details into the clearest accurate workplace language for that reader.
-6. Draft every required field using the field requirements and safe transformations in the quality reference.
-7. Remove overlapping items, unsupported project backlog, and jargon that is not needed to understand the result.
-8. Run the final checklist, then output content that can be pasted directly into the target form.
-
-## Key Rules
-
-- Treat the source priority and sentence classification above as binding for every report statement.
-- Stay within the selected context mode, and keep strict-verification mismatches outside the report.
-- Use repository evidence to clarify the user's task, not to silently expand today's ownership or tomorrow's scope into the full project backlog.
-- Do not infer missing product requirements from an adjacent module. A similar page with charts, filters, or metrics does not prove that tomorrow's task needs the same features.
-- Do not present a repository limitation as today's blocker or execution gap unless the user or a daily-work artifact connects it to today's work.
-- Prefer plain language that a teammate can understand on first read. Keep technical terms only when the user, form, or audience requires them; explain an unavoidable term in context.
-- Apply the quality reference without weakening its factuality, field, or checklist requirements.
-- Ask a brief question only when missing information would materially change the report. Otherwise draft conservatively.
+1. Identify the report date, language, required form, and source mode.
+2. If historical reports or scores are supplied, extract their stable headings, density, fallback wording, and recurring quality feedback.
+3. Gather the minimum evidence needed for today's tasks. In repository-backed mode, inspect same-day commits and current worktree changes, then read only targeted diffs needed to understand outcomes.
+4. Merge related implementation details into distinct task results and preserve the evidenced completion state.
+5. Draft every required field. Use natural fallback wording when no shortcoming or blocker is known; do not explain why information is absent.
+6. Derive tomorrow's plan conservatively from explicit plans, unfinished current work, and directly related follow-up validation. Do not invent a new feature backlog.
+7. Write one concrete reflection tied to the day's work, then run the quality checklist.
 
 ## Output
 
-Follow the user's form exactly when provided. Otherwise, default to these sections in the user's language:
+Follow a supplied form exactly. Otherwise, for a Chinese report use this default structure and heading style:
 
 ```text
-Today's Work Summary
-What Was Not Done Well
-What Could Not Be Resolved
-Tomorrow's Plan
-Today's Reflection
+📌 今日工作总结
+⚠️ 哪些事情没有做好
+❓ 哪些事情解决不了
+📅 明日计划
+💡 今日思考
 ```
 
-For a concise request without a required form, return only the requested sections, usually today's summary and tomorrow's plan. Never omit a field required by a supplied form. Do not include source analysis, confidence labels, or drafting commentary inside the report unless the user asks for them.
+Number multiple independent work-summary items. For tomorrow's plan, use one compact paragraph when several actions serve the same goal or form a sequence such as discussion, decision, and implementation; use numbering only for genuinely independent plans or when the supplied form or historical style prefers it. Use a short paragraph for a single item or a natural no-issue statement. Do not add an “AI 改进建议” section unless the user explicitly asks for it.
 
-When historical reports show a stable heading style, numbering pattern, or use of icons, follow that presentation style unless the user asks for a different one.
+For a concise request that clearly asks for only selected fields, return only those fields. Otherwise preserve all five default fields so the result can be submitted directly.

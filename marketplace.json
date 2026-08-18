@@ -87,8 +87,8 @@
     },
     {
       "name": "generate-daily-report",
-      "description": "Generate or improve structured daily work reports from brief task notes, tomorrow plans, screenshots, report forms, historical reports, or review feedback, with factual results and optional project-aware wording.",
-      "version": "0.2.0",
+      "description": "Generate or improve paste-ready daily work reports from task notes, forms, historical feedback, or the current repository's same-day Git and worktree changes.",
+      "version": "0.3.0",
       "category": "workflow",
       "source": "./skills/generate-daily-report",
       "homepage": "https://github.com/lencamo/skills"
