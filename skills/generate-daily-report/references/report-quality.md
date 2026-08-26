@@ -64,7 +64,29 @@ Only strict-verification mismatches may be reported, and they belong outside the
 
 ## Audience and Readability
 
-Write for the likely workplace reader:
+Unless the user, form, or stable historical style identifies a technical audience, write for a manager or business stakeholder who does not know the repository's internal planning system.
+
+Repository and task language is evidence, not automatically suitable report copy. Translate implementation and planning labels into the affected business capability or user-visible result. By default, do not expose:
+
+- phase or milestone labels such as “阶段 05” or “M2”;
+- acceptance labels such as “Gate”, “WCD-G05”, or internal status codes;
+- planning artifacts such as “spec”, “specs”, task-file names, or capability-matrix names;
+- ticket IDs, commit types, branch names, file paths, function names, routes, table names, and similar repository identifiers;
+- unexplained implementation shorthand such as “快照收敛”, “软删除恢复”, “租户隔离”, or “接通链路”.
+
+Keep an internal term only when the user explicitly wants it in the report, the supplied form requires it, or the intended readers are known to use it. Do not merely replace one internal label with another; describe the work in ordinary business language.
+
+Examples:
+
+| Internal source wording | Audience-ready wording |
+| --- | --- |
+| 完成阶段 05 / 通过 WCD-G05 Gate | 完善客户管理相关功能并完成验证 |
+| 继续后面的 specs 任务 | 继续推进后续功能，按计划完成开发和验证 |
+| 修复快照收敛与软删除恢复 | 修复数据同步和历史数据恢复问题 |
+| 强化租户隔离 | 确保不同企业的数据互不串用 |
+| 接通代开发链路 | 完善代开发模式下的功能流程 |
+
+Write for the selected reader:
 
 - Start completed items with concrete verbs such as “完成”, “新增”, “修复”, “优化”, or “梳理”.
 - Describe what changed and the resulting behavior in one readable sentence.
@@ -152,7 +174,9 @@ Do not say that the repository or records failed to show a blocker.
 
 ### 📅 明日计划
 
-Use explicit user plans first. Otherwise derive conservative next steps in this order:
+Use explicit user plans first, but treat internal shorthand as intent rather than final copy. Rewrite phrases such as “继续后面的 specs 任务”, “推进下一阶段”, or “完成后续 Gate” into the business capability or ordinary work outcome the reader can understand. Preserve exact internal wording only when the user explicitly asks for it in the report.
+
+Otherwise derive conservative next steps in this order:
 
 1. Continue clearly unfinished work from staged or unstaged changes.
 2. Complete directly related integration, regression, or boundary verification for today's implementation.
@@ -177,6 +201,12 @@ When no specific next step can be supported and asking would not materially impr
 
 ```text
 继续完善今日相关功能并开展联调回归，确认核心流程和边界场景表现正常。
+```
+
+When the only known plan is to continue an internally named backlog and its business scope cannot be established safely, use a neutral audience-ready continuation such as:
+
+```text
+继续推进后续功能，按计划完成相关功能的开发和验证。
 ```
 
 ### 💡 今日思考
@@ -255,6 +285,7 @@ Before returning the report, confirm:
 - Same-day commits belong to the current user when the request says “my commits”.
 - Staged, unstaged, and relevant untracked changes were considered in repository-backed mode.
 - Related technical changes were consolidated into distinct work outcomes.
+- Wording matches the intended audience; manager-facing reports do not expose unexplained phase, Gate, spec, ticket, or repository labels.
 - Completion and progress wording match the evidence.
 - Every summary item has a specific object, scope, and supported result when available.
 - No test, release, acceptance, metric, effort, ownership, or production claim was invented.
@@ -262,6 +293,7 @@ Before returning the report, confirm:
 - Missing evidence was not turned into a shortcoming or blocker.
 - Fallback statements sound like normal workplace reporting.
 - Tomorrow's plan is directly related, actionable, and not an invented backlog.
+- Explicit plans written in internal shorthand were translated into audience-ready outcomes instead of echoed verbatim.
 - Tomorrow's plan uses a paragraph or numbering according to goal structure and historical style, not merely the number of actions.
 - The reflection contains a concrete, reusable lesson.
 - Stable historical headings, numbering, density, and personal conventions were followed.
