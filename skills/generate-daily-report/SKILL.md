@@ -2,7 +2,7 @@
 name: generate-daily-report
 description: Generate or improve ready-to-submit daily work reports from task notes, screenshots, forms, historical reports, review feedback, or the current repository's same-day Git commits and worktree changes. Use when the user asks to write, organize, polish, or improve a 日报 or daily work summary, including requests based on today's development record.
 metadata:
-  version: '0.4.0'
+  version: '0.5.0'
 ---
 
 # Generate Daily Report
@@ -57,12 +57,13 @@ The user's explicit status and plans override repository interpretation. Exclude
 ## Workflow
 
 1. Identify the report date, language, required form, intended audience, and source mode. Unless the user or supplied form indicates otherwise, assume the reader is a manager or business stakeholder who does not know the repository's internal planning vocabulary.
-2. If historical reports or scores are supplied, extract their stable headings, density, fallback wording, and recurring quality feedback.
-3. Gather the minimum evidence needed for today's tasks. In repository-backed mode, inspect same-day commits and current worktree changes, then read only targeted diffs needed to understand outcomes.
-4. Merge related implementation details into distinct task results, translate internal planning and implementation vocabulary for the intended audience, and preserve the evidenced completion state.
-5. Draft every required field. Use natural fallback wording when no shortcoming or blocker is known; do not explain why information is absent.
-6. Derive tomorrow's plan conservatively from explicit plans, unfinished current work, and directly related follow-up validation. Do not invent a new feature backlog.
-7. Write one concrete reflection tied to the day's work, then run the quality checklist.
+2. Capture the user's naming exclusions, preferred level of technical detail, tone corrections, and other revision feedback. When revising a report, treat this feedback as report-wide unless the user clearly limits it to one sentence.
+3. If historical reports or scores are supplied, extract their stable headings, density, fallback wording, and recurring quality feedback.
+4. Gather the minimum evidence needed for today's tasks. In repository-backed mode, inspect same-day commits and current worktree changes, then read only targeted diffs needed to understand outcomes.
+5. Merge related implementation details into distinct task results, translate internal planning and implementation vocabulary for the intended audience, and preserve the evidenced completion state.
+6. Draft every required field. Use natural fallback wording when no shortcoming or blocker is known; do not explain why information is absent.
+7. Derive tomorrow's plan conservatively from explicit plans, unfinished current work, and directly related follow-up validation. Do not invent a new feature backlog.
+8. Write one concrete reflection tied to the day's work, perform the audience rewrite pass, then run the quality checklist.
 
 ## Output
 

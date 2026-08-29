@@ -66,6 +66,8 @@ Only strict-verification mismatches may be reported, and they belong outside the
 
 Unless the user, form, or stable historical style identifies a technical audience, write for a manager or business stakeholder who does not know the repository's internal planning system.
 
+For a manager-facing report, describe the work result rather than the implementation method. A sentence should remain understandable without knowledge of the codebase, system architecture, or testing vocabulary. Preserve a technical term only when it is necessary to identify the affected product capability or when the user explicitly wants technical detail.
+
 Repository and task language is evidence, not automatically suitable report copy. Translate implementation and planning labels into the affected business capability or user-visible result. By default, do not expose:
 
 - phase or milestone labels such as “阶段 05” or “M2”;
@@ -103,6 +105,23 @@ Prefer clear wording:
 | 链路 | 流程，或直接说明涉及的前后端步骤 |
 | 降级策略 | 正常数据不可用时的处理方式 |
 | 生产化 | 达到可在正式环境稳定使用的条件 |
+| iframe / 嵌入容器 | 融合展示，或直接说明页面如何使用 |
+| postMessage / 标签通信 / 受控渲染 | 统一页面管理，或直接说明用户可完成的操作 |
+| 多标签、窄窗口回归 | 确认多页面切换及不同窗口尺寸下展示正常 |
+
+### Audience rewrite pass
+
+For a manager or business reader, perform a separate rewrite pass after the factual draft:
+
+1. Replace architecture, code, protocol, and testing terms with the affected capability, corrected problem, or observable result.
+2. Remove implementation mechanisms that do not change the reader's understanding of what was completed.
+3. Express observed validation as a visible outcome, such as “确认多页面切换正常”, instead of a test method such as “完成多标签回归”.
+4. Keep necessary product names, but honor any user request to omit or generalize a name throughout the full report.
+5. Preserve completion boundaries and evidence strength while simplifying the wording; audience translation must not turn progress into completion or imply unobserved business value.
+
+### Revision feedback
+
+When the user corrects wording, terminology, audience level, or tone, apply that feedback to the entire next draft unless they explicitly identify a one-sentence edit. Examples include requests such as “不要提某个系统名称”, “不要写回归”, or “这是给领导看的”. Do not fix only the quoted sentence while leaving equivalent wording elsewhere. When the user asks to rewrite the whole report, regenerate every section under the accumulated constraints.
 
 ## Field Requirements
 
@@ -145,6 +164,8 @@ concrete scenario + current gap + impact or next correction
 ```
 
 Do not turn ordinary follow-up work, an unrelated TODO, or absent evidence into today's deficiency. Tomorrow's plan is not automatically today's failure.
+
+Work intentionally scheduled for a later phase is not a deficiency merely because it has not started. Mention it here only when it was due today, blocked today's result, or the user explicitly identifies it as unfinished work.
 
 When no clear deficiency is known, use a natural statement such as:
 
@@ -200,7 +221,7 @@ Do not invent unrelated features, dates, priorities, owners, metrics, or a full 
 When no specific next step can be supported and asking would not materially improve the report, use a restrained continuation such as:
 
 ```text
-继续完善今日相关功能并开展联调回归，确认核心流程和边界场景表现正常。
+继续完善今日相关功能，确认主要使用流程和不同操作场景表现正常。
 ```
 
 When the only known plan is to continue an internally named backlog and its business scope cannot be established safely, use a neutral audience-ready continuation such as:
@@ -286,11 +307,15 @@ Before returning the report, confirm:
 - Staged, unstaged, and relevant untracked changes were considered in repository-backed mode.
 - Related technical changes were consolidated into distinct work outcomes.
 - Wording matches the intended audience; manager-facing reports do not expose unexplained phase, Gate, spec, ticket, or repository labels.
+- Every manager-facing sentence is understandable without codebase, architecture, or testing knowledge.
+- Technical validation methods were translated into observable results when the method itself was not important to the reader.
+- The user's naming exclusions, technical-detail preference, and revision feedback were applied across the full report.
 - Completion and progress wording match the evidence.
 - Every summary item has a specific object, scope, and supported result when available.
 - No test, release, acceptance, metric, effort, ownership, or production claim was invented.
 - No source-analysis or evidence-disclaimer wording appears in the report.
 - Missing evidence was not turned into a shortcoming or blocker.
+- Work planned for a later phase was not presented as today's deficiency unless it was actually due or blocking.
 - Fallback statements sound like normal workplace reporting.
 - Tomorrow's plan is directly related, actionable, and not an invented backlog.
 - Explicit plans written in internal shorthand were translated into audience-ready outcomes instead of echoed verbatim.
