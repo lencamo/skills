@@ -132,6 +132,14 @@
       "category": "development",
       "source": "./skills/split-pencil-file",
       "homepage": "https://github.com/lencamo/skills"
+    },
+    {
+      "name": "zcode-skills-sync",
+      "description": "MANUAL-ONLY maintenance skill. Rebuilds ~/.zcode/skills as symlinks into ~/.cc-switch/skills when the user explicitly invokes zcode-skills-sync.",
+      "version": "1.0.0",
+      "category": "development",
+      "source": "./skills/zcode-skills-sync",
+      "homepage": "https://github.com/lencamo/skills"
     }
   ]
 }
