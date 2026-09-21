@@ -110,6 +110,14 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
+      "name": "operate-worktree",
+      "description": "MANUAL-ONLY git worktree skill. Absorbs a git worktree branch back into the main checkout by rebasing its commits onto the main checkout's current branch (linear history, every commit preserved, no merge commit), fast-forwarding a personal target branch. Never deletes the worktree directory or branch name; never touches remotes. Run only on explicit invocation of operate-worktree.",
+      "version": "0.1.0",
+      "category": "development",
+      "source": "./skills/operate-worktree",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
       "name": "signature-svg-generator",
       "description": "Use when generating reusable font-based signature assets. Emits static and animated SVG/Vue/React artifacts under signatures/<text-slug>/ by default, including personal signatures, handwritten wordmarks, font-derived paths, and mask-based handwriting animations.",
       "version": "0.4.1",

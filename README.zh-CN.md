@@ -42,6 +42,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 | [`generate-daily-report`](skills/generate-daily-report/docs/SKILL.zh-CN.md)     | 需要把工作记录、日报表单或当天仓库改动整理成真实日报时                       | 生成可直接提交的总结、不足、阻塞、计划和思考，不在正文暴露取证过程            |
 | [`git-smart-commit`](skills/git-smart-commit/docs/SKILL.zh-CN.md)               | 需要生成符合仓库约定的提交信息时                                                 | 检测仓库提交规范并产出简短 commit 标题，仅在需要时补充正文或拆分建议            |
 | [`global-project-rules`](skills/global-project-rules/docs/SKILL.zh-CN.md)       | 需要为项目启用全局 Agent 行为规则时                                              | 固定中文回复、资深工程师风格、简单可维护方案，并保护 git 状态变更               |
+| [`operate-worktree`](skills/operate-worktree/docs/SKILL.zh-CN.md)               | 需要把工作树的提交以 rebase 方式收编到主工作区分支、且清理完全由自己掌控时       | 判定场景后重放工作树提交（个人分支则快进吸收）并输出报告；永不删除目录或分支名、不碰远程 |
 | [`signature-svg-generator`](skills/signature-svg-generator/docs/SKILL.zh-CN.md) | 需要基于字体生成可复用签名 SVG、Vue 组件或 React 组件时                          | 基于真实字体路径默认输出到 `signatures/<签名文本slug>/` 下的静态和动画 SVG/Vue/React 产物 |
 | [`solution-design-review`](skills/solution-design-review/docs/SKILL.zh-CN.md)   | 需要在编码前讨论实施方案、bug 修复方案、根因分析、最佳方案或取舍时               | 在实施前区分根因、快速修复、长期方案、影响范围和验证计划                        |
 | [`split-pencil-file`](skills/split-pencil-file/docs/SKILL.zh-CN.md)             | 需要把导入后的大型 Pencil `.pen` 按顶层 Frame 拆成独立目录时                     | 生成 `<frame-name>/index.pen` 目录，并复制该 Frame 引用的本地图片资源           |
