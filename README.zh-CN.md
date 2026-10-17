@@ -39,7 +39,6 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 | [`brand-asset-generator`](skills/brand-asset-generator/docs/SKILL.zh-CN.md)     | 需要把源 logo 图片生成通用 web、PWA、桌面应用、托盘、ICO 或 ICNS 资产并接入项目时 | 生成透明 source mark，输出带背景和形状规则的 `web/` 与 `desktop/` 图片资产包 |
 | [`doc-feat-desc`](skills/doc-feat-desc/docs/SKILL.zh-CN.md)                     | 已有功能需要补充面向用户的文档时                                                 | 基于真实实现生成 `doc/<requirement-name>/` 下的三类文档                         |
 | [`draft-to-project`](skills/draft-to-project/docs/SKILL.zh-CN.md)               | 需要把截图、HTML 草图、本地 `file://` 原型页或设计稿等 UI 草稿落到真实项目页面时 | 复用已有组件和样式，同时让最终实现的布局结构贴近提供的草图                      |
-| [`generate-daily-report`](skills/generate-daily-report/docs/SKILL.zh-CN.md)     | 需要把工作记录、日报表单或当天仓库改动整理成真实日报时                       | 生成可直接提交的总结、不足、阻塞、计划和思考，不在正文暴露取证过程            |
 | [`git-smart-commit`](skills/git-smart-commit/docs/SKILL.zh-CN.md)               | 需要生成符合仓库约定的提交信息时                                                 | 检测仓库提交规范并产出简短 commit 标题，仅在需要时补充正文或拆分建议            |
 | [`global-project-rules`](skills/global-project-rules/docs/SKILL.zh-CN.md)       | 需要为项目启用全局 Agent 行为规则时                                              | 固定中文回复、资深工程师风格、简单可维护方案，并保护 git 状态变更               |
 | [`operate-worktree`](skills/operate-worktree/docs/SKILL.zh-CN.md)               | 需要把工作树的提交以 rebase 方式收编到主工作区分支、且清理完全由自己掌控时       | 判定场景后重放工作树提交（个人分支则快进吸收）并输出报告；永不删除目录或分支名、不碰远程 |
@@ -84,7 +83,6 @@ npx skills add lencamo/skills -a codex -g -y -s amo-draft
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator
 npx skills add lencamo/skills -a codex -g -y -s doc-feat-desc
 npx skills add lencamo/skills -a codex -g -y -s draft-to-project
-npx skills add lencamo/skills -a codex -g -y -s generate-daily-report
 npx skills add lencamo/skills -a codex -g -y -s global-project-rules
 npx skills add lencamo/skills -a codex -g -y -s signature-svg-generator
 npx skills add lencamo/skills -a codex -g -y -s solution-design-review
