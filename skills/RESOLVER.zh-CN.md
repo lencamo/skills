@@ -37,7 +37,7 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | 调整结构、职责归属、耦合、状态/数据流、模块边界或组件边界 | `amo-refactor` |
 | 挑战已有方案：“这是最佳方案吗？”“有没有更好方案？”“取舍/范围是否正确？” | `amo-best` |
 | 调研竞品、社区实践或开源实现，寻找成熟、可复用的方案 | `amo-research` |
-| 展示已有方案的具体实现细节 | `amo-detail` |
+| 了解已有方案的整体链路、影响范围及前后端变化 | `amo-detail` |
 | 审查已实现代码是否存在冗余、不必要抽象、TypeScript 类型噪音或 composable 行为来源不清晰 | `amo-review` |
 | 编写或编辑目标聚焦的页面文案、需求说明、实施记录、版本说明、发布说明或临时项目文档 | `amo-draft` |
 
@@ -82,7 +82,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 
 只有在已有具体方案后，才把 `amo-best` 作为二次压力测试使用。
 `amo-research` 可以独立使用，也可按需开展外部实现调研，支持 `amo-feature`、`amo-improve`、`amo-fix`、`amo-refactor` 和 `amo-best` 做方案判断；它提供证据及复用建议，不会自动调用其他 skill。
-`amo-detail` 在编码前展开已有方案的具体实现细节；方案可以由用户提供，也可以来自主方案类 skill，并按需经过 `amo-best` 复核。
+`amo-detail` 呈现已有方案的链路、影响范围和前后端变化；方案可以由用户提供，也可以来自主方案类 skill，并按需经过 `amo-best` 复核。
 只有在已有代码后，才使用 `amo-review`。
 当下一步产物是内容而不是代码时，使用 `amo-draft`。
 

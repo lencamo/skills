@@ -1,13 +1,13 @@
 ---
 name: amo-detail
-description: Use when the user asks to expand an existing proposal into concrete module or file changes, interfaces, data flow, and implementation order before coding. Do not use for initial solution design, challenges to the chosen approach, direct implementation, or code review.
+description: Use when the user asks to understand an existing proposal's overall flow, impact scope, frontend changes, backend data flow, storage, or scheduled tasks. Focus on presenting proposal details, not initial solution design, challenges to the chosen approach, direct implementation, or code review.
 metadata:
-  version: '0.2.0'
+  version: '0.3.0'
 ---
 
 # Amo Detail
 
-Expand an existing proposal into concrete implementation details before coding.
+Present an existing proposal through its overall flow, impact, and frontend and backend changes.
 
 ## Shared Output Marker
 
@@ -16,8 +16,8 @@ Prefix the first output line inline with `🔎 [amo-detail]`. Do not put the mar
 ## Use When
 
 - A proposal exists, supplied by the user or formed through `amo-feature`, `amo-improve`, `amo-fix`, `amo-refactor`, or `amo-best`.
-- The user asks what specifically changes, how the parts interact, or in what order to implement them.
-- The proposal needs concrete module, file, interface, or data-flow details.
+- The user wants to understand the overall flow and which features or modules are affected.
+- The user asks what changes on the frontend or how backend data, storage, and scheduled tasks work.
 
 ## Do Not Use
 
@@ -27,29 +27,38 @@ Prefix the first output line inline with `🔎 [amo-detail]`. Do not put the mar
 
 ## Workflow
 
-1. Confirm the proposal's goal, scope, and constraints.
-2. Inspect relevant code to locate changes and reusable capabilities.
-3. Explain module responsibilities, call relationships, and relevant interfaces, data structures, or state transitions.
-4. Describe implementation order and the concrete changes in each step.
-5. Define verification and identify unresolved decisions that affect implementation.
+1. Establish the proposal from the discussion and inspect relevant code to verify its current context.
+2. Connect the flow from trigger to result and identify affected features and modules.
+3. Explain frontend component reuse and changes, displayed data and its sources, state transitions, and page changes.
+4. Explain backend processing and data flow, affected database tables and fields, and any scheduled tasks with their timing, work, and results.
+5. Present the details using the output structure, distinguishing current behavior from planned changes.
 
 ## Key Rules
 
 - Follow the existing approach and decision criteria; do not reopen solution selection.
-- Ground details in real code; distinguish existing files and APIs from proposed additions.
-- Detail only the current proposal; do not add unrelated refactors or extensions.
-- Use short code snippets or pseudocode when needed to explain key logic; do not implement changes.
-- If a critical issue requires changing the proposal, flag it before proceeding rather than silently replacing the approach.
+- Ground current-state claims in the discussion and code; distinguish existing behavior from proposed changes.
+- Cover only changes within the proposal; do not add features, states, or architecture to fill the output.
+- Mark unaffected areas as not involved and unresolved details as pending confirmation.
+- Explain the proposal without implementing it; include implementation order or verification only when requested.
 
 ## Output
 
 Use the user's language for output labels and content.
 
 ```text
-🔎 [amo-detail] Scenario: implementation detail
-Proposal goal:
-Change scope:
-Implementation details:
-Implementation order:
-Verification:
+🔎 [amo-detail] Scenario: proposal details
+Proposal:
+- Flow:
+- Impact scope:
+
+Frontend:
+- Component reuse and changes:
+- Data display:
+- State transitions:
+- Page changes:
+
+Backend:
+- Data flow:
+- Database changes:
+- Scheduled tasks:
 ```

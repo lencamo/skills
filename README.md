@@ -16,7 +16,7 @@ Repository: `https://github.com/lencamo/skills`
 | [`amo-refactor`](skills/amo-refactor/SKILL.md)           | Plan refactors and architecture boundaries by standard      | "Should this be refactored, and where should the boundary be?"              |
 | [`amo-best`](skills/amo-best/SKILL.md)                   | Re-check the chosen best-standard and pressure-test a plan  | "Is this the best solution, or is there a better approach?"                 |
 | [`amo-research`](skills/amo-research/SKILL.md)           | Research implementation evidence and reusable approaches for solution decisions | "How do competitors or open-source projects implement this feature?" |
-| [`amo-detail`](skills/amo-detail/SKILL.md)               | Expand a proposal into concrete changes and implementation order | "Show me the concrete implementation details of this plan."                 |
+| [`amo-detail`](skills/amo-detail/SKILL.md)               | Present proposal flow, impact, and frontend/backend changes | "Explain this proposal's flow and frontend/backend changes."                 |
 | [`amo-review`](skills/amo-review/SKILL.md)               | Review implemented code style, redundancy, and TS typing    | "Review this code for redundancy, style, and type issues."                  |
 | [`amo-draft`](skills/amo-draft/SKILL.md)                 | Write target-focused docs and copy without context pollution | "Write clean page copy or requirement docs from this context."             |
 
@@ -35,7 +35,7 @@ The primary design workflow skills choose a best-standard first: target-state, c
 
 `amo-research` researches competitor products, community practices, and open-source implementations to provide evidence and reuse advice for `amo-feature`, `amo-improve`, `amo-fix`, `amo-refactor`, and `amo-best`. It can run independently and is optional, not a mandatory design step.
 
-`amo-detail` expands an existing proposal into concrete changes, implementation order, and verification before coding. The proposal can come from the user or a primary design skill, optionally reviewed by `amo-best`.
+`amo-detail` presents an existing proposal's overall flow, impact, frontend changes, backend data flow, storage, and scheduled tasks. The proposal can come from the user or a primary design skill, optionally reviewed by `amo-best`.
 
 Detailed `amo-*` workflow routing and ambiguous-case rules live in [`skills/RESOLVER.md`](skills/RESOLVER.md).
 
