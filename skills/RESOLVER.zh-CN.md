@@ -20,6 +20,7 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | `amo-fix` | `🛠️ [amo-fix]` |
 | `amo-refactor` | `🧱 [amo-refactor]` |
 | `amo-best` | `🏆 [amo-best]` |
+| `amo-research` | `🔬 [amo-research]` |
 | `amo-review` | `🧹 [amo-review]` |
 | `amo-draft` | `📝 [amo-draft]` |
 
@@ -34,12 +35,13 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | 解释并修复错误、异常、不稳定、回归或失败的已有行为 | `amo-fix` |
 | 调整结构、职责归属、耦合、状态/数据流、模块边界或组件边界 | `amo-refactor` |
 | 挑战已有方案：“这是最佳方案吗？”“有没有更好方案？”“取舍/范围是否正确？” | `amo-best` |
+| 调研竞品、社区实践或开源实现，寻找成熟、可复用的方案 | `amo-research` |
 | 审查已实现代码是否存在冗余、不必要抽象、TypeScript 类型噪音或 composable 行为来源不清晰 | `amo-review` |
 | 编写或编辑目标聚焦的页面文案、需求说明、实施记录、版本说明、发布说明或临时项目文档 | `amo-draft` |
 
 ## 最佳标准路由
 
-方案类 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。`amo-review` 和 `amo-draft` 不选择最佳标准。
+方案类 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。`amo-research` 沿用已有判断标准，不选择新的最佳标准。`amo-review` 和 `amo-draft` 不选择最佳标准。
 
 | 用户信号 | 标准 |
 | :------- | :--- |
@@ -76,6 +78,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 ```
 
 只有在已有具体方案后，才把 `amo-best` 作为二次压力测试使用。
+`amo-research` 可以独立使用，也可按需开展外部实现调研，支持 `amo-feature`、`amo-improve`、`amo-fix`、`amo-refactor` 和 `amo-best` 做方案判断；它提供证据及复用建议，不会自动调用其他 skill。
 只有在已有代码后，才使用 `amo-review`。
 当下一步产物是内容而不是代码时，使用 `amo-draft`。
 
