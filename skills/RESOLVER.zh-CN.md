@@ -22,6 +22,7 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | `amo-best` | `🏆 [amo-best]` |
 | `amo-research` | `🔬 [amo-research]` |
 | `amo-detail` | `🔎 [amo-detail]` |
+| `amo-implement` | `🔨 [amo-implement]` |
 | `amo-review` | `🧹 [amo-review]` |
 | `amo-draft` | `📝 [amo-draft]` |
 
@@ -38,12 +39,13 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 | 挑战已有方案：“这是最佳方案吗？”“有没有更好方案？”“取舍/范围是否正确？” | `amo-best` |
 | 调研竞品、社区实践或开源实现，寻找成熟、可复用的方案 | `amo-research` |
 | 了解已有方案的整体链路、影响范围及前后端变化 | `amo-detail` |
+| 实施已明确的方案并验证结果 | `amo-implement` |
 | 审查已实现代码是否存在冗余、不必要抽象、TypeScript 类型噪音或 composable 行为来源不清晰 | `amo-review` |
 | 编写或编辑目标聚焦的页面文案、需求说明、实施记录、版本说明、发布说明或临时项目文档 | `amo-draft` |
 
 ## 最佳标准路由
 
-方案类 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。`amo-research` 和 `amo-detail` 沿用已有判断标准，不选择新的最佳标准。`amo-review` 和 `amo-draft` 不选择最佳标准。
+方案类 `amo-*` skill 在推荐方案前都必须先选择一个主要最佳标准。`amo-research`、`amo-detail` 和 `amo-implement` 沿用已有决策，不选择新的最佳标准。`amo-review` 和 `amo-draft` 不选择最佳标准。
 
 | 用户信号 | 标准 |
 | :------- | :--- |
@@ -63,7 +65,7 @@ README 是公开目录：列出所有 skill、安装命令和简短说明。
 5. 已经有候选方案，用户询问是否最佳：使用 `amo-best`。
 6. 已有实现代码，用户要求审查冗余、风格或 TypeScript 类型表达：使用 `amo-review`。
 7. 用户要求基于上下文、参考风格、示例或实施过程写出干净的目标内容：使用 `amo-draft`。
-8. 用户只是要求直接编辑、生成资产或 commit message：不要使用 `amo-*`，除非用户先要求方案设计。
+8. 实施已明确的方案：使用 `amo-implement`；直接小改、生成资产和 commit message 不要求经过 amo 方案设计链路。
 
 ## 串联
 
@@ -75,7 +77,7 @@ Skill 不会自动串联。
 amo-feature / amo-improve / amo-fix / amo-refactor
 -> amo-best
 -> amo-detail
--> implementation
+-> amo-implement
 -> amo-review
 -> amo-draft
 ```
@@ -83,6 +85,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 只有在已有具体方案后，才把 `amo-best` 作为二次压力测试使用。
 `amo-research` 可以独立使用，也可按需开展外部实现调研，支持 `amo-feature`、`amo-improve`、`amo-fix`、`amo-refactor` 和 `amo-best` 做方案判断；它提供证据及复用建议，不会自动调用其他 skill。
 `amo-detail` 呈现已有方案的链路、影响范围和前后端变化；方案可以由用户提供，也可以来自主方案类 skill，并按需经过 `amo-best` 复核。
+`amo-implement` 对已有方案进行编码与验证，同时约束注释噪音、前端内容污染和范围蔓延。
 只有在已有代码后，才使用 `amo-review`。
 当下一步产物是内容而不是代码时，使用 `amo-draft`。
 

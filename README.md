@@ -17,6 +17,7 @@ Repository: `https://github.com/lencamo/skills`
 | [`amo-best`](skills/amo-best/SKILL.md)                   | Re-check the chosen best-standard and pressure-test a plan  | "Is this the best solution, or is there a better approach?"                 |
 | [`amo-research`](skills/amo-research/SKILL.md)           | Research implementation evidence and reusable approaches for solution decisions | "How do competitors or open-source projects implement this feature?" |
 | [`amo-detail`](skills/amo-detail/SKILL.md)               | Present proposal flow, impact, and frontend/backend changes | "Explain this proposal's flow and frontend/backend changes."                 |
+| [`amo-implement`](skills/amo-implement/SKILL.md)         | Implement and verify a proposal while controlling comment noise, frontend content, and scope | "Implement this proposal and verify the result."                        |
 | [`amo-review`](skills/amo-review/SKILL.md)               | Review implemented code style, redundancy, and TS typing    | "Review this code for redundancy, style, and type issues."                  |
 | [`amo-draft`](skills/amo-draft/SKILL.md)                 | Write target-focused docs and copy without context pollution | "Write clean page copy or requirement docs from this context."             |
 
@@ -26,7 +27,7 @@ Typical workflow:
 amo-feature / amo-improve / amo-fix / amo-refactor
 → amo-best
 → amo-detail
-→ implement
+→ amo-implement
 → amo-review
 → amo-draft
 ```
@@ -36,6 +37,8 @@ The primary design workflow skills choose a best-standard first: target-state, c
 `amo-research` researches competitor products, community practices, and open-source implementations to provide evidence and reuse advice for `amo-feature`, `amo-improve`, `amo-fix`, `amo-refactor`, and `amo-best`. It can run independently and is optional, not a mandatory design step.
 
 `amo-detail` presents an existing proposal's overall flow, impact, frontend changes, backend data flow, storage, and scheduled tasks. The proposal can come from the user or a primary design skill, optionally reviewed by `amo-best`.
+
+`amo-implement` implements and verifies an already defined proposal, keeping comments useful, frontend content focused on product behavior, and changes within the agreed scope.
 
 Detailed `amo-*` workflow routing and ambiguous-case rules live in [`skills/RESOLVER.md`](skills/RESOLVER.md).
 
@@ -87,6 +90,7 @@ npx skills add lencamo/skills -a codex -g -y -s amo-refactor
 npx skills add lencamo/skills -a codex -g -y -s amo-best
 npx skills add lencamo/skills -a codex -g -y -s amo-research
 npx skills add lencamo/skills -a codex -g -y -s amo-detail
+npx skills add lencamo/skills -a codex -g -y -s amo-implement
 npx skills add lencamo/skills -a codex -g -y -s amo-review
 npx skills add lencamo/skills -a codex -g -y -s amo-draft
 npx skills add lencamo/skills -a codex -g -y -s brand-asset-generator

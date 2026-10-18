@@ -62,6 +62,14 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
+      "name": "amo-implement",
+      "description": "Use when the user asks to implement an already defined proposal and verify the result, keeping changes focused, comments useful, and frontend content free of conversation or implementation notes. Do not use for solution design, proposal explanation, or standalone code review.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-implement",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
       "name": "amo-review",
       "description": "Use when the user asks to review implemented code for code style, redundancy, unnecessary abstractions, wrappers, helpers, adapters, parsers, type guards, TypeScript type noise, or composable usage clarity.",
       "version": "0.1.0",
