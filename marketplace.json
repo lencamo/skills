@@ -54,6 +54,14 @@
       "homepage": "https://github.com/lencamo/skills"
     },
     {
+      "name": "amo-detail",
+      "description": "Use when the user asks to expand an existing proposal into concrete module or file changes, interfaces, data flow, and implementation order before coding. Do not use for initial solution design, challenges to the chosen approach, direct implementation, or code review.",
+      "version": "0.2.0",
+      "category": "workflow",
+      "source": "./skills/amo-detail",
+      "homepage": "https://github.com/lencamo/skills"
+    },
+    {
       "name": "amo-review",
       "description": "Use when the user asks to review implemented code for code style, redundancy, unnecessary abstractions, wrappers, helpers, adapters, parsers, type guards, TypeScript type noise, or composable usage clarity.",
       "version": "0.1.0",

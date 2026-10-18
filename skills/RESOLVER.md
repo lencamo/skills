@@ -21,6 +21,7 @@ All `amo-*` workflow skills prefix the first output line inline with their skill
 | `amo-refactor` | `🧱 [amo-refactor]` |
 | `amo-best` | `🏆 [amo-best]` |
 | `amo-research` | `🔬 [amo-research]` |
+| `amo-detail` | `🔎 [amo-detail]` |
 | `amo-review` | `🧹 [amo-review]` |
 | `amo-draft` | `📝 [amo-draft]` |
 
@@ -36,12 +37,13 @@ Keep the marker inline with the first line, not as a standalone paragraph.
 | Change structure, ownership, coupling, state/data flow, module boundaries, or component boundaries | `amo-refactor` |
 | Challenge an existing proposal: "is this best?", "better way?", "tradeoff right?", "scope right?" | `amo-best` |
 | Research competitor products, community practices, or open-source implementations for mature, reusable approaches | `amo-research` |
+| Explain concrete implementation details of an existing proposal | `amo-detail` |
 | Review implemented code for redundancy, unnecessary abstractions, TypeScript type noise, or composable usage clarity | `amo-review` |
 | Write or edit target-focused page copy, requirement notes, implementation docs, version notes, release notes, or temporary project documentation | `amo-draft` |
 
 ## Best Standard Routing
 
-Design-oriented `amo-*` skills must choose one primary best standard before recommending a solution. `amo-research` uses existing decision criteria without choosing a new best standard. `amo-review` and `amo-draft` do not choose a best standard.
+Design-oriented `amo-*` skills must choose one primary best standard before recommending a solution. `amo-research` and `amo-detail` use existing decision criteria without choosing a new best standard. `amo-review` and `amo-draft` do not choose a best standard.
 
 | User signal | Standard |
 | :---------- | :------- |
@@ -72,6 +74,7 @@ Typical manual chain:
 ```text
 amo-feature / amo-improve / amo-fix / amo-refactor
 -> amo-best
+-> amo-detail
 -> implementation
 -> amo-review
 -> amo-draft
@@ -79,6 +82,7 @@ amo-feature / amo-improve / amo-fix / amo-refactor
 
 Use `amo-best` only as a second-pass pressure test after a concrete proposal exists.
 Use `amo-research` independently or as optional external implementation research to support decisions in `amo-feature`, `amo-improve`, `amo-fix`, `amo-refactor`, and `amo-best`; it provides evidence and reuse advice without automatically invoking other skills.
+Use `amo-detail` to expand an existing proposal into concrete implementation details before coding; the proposal may come from the user or a primary design skill, optionally reviewed by `amo-best`.
 Use `amo-review` only after code exists.
 Use `amo-draft` when the next artifact is content, not code.
 
