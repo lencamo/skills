@@ -141,3 +141,5 @@ npx skills add . -a codex -g -y
 - [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
 - [tw93/Waza](https://github.com/tw93/Waza)
 - [Animated SVG Logo](https://antfu.me/posts/animated-svg-logo)
+- [antislop-code](https://github.com/miqdadbadjuber/anti-slop/blob/main/skills/antislop-code/SKILL.md)
+- [Claude 提示词最佳实践：过度积极与过度设计](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#overeagerness)
